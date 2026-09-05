@@ -4,12 +4,15 @@ from __future__ import annotations
 from contextlib import ExitStack
 import json
 import os
+import secrets
 import sys
 import time
 from urllib.request import urlopen
 from equity import ROOT
 from equity.processes import spawn, stop, run_bounded
 from equity.scheduler import scheduler_lock
+from equity.scheduler import atomic_state
+from equity.lifecycle import base_url, health as service_health, instance_key
 
 
 def endpoint_ready(url):
@@ -20,9 +23,9 @@ def endpoint_ready(url):
         return False
 
 
-def wait_ready(child, url, *, timeout, label):
+def wait_ready(child, url, *, timeout, label, ready=None):
     deadline = time.monotonic() + timeout
-    while not endpoint_ready(url):
+    while not (ready or endpoint_ready)(url):
         if child.poll() is not None:
             raise RuntimeError(f"{label} exited before becoming ready; inspect var/services logs")
         if time.monotonic() >= deadline:
@@ -37,6 +40,10 @@ def main(args):
     location.mkdir(parents=True, exist_ok=True)
     children = []
     with scheduler_lock(location / "supervisor.lock"), ExitStack() as stack:
+        runtime = {"runtime_id": secrets.token_hex(24), "pid": os.getpid(),
+                   "instance_key": instance_key(), "state": "starting", "port": args.port}
+        os.environ["EQUITY_RUNTIME_ID"] = runtime["runtime_id"]
+        atomic_state(location / "runtime.json", runtime)
 
         def launch(name, arguments):
             log = stack.enter_context((location / (name + ".log")).open("a", encoding="utf-8"))
@@ -45,6 +52,9 @@ def main(args):
             return child
 
         try:
+            web_url = base_url(args.host, args.port)
+            if service_health(web_url) is not None:
+                raise RuntimeError("The configured web port is already in use; no second stack was started")
             if not args.no_model:
                 endpoint = os.getenv("QWEN_BASE_URL", "http://127.0.0.1:8020/v1").rstrip("/") + "/models"
                 if not endpoint_ready(endpoint):
@@ -76,6 +86,7 @@ def main(args):
                 f"http://{probe_host}:{args.port}/healthz",
                 timeout=max(1, int(os.getenv("EQUITY_WEB_START_TIMEOUT_SECONDS", "600"))),
                 label="Web database startup check",
+                ready=lambda _url: (service_health(web_url) or {}).get("runtime_id") == runtime["runtime_id"],
             )
             tunnel_mode = os.getenv("EQUITY_TUNNEL_MODE", "off").lower()
             if tunnel_mode not in {"off", "external", "quick"}:
@@ -84,6 +95,9 @@ def main(args):
                 launch("tunnel", ["tunnel", "--port", str(args.port)])
             if not args.no_schedule:
                 launch("scheduler", ["schedule"])
+            runtime["state"] = "running"
+            runtime["children"] = {name: child.pid for name, child in children}
+            atomic_state(location / "runtime.json", runtime)
             print(
                 json.dumps(
                     {
@@ -106,3 +120,5 @@ def main(args):
         finally:
             for _, child in reversed(children):
                 stop(child)
+            runtime["state"] = "stopped"
+            atomic_state(location / "runtime.json", runtime)

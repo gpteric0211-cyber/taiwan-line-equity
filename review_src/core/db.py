@@ -5,6 +5,7 @@ from contextlib import closing
 from pathlib import Path
 
 from core.config import DATA_DIR, DB_PATH
+from core.database_access import connect
 from core.credit_balance_schema import ensure_credit_balance_schema
 from core.external_event_schema import ensure_external_event_schema
 from core.full_market_batch_schema import ensure_full_market_batch_schema
@@ -26,7 +27,7 @@ RUNTIME_SCHEMA_VERSION = "2026-09-01.2"
 
 def db() -> sqlite3.Connection:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=10)
+    conn = connect(DB_PATH, check_same_thread=False, timeout=10)
     conn.execute("PRAGMA busy_timeout=30000;")
     conn.execute("PRAGMA foreign_keys=ON;")
     conn.execute("PRAGMA synchronous=FULL;")
@@ -38,8 +39,7 @@ def read_only_db(path: Path | None = None) -> sqlite3.Connection:
     """Open an existing SQLite database without creating or mutating it."""
 
     target = (path or DB_PATH).resolve()
-    uri = target.as_uri() + "?mode=ro"
-    conn = sqlite3.connect(uri, uri=True, check_same_thread=False, timeout=10)
+    conn = connect(target, readonly=True, check_same_thread=False, timeout=10)
     conn.execute("PRAGMA busy_timeout=30000;")
     conn.execute("PRAGMA query_only=ON;")
     conn.row_factory = sqlite3.Row
@@ -57,9 +57,8 @@ def assert_db_integrity(path: Path | None = None, *, full: bool = False) -> None
     target = (path or DB_PATH).resolve()
     if not target.exists() or target.stat().st_size == 0:
         return
-    uri = target.as_uri() + "?mode=ro"
     try:
-        conn = sqlite3.connect(uri, uri=True, timeout=10)
+        conn = connect(target, readonly=True, timeout=10)
         try:
             pragma = "integrity_check" if full else "quick_check"
             rows = conn.execute(f"PRAGMA {pragma}").fetchall()
@@ -82,9 +81,8 @@ def runtime_schema_is_current(path: Path | None = None) -> bool:
     target = (path or DB_PATH).resolve()
     if not target.exists() or target.stat().st_size == 0:
         return False
-    uri = target.as_uri() + "?mode=ro"
     try:
-        conn = sqlite3.connect(uri, uri=True, timeout=10)
+        conn = connect(target, readonly=True, timeout=10)
         try:
             table = conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='app_schema_state'"

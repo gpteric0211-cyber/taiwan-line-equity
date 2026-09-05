@@ -13,6 +13,9 @@ from typing import Any, Iterator
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT / "review_src") not in sys.path:
+    sys.path.insert(0, str(ROOT / "review_src"))
+from core.database_access import DatabaseLease
 DEFAULT_ACTIVE_DB = ROOT / "review_src" / "data" / "taiwan50.db"
 DEFAULT_PIPELINE = ROOT / "scripts" / "run_post_close_daily_pipeline.py"
 DEFAULT_LOCK = ROOT / "logs" / "post_close_scheduler" / "isolated_publish.lock"
@@ -142,18 +145,24 @@ def publish_candidate(
     retry_seconds: int = 60,
     integrity_verified: bool = False,
 ) -> Path:
+    if _set_journal_mode(candidate, "DELETE") != "delete":
+        raise RuntimeError("candidate database could not enter DELETE publication mode")
+    integrity_probe = quick_integrity_messages if integrity_verified else full_integrity_messages
+    if integrity_probe(candidate) != ["ok"]:
+        raise RuntimeError("candidate failed final integrity_check before publication")
+    # Build/check the candidate while clients keep reading. Only the file switch
+    # drains existing connections and temporarily waits new analysis requests.
+    with DatabaseLease(active, exclusive=True, timeout=retry_seconds):
+        return _publish_verified_candidate(candidate, active, expected_active_stat=expected_active_stat,
+                                           retry_seconds=retry_seconds)
+
+
+def _publish_verified_candidate(candidate, active, *, expected_active_stat, retry_seconds):
     current = active.stat()
     if (current.st_size, current.st_mtime_ns) != expected_active_stat:
         raise RuntimeError(
             "active database changed while the isolated update was running"
         )
-    if _set_journal_mode(candidate, "DELETE") != "delete":
-        raise RuntimeError("candidate database could not enter DELETE publication mode")
-    integrity_probe = (
-        quick_integrity_messages if integrity_verified else full_integrity_messages
-    )
-    if integrity_probe(candidate) != ["ok"]:
-        raise RuntimeError("candidate failed final integrity_check before publication")
     wal_sidecar = Path(str(active) + "-wal")
     if wal_sidecar.exists() and wal_sidecar.stat().st_size > 0:
         raise RuntimeError(
@@ -176,11 +185,14 @@ def publish_candidate(
             break
         except PermissionError:
             if time.monotonic() >= deadline:
+                previous.unlink(missing_ok=True)
                 raise
             time.sleep(1)
-    if integrity_probe(active) != ["ok"]:
-        os.replace(previous, active)
-        raise RuntimeError("published database failed integrity_check; previous restored")
+        except BaseException:
+            previous.unlink(missing_ok=True)
+            raise
+    # os.replace moved the already verified file, without copying/changing its
+    # bytes. Re-reading all GB here would unnecessarily block LINE data queries.
     return previous
 
 
@@ -290,8 +302,9 @@ def run_isolated_update(
 
 
 def main(argv: list[str] | None = None) -> int:
-    active_text = os.environ.get("TAIWAN50_DB_PATH", "").strip()
-    active = Path(active_text).expanduser() if active_text else DEFAULT_ACTIVE_DB
+    from core.market_database_config import resolve_market_db_path
+
+    active = resolve_market_db_path(base_dir=ROOT / "review_src")
     return run_isolated_update(list(argv if argv is not None else sys.argv[1:]), active=active)
 
 

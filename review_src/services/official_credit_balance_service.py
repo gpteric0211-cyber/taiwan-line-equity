@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import closing
 
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Callable
@@ -126,7 +127,7 @@ def refresh_official_credit_balances(
     with ThreadPoolExecutor(max_workers=len(selected_fetchers)) as executor:
         sources = list(executor.map(invoke, selected_fetchers))
     source_dates = [str(item.get("data_date") or "") for item in sources]
-    with db() as conn:
+    with closing(db()) as conn, conn:
         listed = set(active_stock_codes(conn, market="listed"))
         otc = set(active_stock_codes(conn, market="otc"))
     rows: list[dict[str, Any]] = []
@@ -180,7 +181,7 @@ def refresh_official_credit_balances(
     written = 0
     pruned = 0
     if not dry_run:
-        with db() as conn:
+        with closing(db()) as conn, conn:
             written = upsert_official_credit_balances(conn, valid_rows)
             pruned = prune_credit_balances(conn)
             conn.execute("PRAGMA optimize")

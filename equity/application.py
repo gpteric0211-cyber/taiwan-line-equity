@@ -56,10 +56,18 @@ def create_app():
 
         app.include_router(market_router)
         app.include_router(webhook_router)
+        from core.config import DB_PATH
+        from equity.database_middleware import MarketSnapshotMiddleware
+
+        app.add_middleware(MarketSnapshotMiddleware, database=DB_PATH)
 
         @app.get("/healthz", include_in_schema=False)
         def health():
-            return {"status": "ok", "service": "taiwan-line-equity"}
+            import os
+            from equity.lifecycle import instance_key
+
+            return {"status": "ok", "service": "taiwan-line-equity",
+                    "instance_key": instance_key(), "runtime_id": os.getenv("EQUITY_RUNTIME_ID")}
 
         app.state.equity_integrated = True
         app.title = "Taiwan Line Equity"
