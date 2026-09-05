@@ -88,3 +88,23 @@ def test_tdcc_weekly_checkpoint_survives_weekend_and_monday_restart():
     assert calls == ["tdcc_tw50", "tdcc_watchlist", "tdcc_tw50"]
     run_due(datetime(2026, 9, 11, 18, 36, tzinfo=TPE), state, **options)
     assert calls[-1] == "tdcc_watchlist" and len(calls) == 4
+
+
+def test_startup_dependency_failure_does_not_advance(monkeypatch):
+    import pytest
+    from equity import supervisor
+
+    monkeypatch.setattr(supervisor, "endpoint_ready", lambda url: False)
+    child = type("StoppedChild", (), {"poll": lambda self: 7})()
+    with pytest.raises(RuntimeError, match="exited before becoming ready"):
+        supervisor.wait_ready(child, "http://127.0.0.1/healthz", timeout=30, label="web")
+
+
+def test_startup_readiness_is_bounded(monkeypatch):
+    import pytest
+    from equity import supervisor
+
+    monkeypatch.setattr(supervisor, "endpoint_ready", lambda url: False)
+    child = type("RunningChild", (), {"poll": lambda self: None})()
+    with pytest.raises(RuntimeError, match="did not become ready"):
+        supervisor.wait_ready(child, "http://127.0.0.1/healthz", timeout=0, label="web")

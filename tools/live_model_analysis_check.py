@@ -1,6 +1,7 @@
 """Exercise the real local text model using a synthetic confirmed position."""
 
 from pathlib import Path
+from contextlib import contextmanager
 import argparse, json, os, sys, time
 from unittest.mock import patch
 from urllib.parse import urlsplit
@@ -9,6 +10,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--url", required=True, help="Local unified HTTP service")
+parser.add_argument(
+    "--validate-line",
+    action="store_true",
+    help="Validate the exact rendered answer through LINE without sending it",
+)
 args = parser.parse_args()
 if urlsplit(args.url).hostname not in {"127.0.0.1", "localhost", "::1"}:
     parser.error("Use a loopback QA service")
@@ -58,12 +64,39 @@ report = {
     "line_messages_sent": 0,
 }
 report["ok"] = observed["model_called"] and observed["confirmed_position_in_prompt"] and bool(result.text)
+if args.validate_line:
+    import requests
+    from adapter.line_messaging import reply_text
+    from core.line_bot_config import env_text
+
+    captured = {}
+
+    @contextmanager
+    def capture(request, **kwargs):
+        captured.update(json.loads(request.data))
+        yield type("Response", (), {"status": 200})()
+
+    with patch("adapter.line_messaging.urlrequest.urlopen", capture):
+        reply_text("synthetic-unused-reply-token", result.text)
+    response = requests.post(
+        "https://api.line.me/v2/bot/message/validate/reply",
+        headers={"Authorization": "Bearer " + env_text("LINE_CHANNEL_ACCESS_TOKEN")},
+        json={"messages": captured["messages"]},
+        timeout=30,
+    )
+    report["line_payload_validation_status"] = response.status_code
+    report["rendered_messages"] = captured["messages"]
+    report["ok"] = report["ok"] and response.status_code == 200
 location = ROOT / "var/qa/model-analysis-report.json"
 location.parent.mkdir(parents=True, exist_ok=True)
 location.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 print(
     json.dumps(
-        {key: value for key, value in report.items() if key not in {"answer", "raw_model_answer"}},
+        {
+            key: value
+            for key, value in report.items()
+            if key not in {"answer", "raw_model_answer", "rendered_messages"}
+        },
         ensure_ascii=False,
     )
 )

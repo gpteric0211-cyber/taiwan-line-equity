@@ -20,6 +20,18 @@ def endpoint_ready(url):
         return False
 
 
+def wait_ready(child, url, *, timeout, label):
+    deadline = time.monotonic() + timeout
+    while not endpoint_ready(url):
+        if child.poll() is not None:
+            raise RuntimeError(f"{label} exited before becoming ready; inspect var/services logs")
+        if time.monotonic() >= deadline:
+            raise RuntimeError(
+                f"{label} did not become ready within {timeout} seconds; inspect var/services logs"
+            )
+        time.sleep(1)
+
+
 def main(args):
     location = ROOT / "var" / "services"
     location.mkdir(parents=True, exist_ok=True)
@@ -55,7 +67,16 @@ def main(args):
                     )
                     if code:
                         raise RuntimeError("Model preload failed; inspect var/services/warmup.log")
-            launch("web", ["serve", "--host", args.host, "--port", str(args.port)])
+            web = launch("web", ["serve", "--host", args.host, "--port", str(args.port)])
+            probe_host = {"0.0.0.0": "127.0.0.1", "::": "::1"}.get(args.host, args.host)
+            if ":" in probe_host:
+                probe_host = f"[{probe_host}]"
+            wait_ready(
+                web,
+                f"http://{probe_host}:{args.port}/healthz",
+                timeout=max(1, int(os.getenv("EQUITY_WEB_START_TIMEOUT_SECONDS", "600"))),
+                label="Web database startup check",
+            )
             tunnel_mode = os.getenv("EQUITY_TUNNEL_MODE", "off").lower()
             if tunnel_mode not in {"off", "external", "quick"}:
                 raise ValueError("EQUITY_TUNNEL_MODE must be off, external, or quick")

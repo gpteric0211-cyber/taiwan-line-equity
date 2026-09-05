@@ -117,7 +117,7 @@ uv run --frozen python tools/run_tests.py tests -q
 ## 臨時 HTTPS 與 LINE endpoint
 在私有設定加入 `EQUITY_TUNNEL_MODE=quick`，整合啟動就會管理 cloudflared。預設 off；已有外部固定反向代理時設 external。執行檔從 runtime/cloudflared 或 PATH 找尋，也可設定 CLOUDFLARED_EXE_PATH。
 `EQUITY_LINE_WEBHOOK_SYNC=1` 可在通過公開頁面、未登入持股 API 及本機初始化隔離檢查後，先執行 LINE 空事件測試，再更新 webhook URL 並讀回核對。舊 URL 存在 var/services/line-webhook-before.json。此步驟不發送使用者訊息；LINE Developers 的 Use webhook 仍需啟用。
-目前網址與驗證狀態位於 var/services/public-endpoint.json。Quick Tunnel 重新啟動會改變網址，不保證可用性，適合搬移驗收。固定使用應換成有穩定網址的部署。
+最後一次啟動的網址與驗證狀態位於 var/services/public-endpoint.json；強制停止時可能留下舊結果，需搭配程序與實際 HTTP 查核。Quick Tunnel 重新啟動會改變網址，不保證可用性，適合搬移驗收。固定使用應換成有穩定網址的部署。
 若預設 DNS 對剛建立的臨時網址回覆 NXDOMAIN，但公共 DNS 可解析，可設定 `EQUITY_DOH_URL=https://cloudflare-dns.com/dns-query`。這只影響程式自己的公開入口探針，維持原網域的 TLS SNI、憑證與 Host 驗證，不改 OS DNS；手機瀏覽器仍使用手機自己的 DNS。未設定時使用正常 DNS。
 參考：[Cloudflare Quick Tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/trycloudflare/)、[LINE webhook 設定 API](https://developers.line.biz/en/reference/messaging-api/#set-webhook-endpoint-url)。
 ## 驗證備份可復原
@@ -128,3 +128,9 @@ uv run --frozen python tools/verify_backup.py var/backups/manual --restore-to va
 ## 官方行情與逐筆補充資料分開發布
 整合 CLI 的 finalize 使用 `--publish-official-core`：只有全部必要官方來源更新成功、官方驗證日期一致，且資料庫完整性及適用的畫面一致性檢查通過，才發布候選資料庫。Fugle 缺漏仍標記 supplemental_pending，完整價量評分及 full_analysis_ready 不會因官方行情成功而變成可用。相容層 pipeline CLI 的預設嚴格行為不變。
 減資與面額變更停牌從 TWSE 官方預告／恢復公告及明確停止日期取得；恢復買賣當天不算停牌，不把查詢索引日期當停止日期，不生成假 OHLCV。重大公告 metadata 永久保留。
+
+Windows 排程入口使用 Job Object 管理自己啟動的子程序。停止排程或入口異常結束時，Windows 會關閉整組所屬程序；既有外部模型服務不屬於這組。此 adapter 使用 Windows 8／Server 2012 起支援的 nested jobs，本專案的 Python 版本需搭配仍受支援的 Windows。參考 [Microsoft Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)。
+
+整合啟動先等待 `/healthz` 成功，再建立 Tunnel 與排程。大型資料庫啟動健檢上限由 `EQUITY_WEB_START_TIMEOUT_SECONDS` 設定，預設 600 秒；逾時會保留明確失敗，不會把尚未監聽的入口註冊給 LINE。
+
+真實模型與 LINE 格式驗收可用 `uv run --frozen python tools/live_model_analysis_check.py --url <本機 HTTP 入口> --validate-line`。此命令使用合成持股，只呼叫 LINE 格式驗證端點，不發送訊息；需已設定模型、內部 API token 與 LINE access token。

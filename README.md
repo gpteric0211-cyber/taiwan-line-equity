@@ -69,5 +69,6 @@ uv run --frozen python tools/run_tests.py tests -q
 - [操作、模型、LINE 與故障排查](docs/project/OPERATIONS.md)
 - [資料保存規則](docs/project/DATA_RETENTION.md)
 - [遷移與驗證紀錄](docs/project/MIGRATION.md)
+- [搬到另一個位置或電腦](docs/project/PORTABILITY.md)
 
 本系統提供資料整理與研究觀察。資料延遲、缺漏與未驗證新聞會保留狀態；不承諾未來報酬，也不把模型輸出當成可直接執行的交易指令。
