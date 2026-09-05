@@ -22,8 +22,8 @@ def smtp_configured() -> bool:
 
 def _send_email(to_email: str, subject: str, html_body: str) -> bool:
     if not smtp_configured():
-        logger.warning("[AUTH DEV EMAIL] to=%s subject=%s body=%s", to_email, subject, html_body)
-        return True
+        logger.warning("Authentication email unavailable: SMTP is not configured")
+        return False
     try:
         msg = MIMEMultipart("alternative")
         msg["Subject"] = subject
@@ -36,8 +36,8 @@ def _send_email(to_email: str, subject: str, html_body: str) -> bool:
             server.login(SMTP_USER, SMTP_PASSWORD)
             server.sendmail(FROM_EMAIL, to_email, msg.as_string())
         return True
-    except Exception:
-        logger.exception("Failed to send auth email to %s", to_email)
+    except Exception as exc:
+        logger.warning("Authentication email delivery failed: %s", type(exc).__name__)
         return False
 
 

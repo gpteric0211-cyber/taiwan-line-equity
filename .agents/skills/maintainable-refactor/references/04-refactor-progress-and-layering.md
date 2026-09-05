@@ -2,6 +2,11 @@
 
 Last verified against the working tree: 2026-08-28.
 
+Membership development verified 2026-09-06: account-only migrations v2–v5, membership repository/service/API,
+`/members` administration, `/account` registration/password/phone verification, and opt-in shared Web/LINE entitlement checks
+are implemented. Offline tests and synthetic mobile UI checks pass; production migration, owner assignment,
+identity-provider delivery and payment onboarding remain separate, uncompleted deployment steps. See `docs/project/MEMBERSHIP.md`.
+
 Runtime integration verified 2026-09-06: `equity/lifecycle.py` owns idempotent background desktop startup; both Windows web/LINE buttons delegate to it. `core/database_access.py` coordinates shared market connections with isolated publication, and `equity/database_middleware.py` keeps API requests on one file generation and arbitrates canonical artifact writes with updates. No financial layer was extracted or reweighted. The earlier business-layer snapshot below retains its original verification date. See `docs/project/SHARED_RUNTIME.md` and the latest review packet for validation and deployment limits.
 
 Read this before an `app.py` extraction or a change to the LINE/backend surface. This is a living implementation snapshot, not a fixed specification. Verify paths and responsibilities before updating a checkbox.

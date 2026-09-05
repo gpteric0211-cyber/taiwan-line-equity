@@ -6,6 +6,7 @@ import sqlite3
 from pathlib import Path
 from auth.models import CREATE_TABLES_SQL
 from core.portfolio_storage import configured_path
+from core.membership_schema import migrate
 
 TABLES = ("users", "email_verifications", "user_watchlist", "login_attempts", "auth_sessions")
 
@@ -31,6 +32,7 @@ def initialize(source: Path | None = None) -> dict[str, int]:
             if conn.execute(
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name='account_migration'"
             ).fetchone():
+                migrate(conn)
                 return {name: conn.execute(f"SELECT COUNT(*) FROM {name}").fetchone()[0] for name in TABLES}
         raise RuntimeError("Existing account DB has no migration marker; inspect it before initialization")
     candidate = target.with_suffix(".sqlite3.partial")
@@ -64,6 +66,7 @@ def initialize(source: Path | None = None) -> dict[str, int]:
                 "CREATE TABLE account_migration(version INTEGER PRIMARY KEY,applied_at TEXT DEFAULT CURRENT_TIMESTAMP)"
             )
             dst.execute("INSERT INTO account_migration(version) VALUES(1)")
+        migrate(dst)
         if dst.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
             raise RuntimeError("Account database integrity check failed")
     candidate.replace(target)

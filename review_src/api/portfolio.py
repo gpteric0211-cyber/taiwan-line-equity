@@ -175,6 +175,8 @@ def issue_link(request: Request, user: dict = Depends(get_current_user)):
     store = _store()
     subject = _subject(store, user)
     _consented(store, subject)
+    from repository.member_repository import record_principal
+    record_principal(user["id"],subject)
     return {"command": "綁定 " + store.issue_link(subject), "expires_in": 600}
 
 

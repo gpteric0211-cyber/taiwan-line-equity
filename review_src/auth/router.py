@@ -8,6 +8,7 @@ from .schemas import (
     LoginRequest,
     PasswordResetConfirmRequest,
     PasswordResetRequest,
+    PasswordChangeRequest,
     RegisterRequest,
     ResendVerificationRequest,
     VerifyEmailRequest,
@@ -77,6 +78,10 @@ def auth_security_check() -> dict:
 
 @router.post("/auth/register")
 def register(payload: RegisterRequest, request: Request) -> dict:
+    from adapter.phone_verification import configured
+    from auth.email_sender import smtp_configured
+    if not configured() or not smtp_configured():
+        raise HTTPException(503,"註冊尚未開放：管理員需先完成 Email 與手機驗證服務設定")
     ip = get_client_ip(request)
     ok, reason = verify_turnstile(payload.turnstile_token, ip)
     if not ok:
@@ -85,6 +90,18 @@ def register(payload: RegisterRequest, request: Request) -> dict:
     if not created:
         _raise_bad_request(message)
     return {"ok": True, "message": message, "turnstile": reason}
+
+
+@router.get("/auth/options")
+def auth_options():
+    import os
+    from adapter.phone_verification import configured
+    from auth.email_sender import smtp_configured
+    from auth.security import TURNSTILE_SECRET_KEY
+    site_key=os.getenv("TURNSTILE_SITE_KEY","").strip()
+    return {"registration_enabled": configured() and smtp_configured() and (not TURNSTILE_SECRET_KEY or bool(site_key)),
+            "email_configured":smtp_configured(),"phone_configured":configured(),
+            "phone_required":True,"turnstile_site_key":site_key if TURNSTILE_SECRET_KEY else ""}
 
 
 @router.post("/auth/verify-email")
@@ -155,6 +172,25 @@ def reset_password_endpoint(payload: PasswordResetConfirmRequest) -> dict:
     if not ok:
         _raise_bad_request(message)
     return {"ok": True, "message": message}
+
+
+@router.post("/auth/change-password")
+def change_password_endpoint(payload: PasswordChangeRequest, request: Request, response: Response,
+                             user: dict = Depends(get_current_user)) -> dict:
+    from api.portfolio import _mutation
+    from auth.password_change import change_password
+    from auth.service import too_many_failed_logins, record_login_attempt
+    _mutation(request)
+    ip = get_client_ip(request)
+    if too_many_failed_logins(ip, user["email"]):
+        raise HTTPException(429, "嘗試次數過多，請 15 分鐘後再試")
+    ok, message = change_password(user["id"],payload.current_password,payload.new_password)
+    if not ok:
+        record_login_attempt(ip,user["email"],False,"password_change")
+        _raise_bad_request(message)
+    response.delete_cookie(AUTH_COOKIE_NAME, path="/")
+    response.delete_cookie(f"{AUTH_COOKIE_NAME}_session", path="/")
+    return {"ok":True,"message":message}
 
 
 @router.get("/me/watchlist")

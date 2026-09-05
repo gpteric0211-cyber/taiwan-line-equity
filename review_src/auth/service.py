@@ -69,9 +69,13 @@ def too_many_registrations(ip: str) -> bool:
         return int(row["c"] if row else 0) >= REGISTER_IP_LIMIT
 
 
-def _store_verification_code(email: str, purpose: str, code: str) -> None:
+def _store_verification_code(email: str, purpose: str, code: str) -> bool:
     ts = now_ts()
     with closing(db()) as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        recent = conn.execute("SELECT MAX(created_at),COUNT(*) FROM email_verifications WHERE email=? AND purpose=? AND created_at>?", (email,purpose,ts-3600)).fetchone()
+        if recent[1] >= 5 or (recent[0] is not None and recent[0] > ts-60):
+            return False
         conn.execute(
             "UPDATE email_verifications SET used_at=? WHERE email=? AND purpose=? AND used_at IS NULL",
             (ts, email, purpose),
@@ -81,6 +85,7 @@ def _store_verification_code(email: str, purpose: str, code: str) -> None:
             (email, hash_verification_code(email, code, purpose), purpose, ts + VERIFICATION_TTL_SECONDS, ts),
         )
         conn.commit()
+    return True
 
 
 def create_user(email: str, password: str, ip: str) -> tuple[bool, str]:
@@ -91,6 +96,7 @@ def create_user(email: str, password: str, ip: str) -> tuple[bool, str]:
         return False, "註冊次數過多，請稍後再試"
     ts = now_ts()
     with closing(db()) as conn:
+        conn.execute("BEGIN IMMEDIATE")
         existing = conn.execute("SELECT id,is_verified FROM users WHERE email=?", (email,)).fetchone()
         if existing and existing["is_verified"]:
             return False, "此 Email 已註冊，請直接登入"
@@ -105,13 +111,15 @@ def create_user(email: str, password: str, ip: str) -> tuple[bool, str]:
                 "INSERT INTO users(email,hashed_password,is_verified,is_active,created_at,updated_at) VALUES(?,?,?,?,?,?)",
                 (email, hashed, 0, 1, ts, ts),
             )
+        conn.execute("INSERT INTO account_security(user_id,phone_required) SELECT id,1 FROM users WHERE email=? ON CONFLICT(user_id) DO UPDATE SET phone_required=1",(email,))
         conn.execute(
             "INSERT INTO login_attempts(ip,email,success,reason,attempted_at) VALUES(?,?,?,?,?)",
             (ip, email, 1, "register", ts),
         )
         conn.commit()
     code = generate_verification_code()
-    _store_verification_code(email, "register", code)
+    if not _store_verification_code(email, "register", code):
+        return False, "驗證碼寄送過於頻繁，請稍後再試"
     if not send_verification_email(email, code):
         return False, "驗證信寄送失敗，請稍後再試"
     return True, "註冊成功，請至 Email 收取驗證碼"
@@ -120,6 +128,7 @@ def create_user(email: str, password: str, ip: str) -> tuple[bool, str]:
 def verify_email(email: str, code: str) -> tuple[bool, str]:
     ts = now_ts()
     with closing(db()) as conn:
+        conn.execute("BEGIN IMMEDIATE")
         row = conn.execute(
             """
             SELECT * FROM email_verifications
@@ -128,9 +137,11 @@ def verify_email(email: str, code: str) -> tuple[bool, str]:
             """,
             (email,),
         ).fetchone()
-        if not row or float(row["expires_at"]) < ts:
+        if not row or float(row["expires_at"]) <= ts or row["attempts"] >= 5:
             return False, "驗證碼已過期，請重新發送"
         if not verify_verification_code(email, code, "register", row["code_hash"]):
+            conn.execute("UPDATE email_verifications SET attempts=attempts+1 WHERE id=?", (row["id"],))
+            conn.commit()
             return False, "驗證碼錯誤"
         conn.execute("UPDATE email_verifications SET used_at=? WHERE id=?", (ts, row["id"]))
         conn.execute("UPDATE users SET is_verified=1, updated_at=? WHERE email=?", (ts, email))
@@ -146,7 +157,8 @@ def resend_verification(email: str) -> tuple[bool, str]:
     if user["is_verified"]:
         return False, "此帳號已完成驗證"
     code = generate_verification_code()
-    _store_verification_code(email, "register", code)
+    if not _store_verification_code(email, "register", code):
+        return False, "驗證碼寄送過於頻繁，請稍後再試"
     if not send_verification_email(email, code):
         return False, "驗證信寄送失敗，請稍後再試"
     return True, "驗證碼已重新寄出"
@@ -170,8 +182,12 @@ def login_user(email: str, password: str, ip: str, user_agent: str | None = None
         if not user["is_verified"]:
             record_login_attempt(ip, email, False, "unverified")
             return False, "請先完成 Email 驗證", None
-        access_token = create_jwt(user["id"], token_type="access", expires_seconds=ACCESS_TOKEN_MINUTES * 60)
-        session_token = create_jwt(user["id"], token_type="session", expires_seconds=SESSION_DAYS * 24 * 3600)
+        security = conn.execute("SELECT u.hashed_password,COALESCE(s.credential_version,0) cv FROM users u LEFT JOIN account_security s ON s.user_id=u.id WHERE u.id=?", (user["id"],)).fetchone()
+        if not security or security["hashed_password"] != user["hashed_password"]:
+            return False, "密碼已更新，請重新登入", None
+        claims = {"cv": security["cv"]}
+        access_token = create_jwt(user["id"], token_type="access", expires_seconds=ACCESS_TOKEN_MINUTES * 60, extra=claims)
+        session_token = create_jwt(user["id"], token_type="session", expires_seconds=SESSION_DAYS * 24 * 3600, extra=claims)
         ts = now_ts()
         conn.execute("UPDATE users SET last_login_at=?, updated_at=? WHERE id=?", (ts, ts, user["id"]))
         conn.execute(
@@ -195,7 +211,8 @@ def request_password_reset(email: str) -> tuple[bool, str]:
     if not user or not user["is_active"]:
         return True, "如果此 Email 存在，系統會寄出重設碼"
     code = generate_verification_code()
-    _store_verification_code(email, "reset_password", code)
+    if not _store_verification_code(email, "reset_password", code):
+        return False, "重設碼寄送過於頻繁，請稍後再試"
     if not send_password_reset_email(email, code):
         return False, "重設信寄送失敗，請稍後再試"
     return True, "密碼重設驗證碼已寄出"
@@ -207,6 +224,7 @@ def reset_password(email: str, code: str, new_password: str) -> tuple[bool, str]
         return False, policy_error
     ts = now_ts()
     with closing(db()) as conn:
+        conn.execute("BEGIN IMMEDIATE")
         row = conn.execute(
             """
             SELECT * FROM email_verifications
@@ -215,13 +233,18 @@ def reset_password(email: str, code: str, new_password: str) -> tuple[bool, str]
             """,
             (email,),
         ).fetchone()
-        if not row or float(row["expires_at"]) < ts:
+        if not row or float(row["expires_at"]) <= ts or row["attempts"] >= 5:
             return False, "驗證碼已過期，請重新申請"
         if not verify_verification_code(email, code, "reset_password", row["code_hash"]):
+            conn.execute("UPDATE email_verifications SET attempts=attempts+1 WHERE id=?", (row["id"],))
+            conn.commit()
             return False, "驗證碼錯誤"
         conn.execute("UPDATE users SET hashed_password=?, updated_at=? WHERE email=?", (hash_password(new_password), ts, email))
         conn.execute("UPDATE email_verifications SET used_at=? WHERE id=?", (ts, row["id"]))
-        conn.execute("UPDATE auth_sessions SET revoked_at=? WHERE user_id=(SELECT id FROM users WHERE email=?) AND revoked_at IS NULL", (ts, email))
+        from auth.password_change import revoke_credentials
+        user = conn.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
+        if user:
+            revoke_credentials(conn, user[0], ts)
         conn.commit()
     return True, "密碼已更新，請重新登入"
 

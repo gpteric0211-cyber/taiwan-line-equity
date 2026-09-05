@@ -1,3 +1,25 @@
+# 會員、註冊與密碼：開發驗證（2026-09-06）
+
+- 分支 `feat/member-administration` 基於 `7b718fff906d25ff4662b970870cbb4bc3faf648`；原 main 未重寫。
+- 帳號庫新增交易式 v2–v5 升級：會員資格/角色/稽核、憑證版本、手機驗證及 LINE 身分對照。
+  `equity.membership_admin migrate` 先建立並檢查 SQLite 備份。正式帳號库尚未執行此命令。
+- `/members` 管理員名單、搜尋、分頁、限期/永久招待、角色調整與操作紀錄；版本衝突和重送檢查，
+  寫入交易內重新驗證權限。擁有者須指定現有已驗證帳號，本輪未自動提升任一帳號。
+- `/account` 註冊雙密碼、Email/手機驗證、登入、修改密碼與忘記密碼。舊憑證在密碼變更後撤銷。
+  SMTP 缺設定不假回報成功、不記錄 OTP；Email/簡訊均有重寄與嘗試上限。新會員手機未驗證時阻擋會員 API。
+- Twilio Verify 僅模擬測試；尚無真實送達證據。信用卡、LINE Pay、自動月繳、USDT/USDC 結算未串接/啟用。
+  使用者目前為無統編個人，需依官方資格申請服務。詳見 [會員操作與申請限制](project/MEMBERSHIP.md)。
+- 分級開關 `EQUITY_MEMBERSHIP_ENFORCEMENT` 預設關閉；開啟後 Web AI/圖片與 LINE 分析共用到期狀態，
+  免費持股與刪除功能保留。未更動分析公式、行情更新或歷史保留規則。
+- 相關 42 項測試通過；完整隔離回歸 **1,943 passed，1 個既有套件警告**，
+  報告 `var/test-results/member-account-complete.xml`。新增頁面 JS 語法通過。
+- CUA 沙箱失敗後，以內建 Playwright/Edge 在隔離合成帳號預覽完成 390 px 手機檢查：
+  註冊雙密碼欄位、招待會員操作、修改密碼均通過，零頁面 JS 錯誤。截圖 `var/qa/account-register-mobile.png`、
+  `var/qa/member-admin-mobile.png`；這是測試資料，不是正式會員畫面。
+- 正式服務未重啟，公開註冊及收費尚未上線。保留原有 tracked LINE WAL/SHM 刪除狀態，不納入提交。
+
+---
+
 # 共用網頁、LINE 與行情更新修正（2026-09-06）
 
 - 新分支 `fix/shared-web-line-runtime` 自 `4cab294548a226ae644179f88d2654c3b9c444d5` 建立，未重寫舊提交。GitHub main 已重新讀取核對；舊提交的 Portable regression 四個 Windows／Ubuntu、Python 3.11／3.13 工作全部成功，舊「0 個可存取儲存庫」判斷已失效。
