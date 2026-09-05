@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import closing
 
 from typing import Any
 
@@ -54,7 +55,7 @@ def refresh_official_company_events(
     written = 0
     pruned = 0
     if not dry_run:
-        with db() as conn:
+        with closing(db()) as conn, conn:
             written = upsert_official_events(conn, rows)
             pruned = prune_official_events(conn)
             conn.execute("PRAGMA optimize")

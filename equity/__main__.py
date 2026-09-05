@@ -126,6 +126,9 @@ def doctor(full=False, services=False):
 
 def serve(args):
     port = args.port
+    # Updates belong to the shared scheduler/manual pipeline, never web startup.
+    os.environ["AUTO_REFRESH_MARKET_DATA_ON_START"] = "0"
+    os.environ["AUTO_UPDATE_TW50_ON_START"] = "0"
     # All internal Bot API calls stay on the same local service by default.
     os.environ["BOT_MARKET_DATA_BASE_URL"] = os.getenv("EQUITY_INTERNAL_BASE_URL", f"http://127.0.0.1:{port}")
     import uvicorn
@@ -190,8 +193,11 @@ def backup(args):
     if memory.database_path.is_file():
         sources.append(("line-memory", memory.database_path))
     report = {}
+    from core.database_access import DatabaseLease
+
     for name, path in sources:
-        report[name] = snapshot(path, destination / (name + ".sqlite3"))
+        with DatabaseLease(path):
+            report[name] = snapshot(path, destination / (name + ".sqlite3"))
     (destination / "manifest.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
     )
@@ -239,11 +245,15 @@ def main():
     web = sub.add_parser("serve", help="Serve mobile web, Bot API and LINE webhook together")
     web.add_argument("--host", default=os.getenv("EQUITY_HOST", "127.0.0.1"))
     web.add_argument("--port", type=int, default=int(os.getenv("EQUITY_PORT", "8056")))
-    run = sub.add_parser("run", help="Start web, local model and daily scheduler together")
-    run.add_argument("--host", default=os.getenv("EQUITY_HOST", "127.0.0.1"))
-    run.add_argument("--port", type=int, default=int(os.getenv("EQUITY_PORT", "8056")))
-    run.add_argument("--no-model", action="store_true")
-    run.add_argument("--no-schedule", action="store_true")
+    for command, description in [("run", "Run the shared stack in the foreground"),
+                                 ("start", "Ensure one background stack; safe to repeat")]:
+        run = sub.add_parser(command, help=description)
+        run.add_argument("--host", default=os.getenv("EQUITY_HOST", "127.0.0.1"))
+        run.add_argument("--port", type=int, default=int(os.getenv("EQUITY_PORT", "8056")))
+        run.add_argument("--no-model", action="store_true")
+        run.add_argument("--no-schedule", action="store_true")
+        if command == "start":
+            run.add_argument("--open-browser", action="store_true")
     user = sub.add_parser(
         "create-user", help="Create a verified local account; password is prompted privately"
     )
@@ -286,6 +296,11 @@ def main():
         from equity.supervisor import main as run_services
 
         return run_services(args)
+    if args.command == "start":
+        from equity.lifecycle import ensure_started
+
+        print_json(ensure_started(args))
+        return 0
     if args.command == "create-user":
         create_user(args.email)
         return 0

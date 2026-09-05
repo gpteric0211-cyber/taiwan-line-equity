@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import closing
 
 from typing import Any
 
@@ -32,7 +33,7 @@ def get_canonical_cost_snapshot(
     *,
     as_of_date: str | None = None,
 ) -> dict[str, Any]:
-    with db() as conn:
+    with closing(db()) as conn, conn:
         trade_date = resolve_full_market_analysis_date(conn, as_of_date)
         rows = (
             read_canonical_estimated_cost_rows(
@@ -62,7 +63,7 @@ def refresh_estimated_chip_costs(
     written = 0
     pruned = 0
     target_date: str | None = None
-    with db() as conn:
+    with closing(db()) as conn, conn:
         target_date = resolve_full_market_analysis_date(conn, as_of_date)
         selected_codes = sorted(set(codes or list_history_codes(conn)))
         target_code_count = 0

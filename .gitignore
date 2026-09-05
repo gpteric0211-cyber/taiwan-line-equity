@@ -16,6 +16,10 @@ __pycache__/
 *.db-shm
 *.db-wal
 *.db-journal
+*.sqlite3-shm
+*.sqlite3-wal
+*.sqlite3-journal
+*.access.lock
 *.backup.*.db
 *.csv
 review_src/data/yfinance_cache/

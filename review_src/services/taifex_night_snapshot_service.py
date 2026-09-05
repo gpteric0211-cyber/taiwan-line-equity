@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import closing
 
 from typing import Any
 
@@ -15,7 +16,7 @@ def refresh_taifex_night_snapshot(*, dry_run: bool = False) -> dict[str, Any]:
     written = 0
     pruned = 0
     if not dry_run:
-        with db() as conn:
+        with closing(db()) as conn, conn:
             written = upsert_taifex_night_rows(conn, rows)
             pruned = prune_taifex_night_rows(conn)
             conn.execute("PRAGMA optimize")

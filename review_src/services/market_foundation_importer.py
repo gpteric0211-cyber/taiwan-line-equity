@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import closing
 
 import json
 import re
@@ -268,7 +269,7 @@ def run_market_foundation_update(
         result["finished_at"] = _now_text()
         return result
 
-    with db() as conn:
+    with closing(db()) as conn, conn:
         if dry_run:
             result["schema"] = {"dry_run": True, "schema_write": "skipped"}
         else:

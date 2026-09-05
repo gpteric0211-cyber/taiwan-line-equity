@@ -1,4 +1,5 @@
 from __future__ import annotations
+from contextlib import closing
 
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
@@ -76,7 +77,7 @@ def refresh_official_institution_snapshot(
     written = 0
     pruned = 0
     if not dry_run:
-        with db() as conn:
+        with closing(db()) as conn, conn:
             written = upsert_official_institution_rows(conn, rows)
             pruned = prune_institution_activity(conn)
             conn.execute("PRAGMA optimize")

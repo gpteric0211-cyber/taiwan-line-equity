@@ -8,9 +8,12 @@ set "PYTHONUTF8=1"
 set "PYTHONUNBUFFERED=1"
 
 set "PYTHON_EXE=%REPO_ROOT%python\python.exe"
-if not exist "%PYTHON_EXE%" set "PYTHON_EXE=%REPO_ROOT%review_src\.venv\Scripts\python.exe"
 if not exist "%PYTHON_EXE%" set "PYTHON_EXE=%REPO_ROOT%.venv\Scripts\python.exe"
-if not exist "%PYTHON_EXE%" set "PYTHON_EXE=python"
+if not exist "%PYTHON_EXE%" (
+  echo Run setup.cmd before updating the database.
+  pause
+  exit /b 1
+)
 
 echo ============================================================
 echo Manual one-click daily analysis data update
@@ -25,7 +28,8 @@ echo.
 call "%PYTHON_EXE%" -X utf8 "%REPO_ROOT%scripts\run_isolated_manual_daily_analysis_update.py" %*
 set "UPDATE_EXIT=%ERRORLEVEL%"
 if not "%UPDATE_EXIT%"=="0" goto update_failed
-if /I "%~1"=="--plan-only" goto success
+for %%A in (%*) do if /I "%%~A"=="--plan-only" goto preview_done
+for %%A in (%*) do if /I "%%~A"=="--help" goto preview_done
 
 echo.
 echo Update and same-date live DB verification completed.
@@ -53,3 +57,7 @@ pause
 
 :done
 exit /b %FINAL_EXIT%
+
+:preview_done
+echo Preview completed. No market database was updated.
+exit /b 0

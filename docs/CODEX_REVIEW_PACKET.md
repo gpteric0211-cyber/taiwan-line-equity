@@ -1,4 +1,18 @@
-# Taiwan Line Equity 重建：目前審查狀態
+# 共用網頁、LINE 與行情更新修正（2026-09-06）
+
+- 新分支 `fix/shared-web-line-runtime` 自 `4cab294548a226ae644179f88d2654c3b9c444d5` 建立，未重寫舊提交。GitHub main 已重新讀取核對；舊提交的 Portable regression 四個 Windows／Ubuntu、Python 3.11／3.13 工作全部成功，舊「0 個可存取儲存庫」判斷已失效。
+- 網頁與 LINE 按鈕改用同一背景 supervisor；新增啟動鎖、專案／市場庫識別及 runtime ID 驗證。正式主機已實測冷啟 LINE 後再按網頁／LINE，均沿用同一 PID；命令結束後服務仍持續運行。
+- `core.database_access` 以 Windows LockFileEx／POSIX flock 保護市場連線；API 請求持有共享鎖，候選驗證在鎖外完成、切換時取得排他鎖。切換後清除三種衍生快取並回報 X-Market-Generation。六個既有資料服務補上明確關閉連線，交易語意不變。
+- 一鍵與排程更新使用相同市場路徑解析，修正相對路徑受工作目錄影響的問題。Canonical/shadow 產物保存 POST 也共用寫入鎖；更新中回覆 503／Retry-After，普通讀取仍可使用已發布資料。其他未參與的寫入仍會使候選安全拒絕發布，不能宣稱所有寫入皆可無等待並行。
+- 修改前 1,915 passed；新增 11 個合成並行測試後 **1,926 passed，1 warning**。全部修改的 Python 檔 py_compile 通過。完整報告：`var/test-results/shared-runtime.xml`。一鍵更新以 plan-only 驗證原九階段，沒有重跑正式行情更新。
+- 回歸曾指出啟動旗標遺漏及唯讀缺檔時建立目錄，均已修正並完整重跑。上線查核工具曾因 Secure cookie 在 HTTP 合成客戶端未送出、台灣 50 路由名稱不符而回報 401／404；改用既有登入回傳的 Bearer token 與實際路由，未調弱產品驗證。
+- 市場公式、評分、資料品質門檻與歷史保留規則不變；原有帳號、持股、對話庫未搬移或重建。開始工作前既有兩個 tracked LINE WAL／SHM 刪除狀態保留，未把它們當成本次程式碼變更。
+- 操作說明及限制：[共用服務](project/SHARED_RUNTIME.md)。本次新提交的遠端 CI 與最後服務查核結果於交付時另行回報；後方各節屬歷史紀錄。
+- 上線查核工具已完成：首頁、自選股、台灣 50、2330 明細全部 200；三個網頁資料 API 與正式 Bot daily API 的 generation 相同，行情日期為 2026-09-04。簽章空 webhook 200、錯誤簽章 401；公開頁 200、未登入持股 API 401、遠端初始化關閉，LINE endpoint 啟用且官方空事件成功。報告 `var/qa/shared-runtime-live.json` 不含測試帳密，測試私有庫已自動清除。
+
+---
+
+# Taiwan Line Equity 重建：2026-09-05 歷史審查狀態
 本節描述新專案 2026-09-05 最後查核；後方為原專案歷史紀錄，不能當成目前部署的驗證結果或新的操作指示。
 - 初始遷移 106 個業務表、19,242,910 筆逐筆摘要相同；原保存期限、分析公式與資料品質門檻不變。
 - 四庫備份於另一目錄實際復原，SHA-256、完整性、外鍵及筆數一致；金鑰分開保存。模型與 runtime 共 995 檔約 53.18 GB 的 SHA-256 核對通過。

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from core.market_database_config import resolve_market_db_path
+from core.database_access import connect
 from core.market_timing import (
     analysis_cutoff_for_reference,
     available_at_or_before_cutoff,
@@ -39,9 +40,9 @@ def read_only_db() -> sqlite3.Connection:
     """Open the configured existing database without importing write-capable bootstrap code."""
 
     target = _database_path().resolve()
-    conn = sqlite3.connect(
-        f"{target.as_uri()}?mode=ro",
-        uri=True,
+    conn = connect(
+        target,
+        readonly=True,
         check_same_thread=False,
         timeout=3,
     )

@@ -12,7 +12,7 @@ uv run --frozen python -m equity init
 uv run --frozen python -m equity run
 ```
 
-使用 start.cmd／start.sh 可執行最後一個命令。只啟動 HTTP 可用 `serve`；只跑排程可用 `schedule`。同一專案不要開兩個 supervisor。未啟用 OS 開機服務時，登出或關機會停止工作。
+日常使用 `start.cmd`／`start.sh`，它們執行 `equity start` 並沿用同一背景服務。`啟動台股分析系統.bat` 另外開啟瀏覽器，`啟動LINE股票機器人.cmd` 使用相同入口；關閉按鈕視窗或瀏覽器不會停止 Bot。上方 `equity run` 是前景除錯入口；`serve`／`schedule` 是獨立維護入口，日常不需另外啟動。登出或關機不保證持續運作。詳見 [同機共用服務](SHARED_RUNTIME.md)。
 
 | 環境變數 | 預設／用途 |
 | --- | --- |
