@@ -1,0 +1,129 @@
+{
+  "schema_version": "single-track-v3-stage0-baseline-1",
+  "captured_at": "2026-09-01T15:34:33.2295417+08:00",
+  "timezone": "Asia/Taipei",
+  "base_commit": "6d9e34b2875058394004800a605509f049b45ea2",
+  "working_tree_clean": false,
+  "stage": 0,
+  "stage_status": "complete",
+  "release_phase": "not_started",
+  "release_phase_a_authorized": false,
+  "pre_v3_shadow_counts_as_v3_release_evidence": false,
+  "contract_document": "docs/SINGLE_TRACK_V3_CONTRACTS.md",
+  "contract_versions": {
+    "artifact": "CanonicalAnalysisArtifactV1",
+    "source_policy": "SourceAuthorityPolicyV1",
+    "event_time": "PointInTimeEvidenceV1",
+    "candidate_weight": "CandidateWeightV1",
+    "technical_ensemble": "TechnicalEnsembleV1",
+    "technical_formula": "TechnicalFormulaV1-candidate",
+    "entity_registry": "StockEntityRegistryV1",
+    "conversation_projection": "ConversationProjectionV1",
+    "response_style": "ResponseStyleV1",
+    "image_input": "ImageInputContractV1",
+    "model_packet": "ModelFactPacketV2",
+    "target_label": "TargetLabelContractV1",
+    "statistical_release_gate": "StatisticalReleaseGateV1"
+  },
+  "verified_root_causes": {
+    "6669_partial_support_resistance": {
+      "status": "verified_structural_bug",
+      "cause": "shared referee requires both support and resistance bounds; dashboard readiness then hides the entire stock when either side is absent",
+      "current_live_observation": "2026-08-28 snapshot happened to contain both sides, so a synthetic one-sided regression is required",
+      "affected_components": [
+        "review_src/services/bot_market_data_service.py",
+        "review_src/app.py",
+        "review_src/services/dashboard_readiness_service.py",
+        "tests/test_dashboard_partial_readiness.py"
+      ]
+    },
+    "2454_frozen_outlook": {
+      "status": "verified_structural_bug",
+      "cause": "legacy next_day_outlook_daily has no cutoff, event watermark, event ids, or supersession metadata and is selected only by calc_date; official event selection does not enforce available_at <= analysis_cutoff",
+      "observed_outlook_date": "2026-06-11",
+      "observed_market_date": "2026-08-28",
+      "affected_components": [
+        "review_src/core/market_analytics_schema.py",
+        "review_src/services/market_analytics_service.py",
+        "review_src/repository/market_microstructure_repository.py"
+      ]
+    },
+    "xingyu_confirmation": {
+      "status": "verified_contract_mismatch",
+      "cause": "unique stock-name prefixes are emitted as suggestions and the LINE layer asks for confirmation instead of using a versioned reviewed alias registry",
+      "required_resolution": "星宇 -> 2646 without confirmation",
+      "affected_components": [
+        "review_src/services/line_bot_service.py",
+        "review_src/services/conversation_context_builder.py"
+      ]
+    }
+  },
+  "baseline_verification": {
+    "pytest": {
+      "command": "$env:PYTHONPATH='review_src'; $env:PYTHONDONTWRITEBYTECODE='1'; python -B -m pytest tests -q",
+      "passed": 1450,
+      "failed": 0,
+      "duration_seconds": 37.59
+    },
+    "protected_hashes": {
+      "manifest": "docs/LINE_MODEL_SPEC_V2_BASELINE.json",
+      "matched": 11,
+      "expected": 11,
+      "status": "pass"
+    },
+    "smoke": {
+      "GET /": 200,
+      "GET /api/quotes?mode=watchlist": "200 ready=true count=3",
+      "GET /api/quotes?mode=tw50": "200 ready=true count=50; 6669 present",
+      "GET /api/stock/6669/detail": 200
+    }
+  },
+  "actual_model_runtime": {
+    "runtime": "Ollama 0.33.1",
+    "runtime_model": "taiwan-stock-qwen:latest",
+    "runtime_manifest_sha256": "64285f05652890940d23e0120a4a687b9b8e57deb0c450aa52aef48567f276cf",
+    "model_family": "qwen35",
+    "parameter_count": "26.9B runtime / 27B GGUF metadata",
+    "quantization": "Q4_K_M",
+    "format": "GGUF",
+    "configured_model_file": "models/qwen3.8-27b/Qwen3.8-27B-Q4_K_M.gguf",
+    "context_tokens": 16384,
+    "temperature": 0.2,
+    "top_p": 0.8,
+    "top_k": 20,
+    "seed_configured": false,
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "gpu_memory_mib": 32607,
+    "actual_driver": "610.88",
+    "actual_cuda_umd": "13.3",
+    "expected_driver_in_goal": "595.71",
+    "environment_match": false,
+    "release_effect": "Phase D is blocked until the actual driver is explicitly reviewed or the expected environment is rebaselined"
+  },
+  "known_stage0_gaps": [
+    "CanonicalAnalysisArtifactV1 is not implemented",
+    "point-in-time event selection and supersession are not implemented",
+    "TechnicalEnsembleV1 component persistence is not implemented",
+    "StockEntityRegistryV1 is not implemented",
+    "ConversationProjectionV1 is not implemented",
+    "Web multipart image upload and shared safe decode are not implemented",
+    "TargetLabelContractV1 and StatisticalReleaseGateV1 are not implemented",
+    "100-question blinded response-quality corpus has not been collected or human-rated",
+    "V3 Release Phase A-E evidence has not started"
+  ],
+  "release_bound_source_hashes": {
+    "review_src/core/line_model_contract.py": "59611b86bfe2e4f9632c36dca97989877779f16bf2c7777d9356f0dabaf38982",
+    "review_src/core/line_model_validation.py": "fcaf9de02eb09f55c4754ddd98fff2f37d7f53469f0ec97e052534ae406d2b60",
+    "review_src/core/line_model_output_schema.py": "c6bf58cfc68f51cc817d4abf153af93de95f917e40e234bbd7c15dd76886d731",
+    "review_src/services/line_model_shadow_service.py": "9e1cc1655e6a5207f5531fd623642c20ddeba02af79f5e3a7a9a1d5fb2f604be",
+    "review_src/services/bot_market_data_service.py": "298e785726c5e3e22be808a9d09b95625ba191bc3bbf3f1c437c5f05a426a006",
+    "review_src/services/line_bot_service.py": "657c7141ad579272d97ca8bc09fbde7e480ce1d990f8662bb159cff6b027d018",
+    "review_src/services/chart_image_service.py": "61aee521816ae76a9b318f869bb5cf4a2c1acda6eafca4e8f18b5fa20c687419",
+    "review_src/services/conversation_context_builder.py": "292939c4924eaeb5cadc21fcc51c24ab7e83f3ef5731219d48842da8fbbce007",
+    "review_src/repository/market_microstructure_repository.py": "8956cc93c8a5e33dcea68bbbe73e40be00de63b8cf08f2148f744eb7f94a6567",
+    "review_src/core/market_analytics_schema.py": "eec3b4cea10cff1146309b4a0492ae418e8ef5e113521e2580f552f43be735c3",
+    "review_src/services/market_analytics_service.py": "70a29b4dcc9bf7165d667721a1b6fa84d92cd3dc5fef2c826a58b11ba52f2aa8",
+    "review_src/static/index.html": "4875c69625432547759a6a7382ddcfa684dbde608949e67b05571d396ee1102f",
+    "review_src/static/detail.html": "b80288058094b4a6b112b98f5f3565d1bef9fdb1d6d8e6a9d32b48db66f31dda"
+  }
+}

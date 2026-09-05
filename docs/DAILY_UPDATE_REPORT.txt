@@ -1,0 +1,24 @@
+# Daily Market Foundation Update Report
+
+This file is overwritten by explicit CLI or scheduler runs. Committed copies must remain placeholders without runtime timestamps, row counts, or log paths.
+
+overall_status: SOURCE_DELAYED_RETRYABLE
+exit_code: 5
+completeness_pct: 50.0
+official_sources_completed: 1
+official_sources_total: 2
+twse_status: SOURCE_DELAYED
+twse_rows: 1092
+tpex_status: OK
+tpex_rows: 861
+audit_status: PARTIAL
+prune_status: PARTIAL
+missing_or_delayed_sources: ["TWSE_OFFICIAL"]
+latest_successful_update_time: 
+log_file: logs\market_foundation\daily_update_2026-08-25_150001.log
+warnings: ["Official source dates are not aligned; DB write skipped."]
+writes_db: False
+official_rows: 0
+official_written: 0
+scraped_distribution_rows: 0
+scraped_distribution_written: 0

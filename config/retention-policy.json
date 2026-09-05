@@ -1,0 +1,70 @@
+{
+  "policy_version": "legacy-preserved-1",
+  "change_requires_owner_approval": true,
+  "market_foundation": {
+    "count": 600,
+    "unit": "distinct_market_trading_dates",
+    "authority": "review_src/core/market_foundation_schema.py"
+  },
+  "market_audit": {
+    "count": 730,
+    "unit": "calendar_days",
+    "authority": "review_src/core/market_foundation_schema.py"
+  },
+  "fugle_intraday": {
+    "count": 300,
+    "unit": "distinct_recorded_trading_dates_per_table",
+    "authority": "review_src/core/fugle_intraday_schema.py"
+  },
+  "estimated_chip_cost": {
+    "count": 720,
+    "unit": "distinct_recorded_dates_per_code_and_type",
+    "authority": "review_src/repository/estimated_chip_cost_repository.py"
+  },
+  "intraday_one_minute_setting": {
+    "count": 30,
+    "unit": "calendar_days",
+    "authority": "review_src/core/config.py"
+  },
+  "ordinary_news": {
+    "count": 30,
+    "unit": "calendar_days",
+    "authority": "review_src/repository/news_radar_repository.py"
+  },
+  "corporate_actions": {
+    "count": null,
+    "unit": "permanent",
+    "authority": "review_src/core/corporate_action_schema.py"
+  },
+  "material_news_metadata": {
+    "count": null,
+    "unit": "permanent",
+    "authority": "review_src/core/material_news_schema.py"
+  },
+  "line_raw_messages": {
+    "count": 86400,
+    "unit": "seconds",
+    "authority": ".env.line_bot"
+  },
+  "line_summaries": {
+    "count": 2592000,
+    "unit": "seconds",
+    "authority": ".env.line_bot"
+  },
+  "notes": [
+    "This registry documents defaults and the migrated configuration; it does not replace existing per-table pruning implementations.",
+    "Shared tables can be subject to multiple legacy cleanup jobs; effective retention follows the shortest applicable cutoff.",
+    "No legacy market retention interval was changed.",
+    "New portfolio drafts expire after one hour; confirmed holdings persist until the user deletes them."
+  ],
+  "official_company_disclosures": {
+    "count": 730,
+    "unit": "distinct_disclosure_dates",
+    "authority": "review_src/repository/official_event_repository.py"
+  },
+  "external_market_events": {
+    "count": 730,
+    "unit": "calendar_days",
+    "authority": "review_src/repository/external_event_repository.py"
+  }
+}

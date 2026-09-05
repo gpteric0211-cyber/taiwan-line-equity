@@ -1,0 +1,1108 @@
+{
+  "closure_dates": [
+    "2022-01-01",
+    "2022-01-27",
+    "2022-01-28",
+    "2022-01-31",
+    "2022-02-01",
+    "2022-02-02",
+    "2022-02-03",
+    "2022-02-04",
+    "2022-02-28",
+    "2022-04-04",
+    "2022-04-05",
+    "2022-05-01",
+    "2022-05-02",
+    "2022-06-03",
+    "2022-09-09",
+    "2022-09-10",
+    "2022-10-10",
+    "2023-01-01",
+    "2023-01-02",
+    "2023-01-17",
+    "2023-01-18",
+    "2023-01-19",
+    "2023-01-20",
+    "2023-01-21",
+    "2023-01-22",
+    "2023-01-23",
+    "2023-01-24",
+    "2023-01-25",
+    "2023-01-26",
+    "2023-01-27",
+    "2023-02-27",
+    "2023-02-28",
+    "2023-04-03",
+    "2023-04-04",
+    "2023-04-05",
+    "2023-05-01",
+    "2023-06-22",
+    "2023-06-23",
+    "2023-09-29",
+    "2023-10-09",
+    "2023-10-10",
+    "2024-01-01",
+    "2024-02-06",
+    "2024-02-07",
+    "2024-02-08",
+    "2024-02-09",
+    "2024-02-10",
+    "2024-02-11",
+    "2024-02-12",
+    "2024-02-13",
+    "2024-02-14",
+    "2024-02-28",
+    "2024-04-04",
+    "2024-04-05",
+    "2024-05-01",
+    "2024-06-10",
+    "2024-09-17",
+    "2024-10-02",
+    "2024-10-03",
+    "2024-10-10",
+    "2024-10-31",
+    "2025-01-01",
+    "2025-01-23",
+    "2025-01-24",
+    "2025-01-27",
+    "2025-01-28",
+    "2025-01-29",
+    "2025-01-30",
+    "2025-01-31",
+    "2025-02-28",
+    "2025-04-03",
+    "2025-04-04",
+    "2025-05-01",
+    "2025-05-30",
+    "2025-05-31",
+    "2025-09-28",
+    "2025-09-29",
+    "2025-10-06",
+    "2025-10-10",
+    "2025-10-24",
+    "2025-10-25",
+    "2025-12-25",
+    "2026-01-01",
+    "2026-02-12",
+    "2026-02-13",
+    "2026-02-15",
+    "2026-02-16",
+    "2026-02-17",
+    "2026-02-18",
+    "2026-02-19",
+    "2026-02-20",
+    "2026-02-27",
+    "2026-02-28",
+    "2026-04-03",
+    "2026-04-04",
+    "2026-04-05",
+    "2026-04-06",
+    "2026-05-01",
+    "2026-06-19",
+    "2026-07-10",
+    "2026-09-25",
+    "2026-09-28",
+    "2026-10-09",
+    "2026-10-10",
+    "2026-10-25",
+    "2026-10-26",
+    "2026-12-25"
+  ],
+  "entries": [
+    {
+      "date": "2022-01-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中華民國開國紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-01-03",
+      "description": "國曆新年開始交易。",
+      "is_closed": false,
+      "name": "國曆新年開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-01-26",
+      "description": "農曆春節前最後交易。",
+      "is_closed": false,
+      "name": "農曆春節前最後交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-01-27",
+      "description": "1月27日市場無交易，僅辦理結算交割作業。",
+      "is_closed": true,
+      "name": "農曆春節前最後交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-01-28",
+      "description": "1月28日市場無交易，僅辦理結算交割作業。",
+      "is_closed": true,
+      "name": "農曆春節前最後交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-01-31",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "農曆除夕",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-02-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-02-02",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-02-03",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-02-04",
+      "description": "2月4日（星期五）調整放假，於1月22日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-02-07",
+      "description": "農曆春節後開始交易。",
+      "is_closed": false,
+      "name": "農曆春節後開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-02-28",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "和平紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-04-04",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "兒童節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-04-05",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "民族掃墓節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-05-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "勞動節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-05-02",
+      "description": "5月1日適逢星期日，5月2日（星期一）補假1日。",
+      "is_closed": true,
+      "name": "勞動節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-06-03",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "端午節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-09-09",
+      "description": "9月10日適逢星期六，9月9日（星期五）補假1日。",
+      "is_closed": true,
+      "name": "中秋節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-09-10",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中秋節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2022-10-10",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "國慶日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-01",
+      "description": "依規定放假1日。\r\n1月1日適逢星期日，於1月2日（星期一）補假1日。",
+      "is_closed": true,
+      "name": "中華民國開國紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-02",
+      "description": "依規定放假1日。\r\n1月1日適逢星期日，於1月2日（星期一）補假1日。",
+      "is_closed": true,
+      "name": "中華民國開國紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-03",
+      "description": "國曆新年開始交易。",
+      "is_closed": false,
+      "name": "國曆新年開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-17",
+      "description": "農曆春節前最後交易。\r\n1月18日及1月19日市場無交易，僅辦理結算交割作業。",
+      "is_closed": true,
+      "name": "農曆春節前最後交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-18",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-19",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-20",
+      "description": "1月20日（星期五）調整放假，於1月7日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆除夕前一日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-21",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "農曆除夕",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-22",
+      "description": "依規定於1月22日至1月24日放假3日。\r\n\r\n1月21日及1月22日適逢星期六及星期日，於1月25日（星期三）及1月26日（星期四）補假2日。\r\n1月27日（星期五）調整放假，於2月4日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-23",
+      "description": "依規定於1月22日至1月24日放假3日。\r\n\r\n1月21日及1月22日適逢星期六及星期日，於1月25日（星期三）及1月26日（星期四）補假2日。\r\n1月27日（星期五）調整放假，於2月4日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-24",
+      "description": "依規定於1月22日至1月24日放假3日。\r\n\r\n1月21日及1月22日適逢星期六及星期日，於1月25日（星期三）及1月26日（星期四）補假2日。\r\n1月27日（星期五）調整放假，於2月4日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-25",
+      "description": "1月21日及1月22日適逢星期六及星期日，於1月25日（星期三）及1月26日（星期四）補假2日。\r\n1月27日（星期五）調整放假，於2月4日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-26",
+      "description": "1月21日及1月22日適逢星期六及星期日，於1月25日（星期三）及1月26日（星期四）補假2日。\r\n1月27日（星期五）調整放假，於2月4日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-27",
+      "description": "1月21日及1月22日適逢星期六及星期日，於1月25日（星期三）及1月26日（星期四）補假2日。\r\n1月27日（星期五）調整放假，於2月4日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-01-30",
+      "description": "農曆春節後開始交易。",
+      "is_closed": false,
+      "name": "農曆春節後開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-02-27",
+      "description": "2月27日（星期一）調整放假，於2月18日（星期六）補行上班，但不交易亦不交割。\r\n依規定放假1日。",
+      "is_closed": true,
+      "name": "和平紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-02-28",
+      "description": "2月27日（星期一）調整放假，於2月18日（星期六）補行上班，但不交易亦不交割。\r\n依規定放假1日。",
+      "is_closed": true,
+      "name": "和平紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-04-03",
+      "description": "4月3日（星期一）調整放假，於3月25日（星期六）補行上班，但不交易亦不交割。\r\n依規定放假1日。",
+      "is_closed": true,
+      "name": "兒童節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-04-04",
+      "description": "4月3日（星期一）調整放假，於3月25日（星期六）補行上班，但不交易亦不交割。\r\n依規定放假1日。",
+      "is_closed": true,
+      "name": "兒童節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-04-05",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "民族掃墓節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-05-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "勞動節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-06-22",
+      "description": "依規定放假1日。\r\n6月23日（星期五）調整放假，於6月17日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "端午節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-06-23",
+      "description": "依規定放假1日。\r\n6月23日（星期五）調整放假，於6月17日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "端午節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-09-29",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中秋節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-10-09",
+      "description": "10月9日（星期一）調整放假，於9月23日（星期六）補行上班，但不交易亦不交割。\r\n依規定放假1日。",
+      "is_closed": true,
+      "name": "國慶日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2023-10-10",
+      "description": "10月9日（星期一）調整放假，於9月23日（星期六）補行上班，但不交易亦不交割。\r\n依規定放假1日。",
+      "is_closed": true,
+      "name": "國慶日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-01-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中華民國開國紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-01-02",
+      "description": "國曆新年開始交易。",
+      "is_closed": false,
+      "name": "國曆新年開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-05",
+      "description": "農曆春節前最後交易。",
+      "is_closed": false,
+      "name": "農曆春節前最後交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-06",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-07",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-08",
+      "description": "2月8日（星期四）調整放假，於2月17日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆除夕前一日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-09",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "農曆除夕",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-10",
+      "description": "依規定於2月10日至2月12日放假3日。<br><br>2月10日及2月11日適逢星期六及星期日，於2月13日（星期二）及2月14日（星期三）補假2日。<br>",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-11",
+      "description": "依規定於2月10日至2月12日放假3日。\r\n\r\n2月10日及2月11日適逢星期六及星期日，於2月13日（星期二）及2月14日（星期三）補假2日。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-12",
+      "description": "依規定於2月10日至2月12日放假3日。<br><br>2月10日及2月11日適逢星期六及星期日，於2月13日（星期二）及2月14日（星期三）補假2日。<br>",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-13",
+      "description": "依規定於2月10日至2月12日放假3日。<br><br>2月10日及2月11日適逢星期六及星期日，於2月13日（星期二）及2月14日（星期三）補假2日。<br>",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-14",
+      "description": "依規定於2月10日至2月12日放假3日。<br><br>2月10日及2月11日適逢星期六及星期日，於2月13日（星期二）及2月14日（星期三）補假2日。<br>",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-15",
+      "description": "農曆春節後開始交易。",
+      "is_closed": false,
+      "name": "農曆春節後開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-02-28",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "和平紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-04-04",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "兒童節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-04-05",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "民族掃墓節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-05-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "勞動節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-06-10",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "端午節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-09-17",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中秋節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-10-02",
+      "description": "TWSE typhoon closure bulletin (KRATHON)",
+      "is_closed": true,
+      "name": "臨時停止交易",
+      "source": "TWSE extraordinary closure bulletin",
+      "source_url": "https://www.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d69236c2e301924806d5b4004e.pdf"
+    },
+    {
+      "date": "2024-10-03",
+      "description": "TWSE typhoon closure bulletin (KRATHON)",
+      "is_closed": true,
+      "name": "臨時停止交易",
+      "source": "TWSE extraordinary closure bulletin",
+      "source_url": "https://investoredu.twse.com.tw/FileSystem/FileUpload/2c6e50d4-a390-439c-a2c4-823937dee4b2.pdf"
+    },
+    {
+      "date": "2024-10-10",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "國慶日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2024-10-31",
+      "description": "TWSE typhoon closure bulletin (KONG-REY)",
+      "is_closed": true,
+      "name": "臨時停止交易",
+      "source": "TWSE extraordinary closure bulletin",
+      "source_url": "https://www.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d69236c2e30192dd5179bc0327.pdf"
+    },
+    {
+      "date": "2025-01-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中華民國開國紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-02",
+      "description": "國曆新年開始交易。",
+      "is_closed": false,
+      "name": "國曆新年開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-22",
+      "description": "農曆春節前最後交易。",
+      "is_closed": false,
+      "name": "農曆春節前最後交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-23",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-24",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-27",
+      "description": "1月27日（星期一）調整放假，於2月8日（星期六）補行上班，但不交易亦不交割。",
+      "is_closed": true,
+      "name": "農曆除夕前一日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-28",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "農曆除夕",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-29",
+      "description": "依規定於1月29日至1月31日放假3日。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-30",
+      "description": "依規定於1月29日至1月31日放假3日。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-01-31",
+      "description": "依規定於1月29日至1月31日放假3日。",
+      "is_closed": true,
+      "name": "農曆春節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-02-03",
+      "description": "農曆春節後開始交易。",
+      "is_closed": false,
+      "name": "農曆春節後開始交易日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-02-28",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "和平紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-04-03",
+      "description": "兒童節與民族掃墓節為4月4日（星期五），依規定於前一日4月3日（星期四）放假。",
+      "is_closed": true,
+      "name": "兒童節及民族掃墓節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-04-04",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "兒童節及民族掃墓節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-05-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "勞動節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-05-30",
+      "description": "端午節為5月31日適逢星期六，依規定於前一日5月30日（星期五）補假。",
+      "is_closed": true,
+      "name": "端午節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-05-31",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "端午節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-09-28",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "孔子誕辰紀念日/ 教師節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-09-29",
+      "description": "孔子誕辰紀念日/教師節為9月28日適逢星期日，依規定於後一日9月29日（星期一）補假。",
+      "is_closed": true,
+      "name": "孔子誕辰紀念日/ 教師節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-10-06",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中秋節",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-10-10",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "國慶日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-10-24",
+      "description": "臺灣光復暨金門古寧頭大捷紀念日為10月25日適逢星期六，依規定於前一日10月24日（星期五）補假。",
+      "is_closed": true,
+      "name": "臺灣光復暨金門古寧頭大捷紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-10-25",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "臺灣光復暨金門古寧頭大捷紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2025-12-25",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "行憲紀念日",
+      "source": "TWSE holidaySchedule historical JSON",
+      "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-01-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中華民國開國紀念日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-01-02",
+      "description": "國曆新年開始交易。",
+      "is_closed": false,
+      "name": "國曆新年開始交易日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-11",
+      "description": "農曆春節前最後交易。<br>",
+      "is_closed": false,
+      "name": "農曆春節前最後交易日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-12",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-13",
+      "description": "",
+      "is_closed": true,
+      "name": "市場無交易，僅辦理結算交割作業",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-15",
+      "description": "依規定於2月15日至2月19日放假5日。2月15日適逢星期日，於2月20日（星期五）補假。",
+      "is_closed": true,
+      "name": "農曆除夕及春節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-16",
+      "description": "依規定於2月15日至2月19日放假5日。2月15日適逢星期日，於2月20日（星期五）補假。",
+      "is_closed": true,
+      "name": "農曆除夕及春節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-17",
+      "description": "依規定於2月15日至2月19日放假5日。2月15日適逢星期日，於2月20日（星期五）補假。<br><br><br>",
+      "is_closed": true,
+      "name": "農曆除夕及春節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-18",
+      "description": "依規定於2月15日至2月19日放假5日。2月15日適逢星期日，於2月20日（星期五）補假。",
+      "is_closed": true,
+      "name": "農曆除夕及春節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-19",
+      "description": "依規定於2月15日至2月19日放假5日。2月15日適逢星期日，於2月20日（星期五）補假。",
+      "is_closed": true,
+      "name": "農曆除夕及春節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-20",
+      "description": "依規定於2月15日至2月19日放假5日。2月15日適逢星期日，於2月20日（星期五）補假。",
+      "is_closed": true,
+      "name": "農曆除夕及春節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-23",
+      "description": "農曆春節後開始交易。",
+      "is_closed": false,
+      "name": "農曆春節後開始交易日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-27",
+      "description": "和平紀念日為2月28日適逢星期六，於2月27日（星期五）補假。",
+      "is_closed": true,
+      "name": "和平紀念日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-02-28",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "和平紀念日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-04-03",
+      "description": "兒童節為4月4日適逢星期六，於4月3日（星期五）補假。",
+      "is_closed": true,
+      "name": "兒童節及民族掃墓節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-04-04",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "兒童節及民族掃墓節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-04-05",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "兒童節及民族掃墓節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-04-06",
+      "description": "民族掃墓節為4月5日適逢星期日，於4月6日（星期一）補假。",
+      "is_closed": true,
+      "name": "兒童節及民族掃墓節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-05-01",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "勞動節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-06-19",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "端午節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-07-10",
+      "description": "TWSE typhoon closure bulletin (BAVI)",
+      "is_closed": true,
+      "name": "臨時停止交易",
+      "source": "TWSE extraordinary closure bulletin",
+      "source_url": "https://www.twse.com.tw/staticFiles/news/news/tsecnews/8a8216d69ef76943019f46cbd3fd0112.pdf"
+    },
+    {
+      "date": "2026-09-25",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "中秋節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-09-28",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "孔子誕辰紀念日/ 教師節",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-10-09",
+      "description": "國慶日為10月10日適逢星期六，於10月9日（星期五）補假。",
+      "is_closed": true,
+      "name": "國慶日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-10-10",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "國慶日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-10-25",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "臺灣光復暨金門古寧頭大捷紀念日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-10-26",
+      "description": "臺灣光復暨金門古寧頭大捷紀念日為10月25日適逢星期日，於10月26日（星期一）補假。",
+      "is_closed": true,
+      "name": "臺灣光復暨金門古寧頭大捷紀念日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    },
+    {
+      "date": "2026-12-25",
+      "description": "依規定放假1日。",
+      "is_closed": true,
+      "name": "行憲紀念日",
+      "source": "TWSE holidaySchedule OpenAPI",
+      "source_url": "https://openapi.twse.com.tw/v1/holidaySchedule/holidaySchedule"
+    }
+  ],
+  "fetched_at": "2026-09-03T21:33:29+08:00",
+  "open_reference_dates": [
+    "2022-01-03",
+    "2022-01-26",
+    "2022-02-07",
+    "2023-01-03",
+    "2023-01-30",
+    "2024-01-02",
+    "2024-02-05",
+    "2024-02-15",
+    "2025-01-02",
+    "2025-01-22",
+    "2025-02-03",
+    "2026-01-02",
+    "2026-02-11",
+    "2026-02-23"
+  ],
+  "schema_version": 1,
+  "source": "TWSE official annual schedules",
+  "source_url": "https://www.twse.com.tw/holidaySchedule/holidaySchedule",
+  "years": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ]
+}

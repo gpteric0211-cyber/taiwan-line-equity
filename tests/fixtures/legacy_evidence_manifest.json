@@ -1,0 +1,19 @@
+{
+  "logs/line_model_shadow/c21_delivery_20260831_r2/cases_all_after.json": "346685b1eb2d07c645b14bd1b544c991f2a6344a99d06d030972a3f77d24e65b",
+  "logs/line_model_shadow/c21_delivery_20260831_r2/s1r_cases_after.json": "192107280d63b4c2e10169d3e3037ab25b0ea619c83ef1890036b3cea49e05b4",
+  "logs/line_model_shadow/comparison_binding_fix_20260901/before_valuation/manifest.json": "093b9596d9e952be6ddfdf001cf85d5083c84500e86c6e93020bc78734dd7e42",
+  "logs/line_model_shadow/comparison_binding_v1_2_impact_20260831/supplemental_control_inputs.json": "eb86426fcc581a9afa54dea20a97d9b636e9d7bcb23c462c72972253c4567a84",
+  "logs/line_model_shadow/comparison_binding_v1_2_impact_20260831/tool_control_inputs.json": "1d49fa239ed80c505e8f4427259fd93cc1b4e557d63f5476bb08bbb2fe33e0a1",
+  "logs/line_model_shadow/final_phase_a_current_source_v2_20260830.jsonl": "ab86c7e371a506f9d0f46084da04ac6f36f0c40d1c6bfd53136e5bedfe563125",
+  "logs/line_model_shadow/final_phase_b_current_source_v2_20260830.jsonl": "95aac3d541d16948e01252c1fe524d4eb7c0eae94a53a7a2e1cdce8f99a9379b",
+  "logs/line_model_shadow/generation_contract_pilot_fix_deploy_20260901_1325/pilot3.jsonl": "86cc89da5a26127506a5f66322c345781e9251467a80c1bc9db2ec8322176466",
+  "logs/line_model_shadow/phase2_acceptance_20260831_1641/phase_a.jsonl": "3d257483941107519632a1c7d3b94fdc7ec39ae1b94157a1633401f814d2e036",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D01_current_comparison_missing_rhs.json": "641f2edeaaab247d97db22534188e81131bf5a6a1159d72a430442b0d2bf5d1a",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D02_valuation_facts_control.json": "1e33a6a64c5d62861a2f3c89a25b22c89b3df53e25108fc9f61b8bb49db12861",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D03_pe_labeled_as_pb.json": "8f3ac962be4086deb514f173d29bb418cbaf1af8a5efb4026bd17814be2a6d2d",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D04_true_comparison_control.json": "671fafe899bbe2b2008428d2f0b9b0f348654df5c2027b976295a340fa945285",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D05_false_comparison.json": "3287033d2433257aec3943b7a635dfc5db653a4637d90b1b738443ce64b36782",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D07_literal_facts_control.json": "553313599a2ab76edf37e777390b6f2efbd2f5a84197716c14ed8435b3fae507",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D08_future_scenario_boundary.json": "d250e6ccf57c60cd1970c229fbf073a25d6639a830ef0df0083ecdaf7946a345",
+  "logs/line_model_shadow/phase2_semantic_followup_20260831/D09_ma_label_boundary.json": "7a9db4e1a7ba07b3b5691e3768f574cd1543324ed0349ac52cb7c218981c4d70"
+}

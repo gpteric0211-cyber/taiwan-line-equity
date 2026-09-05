@@ -1,0 +1,16 @@
+fastapi>=0.115,<0.116
+uvicorn[standard]>=0.34,<0.35
+requests>=2.32,<3
+charset-normalizer>=3.4,<4
+truststore>=0.10,<0.11
+python-dotenv>=1.0,<2
+cryptography>=45,<47
+pandas>=2.2,<3.0
+numpy>=1.26,<2.5
+Pillow>=11,<13
+
+yfinance>=0.2.40,<0.3
+
+# Portable Windows timezone data and classification workbook imports
+tzdata>=2025.2
+openpyxl>=3.1,<4

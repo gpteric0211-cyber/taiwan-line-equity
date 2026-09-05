@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101a23"><title>我的持股｜台股研究室</title><link rel="stylesheet" href="/static/portfolio.css"><script src="/static/portfolio.js" defer></script></head>
+<body>
+<header class="top"><a class="brand" href="/portfolio"><span class="brand-icon">台</span>台股研究室</a><span class="private-label">個人研究空間</span></header>
+<main>
+<div class="page-title"><div><p class="eyebrow">PORTFOLIO / 我的投資紀錄</p><h1>看懂持股，掌握變化。</h1><p class="subtle">行情、重大事件與你的持股，一起查看。</p></div><a class="text-link" href="/">開啟完整行情 ↗</a></div>
+<nav class="tabs" aria-label="研究功能"><button data-tab="holdings" class="active">我的持股</button><button data-tab="research">分析對話</button><button data-tab="news">新聞與事件</button><button data-tab="settings">帳號與 LINE</button></nav>
+<div id="status" role="status" aria-live="polite"></div>
+<section id="login" class="panel narrow" hidden><p class="eyebrow">歡迎回來</p><h2>登入你的研究空間</h2><p class="subtle">使用原有網頁帳號。首次使用者可先由專案管理員建立帳號。</p><form id="login-form"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>密碼<input id="password" type="password" autocomplete="current-password" minlength="10" required></label><button class="primary" type="submit">登入</button></form><a href="/">返回行情與帳號設定</a></section>
+<div id="workspace" hidden>
+<section id="consent" class="notice" hidden><h2>開始前，先確認資料保存方式</h2><p>已確認的股票、股數與成本會在本機加密保存，直到你要求刪除。圖片僅供辨識，不保存原圖；辨識草稿一小時後到期。圖片會交由已設定的模型處理，請先遮住姓名與帳號。你可隨時匯出、修改或刪除紀錄。</p><button class="primary" id="accept-consent">同意並開始使用</button></section>
+<section id="tab-holdings" class="tab-page">
+<div class="section-heading"><div><h2>我的持股</h2><p id="holdings-meta" class="subtle">只顯示你已核對確認的紀錄</p></div><button id="show-add" class="primary">＋ 新增持股</button></div>
+<div id="holdings" class="holdings-grid"></div>
+<div id="empty" class="empty" hidden><div class="empty-mark">＋</div><h2>從第一檔持股開始</h2><p>手動輸入股數與成本，或上傳券商持股截圖。<br>辨識結果會先讓你核對，再保存。</p><button class="primary" id="empty-add">新增持股紀錄</button></div>
+<section id="add-panel" class="panel" hidden><div class="section-heading"><h2>新增或更新持股</h2><button id="close-add" class="quiet">關閉</button></div><form id="holding-form" class="entry-grid"><label>股票代號<input name="code" inputmode="numeric" placeholder="2330" pattern="[0-9]{4,6}" required></label><label>數量<input name="quantity" inputmode="decimal" type="number" step="any" min="0.000001" required placeholder="1000"></label><label>單位<select name="unit"><option value="shares">股</option><option value="lots">張（1 張 = 1,000 股）</option></select></label><label>每股平均成本（選填）<input name="average_cost" inputmode="decimal" type="number" step="any" min="0" placeholder="新臺幣"></label><button class="primary" type="submit">核對這筆紀錄</button></form><div class="upload-row"><label class="upload-button">上傳持股截圖<input id="image-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden></label><span class="subtle">PNG、JPEG、WebP，最大 8 MiB</span></div></section>
+<section id="draft-panel" class="panel" hidden><p class="eyebrow">最後一步</p><h2>核對辨識結果</h2><p class="subtle">請特別確認股數、股／張單位與每股成本。同一代號會更新既有紀錄，其他持股保留。</p><div id="draft-rows"></div><div class="actions"><button id="confirm-draft" class="primary">確認正確，保存持股</button><button id="cancel-draft" class="quiet">放棄草稿</button></div></section>
+<p class="footnote">損益依最近可用收盤價與你輸入的成本估算，未計入手續費、稅、股利或尚未調整的除權／分割。請依券商紀錄核對。</p>
+</section>
+<section id="tab-research" class="tab-page" hidden><div class="section-heading"><div><h2>持股分析對話</h2><p class="subtle">結合既有行情、資料品質與市場事件，查看可追溯的分析。</p></div></div><div class="panel"><form id="chat-form"><label>選擇持股<select id="chat-code" required></select></label><div class="suggestions"><button type="button" data-question="請分析近期趨勢、籌碼與主要風險">近期趨勢與風險</button><button type="button" data-question="請整理估值、基本面及資料限制">估值與基本面</button><button type="button" data-question="近期有哪些需要留意的重大事件？">重大事件</button></div><label>想了解什麼？<textarea id="chat-question" rows="3" maxlength="2000" required placeholder="例如：目前有哪些趨勢與風險需要持續觀察？"></textarea></label><button class="primary" type="submit" id="chat-submit">開始分析</button></form><div id="chat-answer" class="answer" aria-live="polite"></div></div></section>
+<section id="tab-news" class="tab-page" hidden><div class="section-heading"><div><h2>新聞與重大事件</h2><p class="subtle">重大事件永久保存，一般新聞依原專案規則滚動保留。</p></div><button id="refresh-news" class="quiet">重新整理</button></div><p class="footnote">新聞線索須查核原始公告；永久保存代表事件值得追蹤，不代表內容已驗證。</p><div id="news-items" class="news-list"></div></section>
+<section id="tab-settings" class="tab-page" hidden><div class="settings-grid"><section class="panel"><p class="eyebrow">LINE</p><h2>手機與 LINE 共用持股</h2><p>產生一次性綁定指令，複製後私訊 LINE 機器人。綁定碼有效 10 分鐘。</p><button class="primary" id="link-line">產生綁定指令</button><div id="link-result" class="answer"></div><p class="subtle">LINE 已有持股時，請先匯出並清除後再綁定。</p></section><section class="panel"><p class="eyebrow">資料管理</p><h2>你的紀錄，由你管理</h2><p>可下載持股紀錄，或刪除持股、草稿、保存同意及 LINE 綁定。</p><div class="actions"><button id="export-data" class="quiet">匯出持股 JSON</button><button id="delete-data" class="danger">刪除全部持股資料</button><button id="logout" class="quiet">登出</button></div></section></div></section>
+</div>
+<footer><span>台股研究室</span><span>資料整理與統計觀察，不保證未來表現。</span></footer>
+</main>
+</body></html>

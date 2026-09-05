@@ -1,0 +1,89 @@
+{
+  "contract_version": "LegalComplianceLaunchContractV1",
+  "packet_version": "LegalReviewPacketV1",
+  "prepared_at": "2026-09-03T11:05:00+08:00",
+  "packet_status": "draft_incomplete",
+  "external_gate_state": "external_gate_not_started",
+  "engineering_release_state": "shadow_only",
+  "operator": null,
+  "audience": {
+    "current": "operator_allowlist_or_offline_testing_only",
+    "intended_private_limited_or_public": null,
+    "public_enablement_allowed_before_written_decision": false
+  },
+  "commercial_terms": {
+    "paid_service": null,
+    "advertising": null,
+    "affiliate_compensation": null,
+    "third_party_compensation": null
+  },
+  "personalization": {
+    "portfolio_allocation_enabled": false,
+    "imperative_buy_sell_commands_allowed": false,
+    "guaranteed_price_or_return_allowed": false,
+    "conversation_context_used": true,
+    "holding_state_used_only_when_explicitly_supplied_by_user": true
+  },
+  "stock_output_surface": {
+    "factual_educational_output": "allowed_under_engineering_fail_closed_contract",
+    "candidate_stock_direction": "shadow_only_not_public",
+    "candidate_price_levels": "not_authorized",
+    "candidate_allocation": "not_authorized",
+    "candidate_probability_distribution": "not_public",
+    "ordinal_magnitude": "engineering_candidate_only_pending_legal_review"
+  },
+  "user_data": {
+    "categories_requiring_review": [
+      "conversation_messages",
+      "active_stock_and_context_projection",
+      "uploaded_image_bytes_in_bounded_processing",
+      "LINE_transport_identifiers_and_delivery_telemetry"
+    ],
+    "privacy_contract": "PrivacyImageSecurityContractV1",
+    "retention_expansion_authorized": false,
+    "raw_image_or_full_ocr_long_term_retention_allowed": false
+  },
+  "retention": {
+    "raw_image_seconds_candidate_limit": 86400,
+    "summary_seconds_candidate_limit": 2592000,
+    "conversation_retention": "existing_TTL_only_exact_current_value_requires_operator_confirmation",
+    "article_full_text_retention": 0,
+    "legal_record_retention_period": null
+  },
+  "disclaimer": {
+    "existing_product_text": "requires_human_legal_review",
+    "disclaimer_is_not_a_substitute_for_legal_compliance": true,
+    "human_or_licensed_professional_review_claim_allowed": false
+  },
+  "engineering_controls": {
+    "rollout": "shadow",
+    "candidate_delivery_authorized": false,
+    "formal_candidate_weight": 0.0,
+    "public_launch_allowed": false,
+    "charging_allowed": false,
+    "personalized_allocation_allowed": false,
+    "fail_closed_public_surface": "timestamped_sourced_factual_or_educational_only"
+  },
+  "questions_for_external_counsel_or_compliance": [
+    "Identify the legal operator and jurisdictions served.",
+    "Confirm whether the intended audience is private, limited, or public.",
+    "Confirm whether any fee, advertising, affiliate, referral, or third-party compensation exists.",
+    "Determine which directional, price-level, ordinal-magnitude, and personalized outputs may be offered and under what conditions.",
+    "Review user-data categories, notices, consent, cross-border processing, access controls, deletion, and incident obligations.",
+    "Approve exact disclaimer wording and placement without treating it as a substitute for substantive compliance.",
+    "Set legally required record-retention and deletion periods for model, evidence, consent, complaint, and delivery records.",
+    "Specify required human supervision, suitability controls, audit records, marketing restrictions, and escalation paths."
+  ],
+  "written_external_decision": null,
+  "legal_approval_claimed": false,
+  "blocking_reason_codes": [
+    "operator_identity_unconfirmed",
+    "audience_scope_unconfirmed",
+    "commercial_terms_unconfirmed",
+    "jurisdictions_unconfirmed",
+    "permitted_output_scope_unconfirmed",
+    "privacy_and_retention_review_pending",
+    "disclaimer_review_pending",
+    "written_external_legal_decision_missing"
+  ]
+}

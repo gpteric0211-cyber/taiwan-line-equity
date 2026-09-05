@@ -1,0 +1,54 @@
+{
+  "schema_version": "line-model-spec-v2-baseline-1",
+  "captured_at": "2026-09-01T12:44:53.3270101+08:00",
+  "timezone": "Asia/Taipei",
+  "base_commit": "6d9e34b2875058394004800a605509f049b45ea2",
+  "baseline_kind": "working_tree_protected_file_hashes",
+  "working_tree_clean": false,
+  "scope": "Protected analysis baseline approved for the four-file generation-contract deployment on 2026-09-01. These hashes guard the accepted working-tree analysis behavior; they do not assert that the dirty working tree equals the base commit or that every formula has been independently approved.",
+  "protected_files": {
+    "review_src/scoring.py": "c24f2dd0a92d188e5cd6e7d02f2ee8a9da9afd60202611d6aad99c171c2e70be",
+    "review_src/analysis/technical.py": "6fa336880a230a9ff3899a820c861a049cec8a779b7aa93f223800d7fe85c034",
+    "review_src/analysis/practical_status.py": "c7866c6f487fb0a09ddc1ef970dec0e8f8d8cd22e4a0f3b929792ae3ebe8d60f",
+    "review_src/analysis/support_resistance.py": "01a4b8b0724904824cb600152db23fa0e38b978717468fff9d215c4bf9cadc80",
+    "review_src/analysis/estimated_chip_cost.py": "795a1d0af75488feca7102801d5ce36610946bf14224b1a058daf1228593813b",
+    "review_src/analysis/next_day_outlook.py": "608d64b42e71d44b30f96c05ed9b02f3b008cf6e5600147a7305745cfe78da48",
+    "review_src/analysis/advisory_decision.py": "23c891b5293b721895c61b0c296bd2546d94710990099da86098c977cd5b6613",
+    "review_src/analysis/recommendation_safety.py": "3adc3aadab3cfdfd56c2feb41e03020a671d525b032a43dd42b0d65d76e182e9",
+    "review_src/analysis/low_zone_entry.py": "ed79da7d38a652eb9a45e6b1c389163cbdd5ec4ef3dcef113b27ac2a077eb8a0",
+    "review_src/services/price_volume_service.py": "ab1e9990efa081e25c3f30407f7babd15f058a9846b6c1b8187ccdfb3148ebed",
+    "review_src/core/data_quality.py": "8db366616c06b2cf9f7764fae2b3b4e57dd9d3eff874a28b98941b0ed79d4c1e"
+  },
+  "post_spec_hash_check": "pass",
+  "runtime_files_changed_by_spec_phase": 0,
+  "last_verified_at": "2026-09-01T12:44:53.3270101+08:00",
+  "baseline_revision": {
+    "approval": "explicit_user_approval_2026-09-01",
+    "candidate_source": "logs/line_model_shadow/generation_contract_deploy_readiness_20260901/candidate_protected_baseline_unapproved.json",
+    "changed_path": "review_src/analysis/support_resistance.py",
+    "previous_sha256": "c8d544d0460ec521ce5391c972be6165c546614515cff8987a845cab579b9a1e",
+    "approved_sha256": "01a4b8b0724904824cb600152db23fa0e38b978717468fff9d215c4bf9cadc80",
+    "deployment_scope": "full launcher restart loads four production differences listed in generation_contract_deploy_readiness_20260901/deployment_delta_vs_0639.json"
+  },
+  "behavioral_contract_fixtures": [
+    "tests/test_line_bot_gateway.py::test_unavailable_fundamentals_allow_bounded_model_limitation_analysis",
+    "tests/test_line_bot_gateway.py::test_unavailable_fundamentals_reject_ungrounded_numeric_claims",
+    "tests/test_line_bot_gateway.py::test_unavailable_fundamentals_skip_model_when_deadline_admission_fails"
+  ],
+  "test_state": {
+    "command": ".\\review_src\\.venv\\Scripts\\python.exe -m pytest -q",
+    "passed": 1441,
+    "failed": 0,
+    "status": "pass",
+    "reason": "Pre-deployment complete regression for the explicitly approved protected baseline and four-file generation-contract deployment. Candidate output remains shadow-only and cannot replace the stable reply."
+  },
+  "shadow_phase": {
+    "status": "implemented_off_by_default",
+    "rollout_flag": "LINE_MODEL_V2_ROLLOUT=off|shadow",
+    "candidate_model_called": false,
+    "candidate_can_replace_reply": false,
+    "canonical_db_writes": 0,
+    "protected_hashes_match": "11/11"
+  },
+  "next_phase_gate": "Collect representative shadow metrics and an environment-bound ReleaseBenchmarkEvidence artifact before proposing candidate generation. Do not enable canary or reply replacement until grounding, context, deadline, concurrency, and protected-hash gates pass."
+}

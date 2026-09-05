@@ -1,0 +1,218 @@
+{
+  "captured_at": "2026-09-02T02:13:45+08:00",
+  "collection_method": "read_only_production_preflight_plus_prior_windows_task_query_source_inventory_installer_what_if_temporary_scheduler_probe_and_isolated_retrieval_calendar_source_plan_official_mops_taiwan_policy_federal_reserve_treasury_ofac_bis_reconciliation_tests",
+  "contract_version": "SingleTrackV3SchedulerAuditV1",
+  "gate_passed": false,
+  "required_slots": [
+    "evening_1800",
+    "evening_2100",
+    "preopen_0600",
+    "preopen_final_scan",
+    "high_signal_sentinel_15m"
+  ],
+  "restart_wake_catch_up": {
+    "offline_probe": {
+      "advanced_tick_materialized": 1,
+      "contract_version": "SingleTrackV3SchedulerOfflineRestartProbeV1",
+      "first_tick_materialized": 101,
+      "first_tick_skipped": 100,
+      "passed": true,
+      "production_database_used": false,
+      "production_scheduler_installed": false,
+      "replay_detected": true,
+      "run_count_after_advanced_tick": 102,
+      "run_count_after_first": 101,
+      "run_count_after_replay": 101,
+      "status": "pass",
+      "synthetic_offline_probe": true,
+      "zero_gpu_model_calls": 0
+    },
+    "retrieval_worker_offline_probe": {
+      "canonical_table_writes": 0,
+      "cases_passed": 11,
+      "close_reopen_terminal_replay": true,
+      "expired_running_lease_resume": true,
+      "live_lease_adapter_calls": 0,
+      "production_database_used": false,
+      "raw_article_bodies_retained": 0,
+      "status": "pass",
+      "test_file": "tests/test_single_track_v3_retrieval_worker.py",
+      "zero_model_calls": 0
+    },
+    "date_only_publisher_metadata_offline_probe": {
+      "cases_passed": 2,
+      "exact_date_persisted_without_fabricated_timestamp": true,
+      "future_or_conflicting_date_rejected": true,
+      "schema_version": "single-track-v3-stage8.11",
+      "status": "pass",
+      "test_files": [
+        "tests/test_single_track_v3_research_repository.py",
+        "tests/test_single_track_v3_us_policy_retrieval.py"
+      ]
+    },
+    "event_source_plan_offline_probe": {
+      "cases_passed": 10,
+      "complete_scan_claimed": false,
+      "implemented_off_by_default_sources": [
+        "mops_listed_disclosures",
+        "mops_otc_disclosures",
+        "taiwan_government_policy_official",
+        "FEDERAL_RESERVE_MONETARY_POLICY_RSS",
+        "US_TREASURY_PRESS_RELEASE_INDEX",
+        "OFAC_RECENT_ACTIONS_INDEX",
+        "BIS_PRESS_RELEASE_INDEX",
+        "controlled_news_metadata"
+      ],
+      "missing_scopes_fail_closed": true,
+      "query_plan_network_calls": 0,
+      "status": "pass",
+      "test_files": [
+        "tests/test_single_track_v3_event_source_plan.py",
+        "tests/test_single_track_v3_event_retrieval_plan.py"
+      ],
+      "zero_model_calls": 0
+    },
+    "official_mops_retrieval_offline_probe": {
+      "canonical_event_evidence_writes": 0,
+      "cases_passed": 5,
+      "exact_disclosure_time_preserved": true,
+      "explanation_or_raw_body_retained": false,
+      "partial_source_success_preserved": true,
+      "production_source_fetches": 0,
+      "status": "pass",
+      "test_file": "tests/test_single_track_v3_official_retrieval.py",
+      "zero_model_calls": 0
+    },
+    "taiwan_policy_retrieval_offline_probe": {
+      "canonical_event_evidence_writes": 0,
+      "cases_passed": 4,
+      "official_feed_whitelist_enforced": true,
+      "partial_source_success_preserved": true,
+      "production_source_fetches": 0,
+      "rss_summary_or_raw_body_retained": false,
+      "status": "pass",
+      "test_file": "tests/test_single_track_v3_taiwan_policy_retrieval.py",
+      "zero_model_calls": 0
+    },
+    "federal_reserve_retrieval_offline_probe": {
+      "canonical_event_evidence_writes": 0,
+      "cases_passed": 4,
+      "exact_publisher_time_preserved": true,
+      "official_host_and_redirect_boundary_enforced": true,
+      "production_source_fetches": 0,
+      "raw_body_retained": false,
+      "status": "pass",
+      "test_file": "tests/test_single_track_v3_federal_reserve_retrieval.py",
+      "unsafe_xml_rejected": true,
+      "zero_model_calls": 0
+    },
+    "us_policy_sanctions_export_retrieval_offline_probe": {
+      "canonical_event_evidence_writes": 0,
+      "cases_passed": 4,
+      "date_only_publisher_time_verified": false,
+      "exact_official_hosts_and_paths_enforced": true,
+      "ofac_retired_rss_used": false,
+      "partial_source_success_preserved": true,
+      "production_source_fetches": 0,
+      "raw_body_retained": false,
+      "source_plan_version": "SingleTrackV3EventSourcePlanV2",
+      "status": "pass",
+      "test_file": "tests/test_single_track_v3_us_policy_retrieval.py",
+      "zero_model_calls": 0
+    },
+    "event_reconciliation_offline_probe": {
+      "canonical_event_evidence_writes": 0,
+      "cases_passed": 3,
+      "entity_bound_dedup": true,
+      "primary_evidence_required": true,
+      "production_database_used": false,
+      "radar_only_promotion": false,
+      "status": "pass",
+      "test_file": "tests/test_single_track_v3_event_reconciler.py",
+      "zero_model_calls": 0
+    },
+    "official_calendar_materializer_offline_probe": {
+      "cases_passed": 5,
+      "exact_session_states_covered": [
+        "scheduled",
+        "cancelled",
+        "delayed",
+        "special_session",
+        "early_close"
+      ],
+      "holiday_only_input_rejected": true,
+      "production_source_fetches": 0,
+      "status": "pass",
+      "test_file": "tests/test_single_track_v3_calendar_materializer.py"
+    },
+    "status": "offline_temporary_verified",
+    "unverified_scope": "actual Windows boot, sleep/wake, task launch, and production-database catch-up",
+    "verified": false
+  },
+  "runtime_preflight": {
+    "calendar_ready": false,
+    "install_ready": false,
+    "production_writes": 0,
+    "reason_codes": [
+      "single_track_v3_schema_not_initialized",
+      "sealed_calendar_revision_unavailable",
+      "durable_retrieval_worker_schema_not_initialized"
+    ],
+    "retrieval_worker_ready": false,
+    "schema_ready": false,
+    "task_registered": false,
+    "taipei_time_zone_ready": true
+  },
+  "source_implementation": {
+    "calendar_revision_contract_present": true,
+    "installer_present": true,
+      "matching_files": [
+        "review_src/core/single_track_v3_schema.py",
+        "review_src/core/single_track_v3_event_source_plan.py",
+        "review_src/core/news_research_policy.py",
+        "review_src/adapter/official_calendar_revision.py",
+        "review_src/adapter/official_company_events.py",
+        "review_src/adapter/official_external_events.py",
+        "review_src/adapter/single_track_v3_federal_reserve_retrieval.py",
+        "review_src/adapter/single_track_v3_official_retrieval.py",
+        "review_src/adapter/single_track_v3_taiwan_policy_retrieval.py",
+        "review_src/adapter/single_track_v3_us_policy_retrieval.py",
+      "review_src/repository/single_track_v3_artifact_production_repository.py",
+      "review_src/repository/single_track_v3_calendar_repository.py",
+        "review_src/repository/single_track_v3_retrieval_repository.py",
+        "review_src/repository/single_track_v3_reconciliation_repository.py",
+      "review_src/repository/single_track_v3_scheduler_repository.py",
+      "review_src/task/single_track_v3_calendar_materializer.py",
+        "review_src/task/single_track_v3_retrieval_worker.py",
+        "review_src/task/single_track_v3_event_retrieval_plan.py",
+        "review_src/task/single_track_v3_event_reconciler.py",
+      "review_src/task/single_track_v3_scheduler.py",
+      "scripts/install_single_track_v3_scheduler.ps1",
+      "scripts/run_single_track_v3_scheduler.py"
+    ],
+    "official_calendar_revision_materialized_in_production": false,
+    "official_exact_calendar_materializer_present": true,
+    "event_source_plan_present": true,
+    "official_mops_retrieval_present": true,
+    "taiwan_policy_retrieval_present": true,
+    "federal_reserve_retrieval_present": true,
+    "us_treasury_policy_retrieval_present": true,
+    "ofac_sanctions_retrieval_present": true,
+    "bis_export_control_retrieval_present": true,
+    "event_reconciler_present": true,
+    "full_required_source_coverage_present": false,
+    "persistence_foundation_present": true,
+    "required_slot_markers_present": true,
+    "retrieval_worker_present": true,
+    "runner_present": true,
+    "zero_gpu_artifact_producer_present": true
+  },
+  "windows_tasks": {
+    "local_time_zone_id": "Taipei Standard Time",
+    "matching_single_track_task_count": 0,
+    "matching_tasks": [],
+    "query_status": "ok",
+    "required_tasks_enabled": false,
+    "required_tasks_installed": false
+  }
+}

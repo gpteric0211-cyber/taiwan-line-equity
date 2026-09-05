@@ -1,0 +1,119 @@
+{
+  "audit_version": "stage7-v11-load-matrix-readiness-audit-v1",
+  "captured_at": "2026-09-03T11:46:58+08:00",
+  "scope": "read_only_runtime_preflight_no_benchmark_posts",
+  "runtime_source_preflight": {
+    "contract_version": "line-model-runtime-source-fingerprint-v1",
+    "http_status": 200,
+    "remote_loaded_at": "2026-09-03T11:40:55+08:00",
+    "remote_source_digest": "0feff6c6247680d61c34e4b638393b23cf316af6a890a2d9296a5e132595daee",
+    "current_source_digest": "0feff6c6247680d61c34e4b638393b23cf316af6a890a2d9296a5e132595daee",
+    "matches": true
+  },
+  "post_audit_invalidation": {
+    "observed_at": "2026-09-03T11:10:31+08:00",
+    "reason": "The Stage 8 release validator was tightened after this read-only preflight.",
+    "remote_loaded_source_digest": "a126206e156ec83d5bb4587a389e8e3ed33112a03e38eb8adf1e21119492ffef",
+    "current_source_digest": "98389b4a55a4c0aa54fc1f6f9c363556a910dc9dc15c46e85f970b48f7f05d29",
+    "runtime_source_matches_current_workspace": false,
+    "valid_for_current_code_freeze": false,
+    "runtime_restart_performed": false,
+    "superseded_by_latest_runtime_recheck": true
+  },
+  "latest_runtime_recheck": {
+    "observed_at": "2026-09-03T11:46:58+08:00",
+    "remote_loaded_at": "2026-09-03T11:40:55+08:00",
+    "remote_loaded_source_digest": "0feff6c6247680d61c34e4b638393b23cf316af6a890a2d9296a5e132595daee",
+    "current_source_digest": "0feff6c6247680d61c34e4b638393b23cf316af6a890a2d9296a5e132595daee",
+    "runtime_source_matches_current_workspace": true,
+    "restart_performed_by_this_stage": false,
+    "phase_d_evidence_status_unchanged": "not_complete"
+  },
+  "service_health": {
+    "market_8010": "ready",
+    "ollama_8020": "ready",
+    "line_8021": "ready"
+  },
+  "actual_environment": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "gpu_vram_bytes": 34190917632,
+    "driver_version": "610.88",
+    "cuda_version": "13.3",
+    "cpu": "AMD Ryzen 9 9950X3D 16-Core Processor",
+    "system_ram_bytes": 66155397120,
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "model_id": "taiwan-stock-qwen:latest",
+    "model_digest": "64285f05652890940d23e0120a4a687b9b8e57deb0c450aa52aef48567f276cf",
+    "parameter_size": "26.9B",
+    "quantization": "Q4_K_M",
+    "runner": "Ollama",
+    "runner_version": "0.33.1",
+    "context_length": 16384,
+    "kv_cache_type": "f16",
+    "gpu_layers": 65,
+    "parallel_slots": 1,
+    "text_model_resident": true,
+    "vision_model_id": "qwen3-vl:8b-instruct",
+    "vision_model_resident": false
+  },
+  "phase_d_current_aggregate": {
+    "trading_day_count": 0,
+    "focused_completed_samples": 0,
+    "comprehensive_completed_samples": 0,
+    "actual_line_reply_sent_samples": 0,
+    "actual_line_reply_shadow_active_samples": 0,
+    "five_trading_days_pass": false,
+    "profile_100_samples_pass": false,
+    "phase_d_sample_gate_pass": false
+  },
+  "matrix_coverage": {
+    "concurrency_1_2_4_8_current_cycle": "not_run",
+    "focused_current_cycle": "not_run",
+    "comprehensive_current_cycle": "not_run",
+    "warm_current_cycle": "readiness_only",
+    "cold_current_cycle": "not_run_maintenance_not_authorized",
+    "cache_hit_miss_current_cycle": "not_run",
+    "vision_contention_current_cycle": "not_run",
+    "compaction_contention_current_cycle": "not_run",
+    "scheduled_assessment_contention_current_cycle": "not_run",
+    "retry_cascade_burst_current_cycle": "source_tests_only",
+    "profile_32k": "candidate_not_selected_context_16384"
+  },
+  "historical_diagnostic_only": {
+    "artifact": "docs/STAGE8_CANONICAL_MATRIX.json",
+    "captured_at": "2026-09-01T20:31:45+08:00",
+    "actual_executions": 30,
+    "focused_concurrency_8_p95_ms": 46679,
+    "focused_limit_ms": 31000,
+    "comprehensive_concurrency_8_p95_ms": 53695,
+    "comprehensive_limit_ms": 45000,
+    "reason_not_current_phase_d_evidence": "The artifact predates the V11 source changes and has no complete current runtime-source binding or five-day/profile-100 aggregate."
+  },
+  "verification": {
+    "stage7_source_tests": "93 passed in 2.70s",
+    "read_only_gets_only": true,
+    "benchmark_posts": 0,
+    "model_unloads": 0,
+    "cache_mutations": 0,
+    "rollout_changed": false,
+    "scheduler_installed_or_enabled": false,
+    "production_database_write_by_stage7_audit": false,
+    "parallel_corporate_action_maintenance_production_write_observed": true,
+    "candidate_reply_sent": false
+  },
+  "decision": {
+    "stage7_complete": false,
+    "phase_d_complete": false,
+    "state": "blocked_by_missing_current_multiday_load_evidence",
+    "reason_codes": [
+      "five_trading_days_not_met",
+      "focused_100_completed_samples_not_met",
+      "comprehensive_100_completed_samples_not_met",
+      "current_concurrency_matrix_not_run",
+      "cold_cache_vision_compaction_assessment_contention_not_run",
+      "actual_line_ingress_to_reply_p95_missing",
+      "historical_concurrency_8_latency_failed",
+      "profile_32k_not_eligible"
+    ]
+  }
+}

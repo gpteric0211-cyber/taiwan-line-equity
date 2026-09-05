@@ -1,0 +1,89 @@
+﻿# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+!review_src/.env.line_bot.example
+
+# Databases and local caches
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.db-journal
+*.backup.*.db
+*.csv
+review_src/data/yfinance_cache/
+review_src/data/line_conversation_memory.key
+
+# Archives / backups
+*.rar
+*.zip
+*.7z
+*.tar.gz
+修改命令方式.txt
+
+# Portable build output
+dist/
+portable/
+Taiwan50Dashboard_Portable_*/
+runtime/
+models/
+
+# Logs
+*.log
+tmp/
+logs/market_foundation/*.log
+logs/market_foundation/backfill_state.json
+logs/market_foundation/backfill_state.bak.json
+logs/market_foundation/backfill_state.json.tmp
+logs/market_foundation/backfill_dryrun_*.txt
+logs/market_foundation/reports/
+logs/market_foundation/*.runtime.txt
+logs/market_foundation/canonical_surface_parity_*.json
+logs/market_foundation/canonical_surface_parity_*.json.bak
+logs/market_foundation/canonical_surface_parity_*.json.tmp
+logs/fugle_connection_json/
+logs/fugle_intraday_update_json/
+# Runtime and generated evidence stay local; tracked files under logs remain tracked.
+logs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+台股上市公司精準分類表_全1974檔_全量分類修正版.xlsx
+data/imports/*.xlsx
+
+# Generated valuation audit details
+docs/audit/valuation/*.csv
+docs/audit/valuation/*.jsonl
+docs/audit/valuation/*.raw.*
+
+# New application state, private migration evidence and archived source
+var/
+legacy_archive/
+*.partial
+*.key
+.pytest_cache/
+.uv-cache/
+!review_src/data/taiwan50_components.csv
+
+!tests/fixtures/legacy_evidence.zip
+
+# Current job outputs are deployment evidence, not source-controlled fixtures.
+docs/ALL_MARKET_DATABASE_UPDATE_REPORT.json
+docs/POST_CLOSE_DAILY_PIPELINE_REPORT.json
+
+docs/ANALYSIS_DATA_COMPLETENESS_AUDIT.json
+docs/DATABASE_HYGIENE_AUDIT.json
+docs/MANUAL_DAILY_ANALYSIS_UPDATE_REPORT.json
+docs/MANUAL_DAILY_ANALYSIS_UPDATE_VERIFICATION.json

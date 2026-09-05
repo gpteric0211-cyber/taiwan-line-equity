@@ -1,0 +1,518 @@
+# Data File Map
+
+This file is generated from SQLite schema introspection plus a fixed project template.
+It documents the latest market-foundation data map only; it is not a runtime migration.
+
+## Daily OHLCV Decision
+
+- Daily OHLCV main table: `history_price`.
+- Future analysis services should read `history_price` directly for daily OHLCV.
+- Do not create a duplicate `daily_price_volume` table while `history_price` owns daily OHLCV semantics.
+- OHLCV source priority: `TWSE_OFFICIAL` / `TPEX_OFFICIAL` > `FINMIND` > `YAHOO` / `PCHOME`.
+- `INSERT OR REPLACE` must not be used for the OHLCV main table because it can erase source metadata.
+
+## Source Rules
+
+- Official sources: TWSE official endpoints, TPEx official endpoints, TDCC official open data, and official valuation feeds.
+- Supplemental scraped sources: Yahoo and PChome. These must be marked `SCRAPED`, `PARTIAL`, or `UNAVAILABLE`, never official.
+- Yahoo time-sales rows with UNKNOWN, blank, or missing side must be accumulated into `neutral_volume_lots`.
+- PChome is currently a skeleton/TODO source and must not perform real HTTP scraping in this phase.
+- Institution net buy/sell rows are not official institution holding balances.
+
+## Retention Rules
+
+- Daily market-foundation rows retain the latest 600 trading days based on the daily OHLCV table date set.
+- `daily_data_source_audit` retains roughly the latest 2 years by `started_at`.
+- Cleanup should use batch deletion and `PRAGMA optimize`; routine updates must not auto-run `VACUUM`.
+- Future improvement: introduce a formal `market_trading_calendar` so retention cutoff does not depend on OHLCV completeness.
+
+## Watchlist Intraday TODO
+
+- Watchlist detail pages should eventually show realtime price/change/volume.
+- Sections needing complete same-day analysis should show `台股盤中，暫停顯示` when intraday data is incomplete.
+- Related US/industry ETF context and TDCC equity concentration are excluded from that pause rule.
+- This phase documents the rule only; it does not change detail-page behavior.
+
+## Tables
+
+### `history_price`
+
+- Purpose: Daily OHLCV / K-line foundation table. This is the official daily OHLCV main table for the project.
+- Columns:
+  - `date` TEXT primary_key
+  - `code` TEXT primary_key
+  - `open` REAL
+  - `high` REAL
+  - `low` REAL
+  - `close` REAL
+  - `volume` REAL
+  - `source` TEXT
+  - `updated_at` REAL
+  - `volume_unit` TEXT
+  - `amount` REAL
+  - `source_quality` TEXT
+  - `fetched_at` REAL
+  - `market` TEXT
+- Indexes:
+  - `idx_history_price_code_date`
+  - `sqlite_autoindex_history_price_1` unique
+
+### `institution_daily`
+
+- Purpose: Daily three-institution net buy/sell rows. It is not official position/holding data.
+- Columns:
+  - `date` TEXT primary_key
+  - `code` TEXT primary_key
+  - `foreign_net` REAL
+  - `trust_net` REAL
+  - `dealer_net` REAL
+  - `source` TEXT
+  - `updated_at` REAL
+  - `source_quality` TEXT
+  - `fetched_at` REAL
+- Indexes:
+  - `idx_institution_daily_code_date`
+  - `sqlite_autoindex_institution_daily_1` unique
+
+### `institution_activity_daily`
+
+- Purpose: Official daily foreign, investment-trust, and dealer gross buy, gross sell, and net shares for listed and OTC stocks.
+- Columns:
+  - `trade_date` TEXT primary_key not_null
+  - `code` TEXT primary_key not_null
+  - `market` TEXT not_null
+  - `foreign_buy` INTEGER
+  - `foreign_sell` INTEGER
+  - `foreign_net` INTEGER
+  - `trust_buy` INTEGER
+  - `trust_sell` INTEGER
+  - `trust_net` INTEGER
+  - `dealer_buy` INTEGER
+  - `dealer_sell` INTEGER
+  - `dealer_net` INTEGER
+  - `source` TEXT not_null
+  - `source_quality` TEXT not_null
+  - `fetched_at` TEXT not_null
+- Indexes:
+  - `idx_institution_activity_code_date`
+  - `sqlite_autoindex_institution_activity_daily_1` unique
+
+### `margin_daily`
+
+- Purpose: Daily margin and short balance/change rows.
+- Columns:
+  - `date` TEXT primary_key
+  - `code` TEXT primary_key
+  - `margin_delta` REAL
+  - `margin_balance` REAL
+  - `short_delta` REAL
+  - `short_balance` REAL
+  - `source` TEXT
+  - `updated_at` REAL
+  - `source_quality` TEXT
+  - `fetched_at` REAL
+  - `margin_unit` TEXT
+  - `short_unit` TEXT
+- Indexes:
+  - `idx_margin_daily_code_date`
+  - `sqlite_autoindex_margin_daily_1` unique
+
+### `lending_daily`
+
+- Purpose: Daily securities-lending short-sale balance/change rows; unit is stored explicitly.
+- Columns:
+  - `date` TEXT primary_key
+  - `code` TEXT primary_key
+  - `lending_delta` REAL
+  - `lending_balance` REAL
+  - `source` TEXT
+  - `updated_at` REAL
+  - `source_quality` TEXT
+  - `fetched_at` REAL
+  - `lending_unit` TEXT
+- Indexes:
+  - `sqlite_autoindex_lending_daily_1` unique
+
+### `credit_balance_daily`
+
+- Purpose: Official listed/OTC daily margin, short, and securities-lending components with dates, units, validation timestamps, and a five-minute usability delay.
+- Columns:
+  - `trade_date` TEXT primary_key not_null
+  - `code` TEXT primary_key not_null
+  - `market` TEXT not_null
+  - `margin_prev_balance_lots` INTEGER
+  - `margin_buy_lots` INTEGER
+  - `margin_sell_lots` INTEGER
+  - `margin_cash_repayment_lots` INTEGER
+  - `margin_balance_lots` INTEGER
+  - `margin_delta_lots` INTEGER
+  - `short_prev_balance_lots` INTEGER
+  - `short_sell_lots` INTEGER
+  - `short_buy_lots` INTEGER
+  - `short_stock_repayment_lots` INTEGER
+  - `short_balance_lots` INTEGER
+  - `short_delta_lots` INTEGER
+  - `sbl_prev_balance_shares` INTEGER
+  - `sbl_sell_shares` INTEGER
+  - `sbl_return_shares` INTEGER
+  - `sbl_adjust_shares` INTEGER
+  - `sbl_balance_shares` INTEGER
+  - `sbl_delta_shares` INTEGER
+  - `margin_source` TEXT
+  - `lending_source` TEXT
+  - `source_quality` TEXT not_null
+  - `first_seen_at` TEXT not_null
+  - `validation_passed_at` TEXT not_null
+  - `usable_from` TEXT not_null
+  - `schema_version` TEXT not_null
+  - `updated_at` TEXT not_null
+  - `margin_utilization_pct` REAL
+  - `margin_utilization_method` TEXT
+  - `margin_limit_lots` INTEGER
+  - `short_utilization_pct` REAL
+  - `short_utilization_method` TEXT
+  - `short_limit_lots` INTEGER
+- Indexes:
+  - `idx_credit_balance_date_market`
+  - `idx_credit_balance_code_date`
+  - `sqlite_autoindex_credit_balance_daily_1` unique
+
+### `tdcc_equity_summary`
+
+- Purpose: TDCC weekly equity concentration summary.
+- Columns:
+  - `date` TEXT primary_key not_null
+  - `code` TEXT primary_key not_null
+  - `total_holders` INTEGER
+  - `total_shares` REAL
+  - `small_10_share_pct` REAL
+  - `big_400_share_pct` REAL
+  - `big_1000_share_pct` REAL
+  - `small_10_change_4w` REAL
+  - `big_400_change_4w` REAL
+  - `big_1000_change_4w` REAL
+  - `holder_count_change_4w` REAL
+  - `holder_count_change_4w_pct` REAL
+  - `equity_score` REAL
+  - `equity_label` TEXT
+  - `equity_reason` TEXT
+  - `source` TEXT
+  - `quality` TEXT
+  - `updated_at` REAL
+  - `source_quality` TEXT
+  - `fetched_at` REAL
+- Indexes:
+  - `idx_tdcc_equity_summary_code_date`
+  - `sqlite_autoindex_tdcc_equity_summary_1` unique
+
+### `daily_chip_momentum`
+
+- Purpose: Daily derived chip momentum summary built from local data.
+- Columns:
+  - `date` TEXT not_null
+  - `stock_id` TEXT not_null
+  - `close` REAL
+  - `previous_close` REAL
+  - `volume` INTEGER
+  - `volume_ratio_5d` REAL
+  - `volume_ratio_20d` REAL
+  - `foreign_net` INTEGER
+  - `trust_net` INTEGER
+  - `dealer_net` INTEGER
+  - `inst_total_net` INTEGER
+  - `margin_balance` INTEGER
+  - `short_balance` INTEGER
+  - `margin_change` INTEGER
+  - `short_change` INTEGER
+  - `intraday_high` REAL
+  - `intraday_low` REAL
+  - `intraday_vwap` REAL
+  - `chip_score` INTEGER
+  - `chip_label` TEXT
+  - `chip_summary` TEXT
+  - `tdcc_trend` TEXT
+  - `tdcc_whale_change_pct` REAL
+  - `tdcc_shareholder_change` INTEGER
+  - `last_updated_phase` TEXT
+  - `data_status` TEXT
+  - `completeness_json` TEXT
+  - `source_flags_json` TEXT
+  - `price_source` TEXT
+  - `inst_source` TEXT
+  - `margin_source` TEXT
+  - `intraday_source` TEXT
+  - `updated_at` TEXT
+- Indexes:
+  - `idx_daily_chip_momentum_stock`
+  - `sqlite_autoindex_daily_chip_momentum_1` unique
+
+### `intraday_quote_snapshot`
+
+- Purpose: Latest intraday quote snapshot for watchlist/detail support.
+- Columns:
+  - `stock_id` TEXT primary_key
+  - `quote_time` TEXT
+  - `price` REAL
+  - `open` REAL
+  - `high` REAL
+  - `low` REAL
+  - `close` REAL
+  - `volume` INTEGER
+  - `turnover` REAL
+  - `vwap` REAL
+  - `change` REAL
+  - `change_pct` REAL
+  - `source` TEXT
+  - `last_updated_phase` TEXT
+  - `data_status` TEXT
+  - `raw_json` TEXT
+  - `updated_at` TEXT
+- Indexes:
+  - `sqlite_autoindex_intraday_quote_snapshot_1` unique
+
+### `intraday_quote_1m`
+
+- Purpose: Intraday one-minute quote rows, retained separately from daily OHLCV.
+- Columns:
+  - `trade_date` TEXT not_null
+  - `minute_ts` TEXT not_null
+  - `stock_id` TEXT not_null
+  - `open` REAL
+  - `high` REAL
+  - `low` REAL
+  - `close` REAL
+  - `volume` INTEGER
+  - `turnover` REAL
+  - `vwap` REAL
+  - `source` TEXT
+  - `data_status` TEXT
+  - `updated_at` TEXT
+- Indexes:
+  - `idx_intraday_quote_1m_stock_date`
+  - `sqlite_autoindex_intraday_quote_1m_1` unique
+
+### `price_volume_profile_daily`
+
+- Purpose: Existing daily price-volume profile/score input table.
+- Columns:
+  - `date` TEXT primary_key
+  - `code` TEXT primary_key
+  - `source_level` INTEGER
+  - `source_name` TEXT
+  - `source_hash` TEXT
+  - `trade_scope` TEXT
+  - `volume_unit` TEXT
+  - `total_volume_shares` REAL
+  - `eod_volume_shares` REAL
+  - `volume_diff_pct` REAL
+  - `price_level_count` INTEGER
+  - `min_price` REAL
+  - `max_price` REAL
+  - `profile_json` TEXT
+  - `quality` TEXT
+  - `quality_reason` TEXT
+  - `fetched_at` REAL
+- Indexes:
+  - `sqlite_autoindex_price_volume_profile_daily_1` unique
+
+### `price_volume_distribution`
+
+- Purpose: Real or supplemental price-volume distribution rows by price level.
+- Columns:
+  - `id` INTEGER primary_key
+  - `stock_id` TEXT not_null
+  - `trade_date` TEXT not_null
+  - `price` REAL not_null
+  - `volume_lots` INTEGER not_null
+  - `volume_shares` INTEGER
+  - `total_volume_lots` INTEGER
+  - `snapshot_time` TEXT
+  - `created_at` REAL
+  - `updated_at` REAL
+  - `buy_volume_lots` INTEGER not_null
+  - `sell_volume_lots` INTEGER not_null
+  - `neutral_volume_lots` INTEGER not_null
+  - `source` TEXT
+  - `source_quality` TEXT
+  - `fetched_at` REAL
+  - `volume_at_bid` INTEGER
+  - `volume_at_ask` INTEGER
+  - `data_quality` TEXT
+- Indexes:
+  - `idx_price_volume_distribution_stock_date_source`
+  - `idx_price_volume_distribution_stock_date`
+  - `idx_price_volume_distribution_stock`
+  - `idx_price_volume_distribution_date`
+  - `sqlite_autoindex_price_volume_distribution_1` unique
+
+### `intraday_time_sales_daily`
+
+- Purpose: Supplemental intraday time-sales detail rows. Non-official unless source says otherwise.
+- Columns:
+  - `code` TEXT primary_key not_null
+  - `trade_date` TEXT primary_key not_null
+  - `trade_time` TEXT primary_key not_null
+  - `price` REAL primary_key not_null
+  - `volume_lots` INTEGER not_null
+  - `side` TEXT not_null
+  - `source` TEXT primary_key not_null
+  - `source_quality` TEXT
+  - `fetched_at` REAL
+  - `raw_json` TEXT
+- Indexes:
+  - `idx_intraday_time_sales_daily_code_date`
+  - `sqlite_autoindex_intraday_time_sales_daily_1` unique
+
+### `daily_data_source_audit`
+
+- Purpose: Run-level source audit table, retained by started_at for roughly two years.
+- Columns:
+  - `id` INTEGER primary_key
+  - `started_at` TEXT not_null
+  - `finished_at` TEXT
+  - `run_date` TEXT
+  - `mode` TEXT
+  - `code` TEXT
+  - `source` TEXT
+  - `status` TEXT not_null
+  - `message` TEXT
+  - `rows_read` INTEGER
+  - `rows_written` INTEGER
+  - `payload_json` TEXT
+- Indexes:
+  - `idx_daily_data_source_audit_started_at`
+  - `idx_daily_data_source_audit_source_status`
+
+### `twse_daily_valuation`
+
+- Purpose: Official TWSE/TPEx valuation table for PE, PB, dividend yield, and valuation date.
+- Columns:
+  - `data_date` TEXT primary_key not_null
+  - `symbol` TEXT primary_key not_null
+  - `name` TEXT
+  - `close_price` REAL
+  - `dividend_yield` REAL
+  - `dividend_year` TEXT
+  - `pe_ratio` REAL
+  - `pb_ratio` REAL
+  - `financial_year_quarter` TEXT
+  - `source` TEXT not_null
+  - `source_status` TEXT
+  - `updated_at` TEXT not_null
+  - `timezone` TEXT not_null
+  - `available_at` TEXT
+- Indexes:
+  - `idx_twse_daily_valuation_symbol`
+  - `idx_twse_daily_valuation_date`
+  - `sqlite_autoindex_twse_daily_valuation_1` unique
+
+### `global_market_daily_snapshot`
+
+- Purpose: Supplemental persisted US index, sector-ETF, SOX, and TSM ADR close context. Official Taiwan industry codes select the related weighting set; it may adjust confidence but never overrides the Taiwan-stock referee.
+- Columns:
+  - `market_date` TEXT primary_key not_null
+  - `ticker` TEXT primary_key not_null
+  - `display_name` TEXT not_null
+  - `close` REAL not_null
+  - `previous_close` REAL
+  - `change_pct` REAL
+  - `currency` TEXT not_null
+  - `source` TEXT not_null
+  - `source_quality` TEXT not_null
+  - `fetched_at` TEXT not_null
+  - `available_at` TEXT
+  - `market_session` TEXT not_null
+  - `effective_tw_trade_date` TEXT
+  - `exchange_timezone` TEXT
+  - `source_market_timestamp` TEXT
+- Indexes:
+  - `idx_global_market_daily_snapshot_date`
+  - `sqlite_autoindex_global_market_daily_snapshot_1` unique
+
+### `taifex_night_daily_snapshot`
+
+- Purpose: Official TAIFEX after-hours futures snapshot. It adjusts next-session confidence and never overrides the stock referee.
+- Columns:
+  - `trade_date` TEXT primary_key not_null
+  - `contract` TEXT primary_key not_null
+  - `contract_month` TEXT not_null
+  - `last` REAL not_null
+  - `change_pct` REAL not_null
+  - `volume` REAL not_null
+  - `trading_session` TEXT not_null
+  - `source` TEXT not_null
+  - `source_quality` TEXT not_null
+  - `fetched_at` TEXT not_null
+- Indexes:
+  - `idx_taifex_night_date`
+  - `sqlite_autoindex_taifex_night_daily_snapshot_1` unique
+
+### `official_company_event`
+
+- Purpose: Official listed/OTC daily material events from TWSE and TPEx open-data endpoints.
+- Columns:
+  - `event_key` TEXT primary_key
+  - `disclosed_date` TEXT not_null
+  - `disclosed_time` TEXT
+  - `fact_date` TEXT
+  - `code` TEXT not_null
+  - `company_name` TEXT
+  - `subject` TEXT not_null
+  - `explanation` TEXT
+  - `article_code` TEXT
+  - `market` TEXT not_null
+  - `attention_level` TEXT not_null
+  - `source` TEXT not_null
+  - `source_quality` TEXT not_null
+  - `fetched_at` TEXT not_null
+  - `available_at` TEXT
+  - `market_session` TEXT not_null
+  - `effective_tw_trade_date` TEXT
+- Indexes:
+  - `idx_official_event_date`
+  - `idx_official_event_code_date`
+  - `sqlite_autoindex_official_company_event_1` unique
+
+### `estimated_chip_cost_daily`
+
+- Purpose: Derived recent incremental institutional cost estimates. These are not actual total institutional holding costs.
+- Columns:
+  - `id` INTEGER primary_key
+  - `code` TEXT not_null
+  - `trade_date` TEXT not_null
+  - `cost_type` TEXT not_null
+  - `cost_label` TEXT
+  - `estimated_cost` REAL
+  - `cost_status` TEXT not_null
+  - `confidence` TEXT not_null
+  - `data_source_confidence` TEXT not_null
+  - `data_source_status` TEXT
+  - `source_license` TEXT
+  - `source_detail` TEXT
+  - `source_tables` TEXT
+  - `calculation_method` TEXT
+  - `formula_version` TEXT
+  - `price_basis` TEXT
+  - `price_basis_value` REAL
+  - `price_to_cost_deviation_pct` REAL
+  - `accumulation_status` TEXT
+  - `position_shares` REAL
+  - `total_cost_amount` REAL
+  - `cumulative_net_shares` REAL
+  - `estimate_start_date` TEXT
+  - `estimate_end_date` TEXT
+  - `sample_days` INTEGER
+  - `display_reason` TEXT
+  - `debug_reason` TEXT
+  - `missing_required_fields` TEXT
+  - `created_at` TEXT
+  - `updated_at` TEXT
+- Indexes:
+  - `idx_est_chip_cost_date_type`
+  - `idx_est_chip_cost_code_type_date`
+  - `sqlite_autoindex_estimated_chip_cost_daily_1` unique
+
+## Generated File Notes
+
+- This file should be regenerated by `review_src/core/data_map_generator.py` after market-foundation schema changes.
+- If generation fails, do not publish a partial data map.

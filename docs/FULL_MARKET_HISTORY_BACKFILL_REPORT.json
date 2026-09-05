@@ -1,0 +1,150 @@
+{
+  "ok": true,
+  "dry_run": false,
+  "target_day_count": 480,
+  "selected_day_count": 3,
+  "completed_day_count": 480,
+  "remaining_day_count": 0,
+  "rows_written": 5430,
+  "no_trade_rows_written": 39,
+  "results": [
+    {
+      "ok": true,
+      "status": "ok",
+      "trade_date": "2024-09-04",
+      "dry_run": false,
+      "rows_written": 1815,
+      "no_trade_rows_written": 8,
+      "source_results": [
+        {
+          "market": "listed",
+          "source": "TWSE MI_INDEX",
+          "ok": true,
+          "fetch_ok": true,
+          "data_date": "2024-09-04",
+          "expected_codes": 1015,
+          "observed_codes": 1013,
+          "coverage_pct": 99.8,
+          "ohlcv_rows": 1013,
+          "no_trade_rows": 0,
+          "missing_code_sample": [
+            "2911",
+            "8101"
+          ],
+          "error": null
+        },
+        {
+          "market": "otc",
+          "source": "TPEX DAILY_QUOTES",
+          "ok": true,
+          "fetch_ok": true,
+          "data_date": "2024-09-04",
+          "expected_codes": 814,
+          "observed_codes": 810,
+          "coverage_pct": 99.51,
+          "ohlcv_rows": 802,
+          "no_trade_rows": 8,
+          "missing_code_sample": [
+            "4804",
+            "4950",
+            "6763",
+            "8932"
+          ],
+          "error": null
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "status": "ok",
+      "trade_date": "2024-09-03",
+      "dry_run": false,
+      "rows_written": 1806,
+      "no_trade_rows_written": 17,
+      "source_results": [
+        {
+          "market": "listed",
+          "source": "TWSE MI_INDEX",
+          "ok": true,
+          "fetch_ok": true,
+          "data_date": "2024-09-03",
+          "expected_codes": 1015,
+          "observed_codes": 1013,
+          "coverage_pct": 99.8,
+          "ohlcv_rows": 1009,
+          "no_trade_rows": 4,
+          "missing_code_sample": [
+            "2911",
+            "8101"
+          ],
+          "error": null
+        },
+        {
+          "market": "otc",
+          "source": "TPEX DAILY_QUOTES",
+          "ok": true,
+          "fetch_ok": true,
+          "data_date": "2024-09-03",
+          "expected_codes": 814,
+          "observed_codes": 810,
+          "coverage_pct": 99.51,
+          "ohlcv_rows": 797,
+          "no_trade_rows": 13,
+          "missing_code_sample": [
+            "4804",
+            "4950",
+            "6763",
+            "8932"
+          ],
+          "error": null
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "status": "ok",
+      "trade_date": "2024-09-02",
+      "dry_run": false,
+      "rows_written": 1809,
+      "no_trade_rows_written": 14,
+      "source_results": [
+        {
+          "market": "listed",
+          "source": "TWSE MI_INDEX",
+          "ok": true,
+          "fetch_ok": true,
+          "data_date": "2024-09-02",
+          "expected_codes": 1015,
+          "observed_codes": 1013,
+          "coverage_pct": 99.8,
+          "ohlcv_rows": 1011,
+          "no_trade_rows": 2,
+          "missing_code_sample": [
+            "2911",
+            "8101"
+          ],
+          "error": null
+        },
+        {
+          "market": "otc",
+          "source": "TPEX DAILY_QUOTES",
+          "ok": true,
+          "fetch_ok": true,
+          "data_date": "2024-09-02",
+          "expected_codes": 814,
+          "observed_codes": 810,
+          "coverage_pct": 99.51,
+          "ohlcv_rows": 798,
+          "no_trade_rows": 12,
+          "missing_code_sample": [
+            "4804",
+            "4950",
+            "6763",
+            "8932"
+          ],
+          "error": null
+        }
+      ]
+    }
+  ]
+}

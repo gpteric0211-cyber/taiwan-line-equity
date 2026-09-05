@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>個股詳細分析</title>
+  <style>
+    :root{--bg:#0c0d0f;--card:#1b1d20;--line:#343941;--muted:#9b9fa8;--txt:#f5f6f7;--green:#31d07b;--red:#ff5f57;--yellow:#ffd166;--orange:#ff8a3d;--shadow:0 18px 45px rgba(0,0,0,.38)}
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;margin:0;background:radial-gradient(circle at 50% -10%,#20242a 0,#111315 38%,#0c0d0f 100%);color:var(--txt);font-size:15px}
+    .wrap{max-width:760px;margin:0 auto;padding:12px 12px 80px}
+    .top{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(16,18,21,.96) 88%,rgba(16,18,21,0));padding:10px 0 12px;backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .topRow{display:flex;justify-content:space-between;gap:10px;align-items:center}
+    h1{font-size:24px;margin:4px 0;font-weight:900}
+    .muted{color:var(--muted)}
+    .small{font-size:12px;color:var(--muted);line-height:1.55}
+    .card{background:linear-gradient(145deg,rgba(30,32,36,.96),rgba(20,22,25,.96));border:1px solid var(--line);border-radius:24px;padding:15px;margin:12px 0;box-shadow:var(--shadow)}
+    .h2{font-size:18px;font-weight:900;margin-bottom:10px}
+    .badge{display:inline-flex;border-radius:999px;padding:4px 9px;font-size:12px;border:1px solid var(--line);background:#242a33;margin:2px 4px 2px 0}
+    .badge-positive{border-color:#14532d;color:var(--green);background:rgba(49,208,123,.09)}
+    .badge-hot,.badge-warning{border-color:#a16207;color:var(--yellow);background:rgba(255,209,102,.1)}
+    .badge-warning_heavy{border-color:#c2410c;color:var(--orange);background:rgba(255,138,61,.1)}
+    .badge-danger{border-color:#991b1b;color:var(--red);background:rgba(255,95,87,.1)}
+    .green{color:var(--green)} .red{color:var(--red)} .yellow{color:var(--yellow)} .orange{color:var(--orange)}
+    a.btn,button{background:linear-gradient(135deg,#ff8a3d,#f25636);color:#fff;border:0;border-radius:16px;padding:10px 12px;text-decoration:none;cursor:pointer;font-weight:800}
+    .btn.secondary{background:#303744}
+    .grid{display:grid;grid-template-columns:1fr;gap:10px}
+    .kv{display:grid;grid-template-columns:128px 1fr;gap:10px;border-bottom:1px solid #2b3037;padding:10px 0}
+    .kv:last-child{border-bottom:0}
+    .tableWrap{overflow:auto;border:1px solid var(--line);border-radius:18px}
+    table{width:100%;border-collapse:collapse;background:#171a1f}
+    th,td{border-bottom:1px solid #2d333b;padding:9px 10px;text-align:left;vertical-align:top;font-size:13px;line-height:1.35}
+    th{background:#232933;font-weight:700}
+    .footer{position:fixed;left:0;right:0;bottom:0;background:rgba(13,15,18,.94);border-top:1px solid var(--line);backdrop-filter:blur(12px);padding:8px 12px;display:flex;gap:8px;z-index:6}
+    .footer button,.footer a{flex:1;text-align:center}
+    .sectionLine{border-top:1px solid #2b3037;margin:10px 0}
+    .advice{font-size:16px;line-height:1.75;color:#f4f7fb}
+    .lineList{line-height:1.75}
+    .priceBig{font-size:24px;font-weight:900}
+    .notice{border:1px solid rgba(255,209,102,.28);background:linear-gradient(145deg,rgba(255,209,102,.09),rgba(255,138,61,.05));border-radius:18px;padding:14px}
+    .notice b{color:var(--yellow)}
+    .volumeBar{display:grid;grid-template-columns:minmax(58px,72px) 1fr minmax(70px,88px);gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #2b3037}
+    .volumeBar:last-child{border-bottom:0}
+    .volumeTrack{height:10px;background:#252b34;border-radius:999px;overflow:hidden}
+    .volumeFill{height:100%;background:linear-gradient(90deg,#ffd166,#ff8a3d);border-radius:999px}
+    .hintList{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .hintChip{border:1px solid #343941;border-radius:999px;padding:6px 10px;background:#222832;color:#f5f6f7;font-size:12px;line-height:1.35}
+    .metricGrid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+    .metricBox{border:1px solid #2b3037;border-radius:14px;padding:10px;background:#171a1f}
+    .metricBox .label{font-size:12px;color:var(--muted);margin-bottom:4px}
+    .metricBox .value{font-size:16px;font-weight:800}
+    .klineViewport{overflow-x:auto;border:1px solid var(--line);border-radius:18px;background:#111418;margin-top:12px}
+    .klineSvg{display:block;width:100%;height:auto;min-height:390px}
+    .klineLegend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;color:var(--muted);font-size:12px}
+    .legendDot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+    details.klineRows{margin-top:12px}
+    details.klineRows summary{cursor:pointer;color:var(--yellow);font-weight:800;padding:6px 0}
+    @media(min-width:720px){.metricGrid{grid-template-columns:repeat(3,1fr)}#klineSummary{grid-template-columns:repeat(4,1fr)}}
+    @media(min-width:900px){.wrap{max-width:1100px}.grid{grid-template-columns:1fr 1fr}.footer{display:none}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="topRow">
+      <div><h1 id="title">個股詳細分析</h1><div id="subtitle" class="small">讀取中...</div></div>
+      <button onclick="goBack()">← 返回</button>
+    </div>
+  </div>
+  <div id="summary" class="card"></div>
+  <div class="card" id="klineCard">
+    <div class="h2">歷史日 K 與成交量</div>
+    <div id="klineMeta" class="small">讀取中...</div>
+    <div id="klineSummary" class="metricGrid"></div>
+    <div id="klineChart" class="klineViewport"><div class="small" style="padding:16px">讀取中...</div></div>
+    <div class="klineLegend"><span><i class="legendDot" style="background:#ff5f57"></i>上漲 K</span><span><i class="legendDot" style="background:#31d07b"></i>下跌 K</span><span><i class="legendDot" style="background:#ffd166"></i>平盤 K</span><span>成交量單位：股</span></div>
+    <div id="klineHistoryTable"></div>
+  </div>
+  <div class="card"><div class="h2">觀察建議</div><div id="actionHint" class="advice">讀取中...</div></div>
+  <div class="card" id="diagnosticsCard"><div class="h2">操作風險提醒</div><div id="diagnostics" class="lineList small">讀取中...</div></div>
+  <div class="grid">
+    <div class="card"><div class="h2">技術數據與解讀</div><div class="tableWrap"><table><thead><tr><th>項目</th><th>數據</th><th>解讀</th><th>風險/評估</th></tr></thead><tbody id="techRows"><tr><td colspan="4">讀取中...</td></tr></tbody></table></div><div id="techHints" class="hintList"></div></div>
+    <div class="card"><div class="h2">估值 / 籌碼 / 支撐賣壓</div><div id="valuation"></div><div class="sectionLine"></div><div id="themeProfile"></div><div class="sectionLine"></div><div id="chipMomentum"></div><div class="sectionLine"></div><div id="costs"></div><div class="sectionLine"></div><div id="sr"></div></div>
+  </div>
+  <div class="card"><div class="h2">股權集中度</div><div class="small">週資料，反映中期持股結構，不代表短線分點買賣流向。</div><div id="equityConcentration" class="lineList" style="margin-top:10px">讀取中...</div></div>
+  <div class="card" id="priceVolumeCard"><div class="h2">分價量表</div><div id="priceVolume" class="lineList">讀取中...</div></div>
+  <div class="card"><div class="h2">下一個台股交易日展望</div><div class="small">海外關聯行情、台灣期貨夜盤、個股籌碼、技術位置合成；只作情緒與風險參考，不覆蓋主狀態。</div><div id="nextDayOutlook" class="lineList" style="margin-top:10px">讀取中...</div></div>
+  <div class="card"><div class="h2">台灣期貨盤後參考</div><div class="small">台灣期貨盤後行情，僅作情緒與風險參考，不可單獨推翻主結論。</div><div id="futuresNight" class="lineList" style="margin-top:10px">讀取中...</div></div>
+  <div class="card"><div class="h2">除權息資訊</div><div id="corpAction" class="lineList">讀取中...</div></div>
+  <div class="card"><div class="h2">相關美股與產業 ETF</div><div class="small">海外關聯行情，僅作情緒參考。</div><div id="usRelationNote" class="lineList small" style="margin-top:8px"></div><div class="tableWrap" style="margin-top:10px"><table><thead><tr><th>標的</th><th>類型</th><th>價格</th><th>漲跌幅</th><th>參考重點</th></tr></thead><tbody id="usRows"><tr><td colspan="5">讀取中...</td></tr></tbody></table></div><div id="usSummary" class="small" style="margin-top:10px"></div></div>
+</div>
+<div class="footer"><button onclick="goBack()">← 返回上一頁</button><a class="btn secondary" href="/">回首頁</a></div>
+<script>
+const $=id=>document.getElementById(id);
+const qs=new URLSearchParams(location.search);
+const pathCode=(location.pathname.match(/\/(?:stock|detail)\/(\d{4})/)||[])[1];
+const code=qs.get('code')||pathCode||'';
+let detailPollAttempts=0;
+let detailPollTimer=null;
+function esc(s){return String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+function val(x){return x===null||x===undefined||x===''||rawDisplayLeak(x)?'--':esc(x)}
+function displayName(x){
+  const s=String(x??'').trim();
+  return (!s||['null','undefined','none','nan'].includes(s.toLowerCase()))?'':s;
+}
+function num(x){const n=Number(String(x??'').replace(/,/g,'')); return Number.isFinite(n)?n:null}
+function cls(n){n=Number(n||0); return n>0?'green':(n<0?'red':'muted')}
+function badgeClass(b){return 'badge badge-'+esc(b||'muted')}
+function goBack(){ if(history.length>1) history.back(); else location.href='/'; }
+function cleanText(s){
+  return String(s??'')
+    .replace(/\b(high|medium|low|fresh|stale|stale_48h|reliable)\b/gi,'')
+    .replace(/used\s*[\d/]+/gi,'')
+    .replace(/net\s*[-\d,]+/gi,'')
+    .replace(/range\s*\d{4}-\d{2}-\d{2}\s*to\s*\d{4}-\d{2}-\d{2}/gi,'')
+    .replace(/來源[:：][^｜]*/g,'')
+    .replace(/日期[:：][^｜]*/g,'')
+    .replace(/\s{2,}/g,' ')
+    .trim();
+}
+function rawDisplayLeak(x){const s=String(x??''); return /numpy\.|object at 0x|Traceback|KeyError|NoneType|Infinity|-Infinity|NaN|'date'/.test(s);}
+function safeText(s){return rawDisplayLeak(s)?'--':esc(cleanText(s));}
+function useful(x){x=cleanText(x); return x && !['資料不足','暫無資料','低可信度','中可信度','高可信度'].includes(x) ? x : '';}
+function mainPeriodLevel(periods, side){
+  const rows=[...(periods||[])].reverse();
+  for(const x of rows){
+    const txt=side==='support'?x.support_display:x.resistance_display;
+    const value=side==='support'?x.support_value:x.resistance_value;
+    const distance=side==='support'?x.support_distance_pct:x.resistance_distance_pct;
+    const strength=side==='support'?x.support_strength:x.resistance_strength;
+    if(txt && !String(txt).includes('資料缺口')){
+      const label=x.label||`${x.period||''}日`;
+      return {text:`${label} ${cleanText(txt)}`, value:value??null, period:x.period??null, distance_pct:distance??null, strength:strength??''};
+    }
+  }
+  return {text:'--', value:null, period:null, distance_pct:null, strength:''};
+}
+function srRows(d,b){
+  return [
+    ['正式支撐區', d.support_display || '--'],
+    ['正式賣壓區', d.resistance_display || '--'],
+  ];
+}
+function levelValue(text){
+  const s=String(text||'');
+  const afterKeyword=s.match(/(?:支撐|賣壓|低點|高點|區)\s*(-?\d+(?:\.\d+)?)/);
+  if(afterKeyword) return afterKeyword[1];
+  const m=s.match(/-?\d+(?:\.\d+)?/);
+  return m?m[0]:'--'
+}
+function buildHumanAdvice(d){
+  if(d.action_hint) return cleanText(d.action_hint);
+  const sig0=d.score_signal||{};
+  if(sig0.action_hint) return cleanText(sig0.action_hint);
+  const b=d.base||{}, sig=d.score_signal||{};
+  const levels=Object.fromEntries(srRows(d,b).map(([k,v])=>[k, cleanText(v)]));
+  const price=b.price||'--';
+  const status=sig.main_status||b.main_status||'';
+  const todaySupport=levelValue(levels['今日支撐']);
+  const todayRes=levelValue(levels['今日賣壓']);
+  const parts=[];
+  parts.push(`現價 ${price}。今日支撐 ${levels['今日支撐']||'--'}，5日支撐 ${levels['5日支撐']||'--'}，主要支撐 ${levels['主要支撐']||'--'}。`);
+  parts.push(`今日賣壓 ${levels['今日賣壓']||'--'}，5日賣壓 ${levels['5日賣壓']||'--'}，主要賣壓 ${levels['主要賣壓']||'--'}。`);
+  if(todaySupport!=='--') parts.push(`若跌破今日支撐 ${todaySupport}，短線支撐轉弱，需降低追價或加碼意願。`);
+  if(todayRes!=='--') parts.push(`若站回今日賣壓 ${todayRes} 以上，代表短線賣壓開始轉弱。`);
+  if(String(status).includes('偏多') && String(status).includes('不追價')){
+    parts.push('目前技術結構仍偏多，但現價接近上方賣壓，風險報酬偏低，因此不適合追價。');
+  }else{
+    parts.push(cleanText(d.action_hint||sig.action_hint||b.action_hint||'請先確認支撐、賣壓與量價是否同步。'));
+  }
+  return parts.filter(Boolean).join(' ');
+}
+function showLoadErrorLegacy(d){
+  const msg=esc((d&&d.error)||'資料暫時無法顯示');
+  $('subtitle').innerHTML=msg;
+  $('summary').innerHTML=`<span class="badge badge-danger">資料未完整</span><div class="small" style="margin-top:8px">${msg}</div>`;
+  $('actionHint').textContent='請先回到列表執行更新，或稍後再重新整理。';
+  $('diagnostics').innerHTML=msg;
+  $('techHints').innerHTML='';
+  $('techRows').innerHTML=`<tr><td colspan="4">${msg}</td></tr>`;
+  ['valuation','themeProfile','chipMomentum','costs','sr','equityConcentration','priceVolume','nextDayOutlook','futuresNight','corpAction','usSummary'].forEach(id=>$(id).innerHTML=`<div class="small">${msg}</div>`);
+  $('klineMeta').innerHTML=msg;
+  $('klineSummary').innerHTML='';
+  $('klineChart').innerHTML=`<div class="small" style="padding:16px">${msg}</div>`;
+  $('klineHistoryTable').innerHTML='';
+  $('usRows').innerHTML=`<tr><td colspan="5">${msg}</td></tr>`;
+}
+function onboardingStatusText(status){
+  const map={
+    not_started:'尚未開始補資料',
+    queued:'資料補齊中',
+    running:'資料補齊中',
+    already_ready:'資料已可使用',
+    manual_required:'需要手動執行資料補齊流程',
+    unsupported:'目前暫不支援此市場資料',
+    failed:'資料補齊失敗'
+  };
+  return map[status]||'資料補齊狀態待確認';
+}
+function stopDetailPolling(){
+  if(detailPollTimer) clearTimeout(detailPollTimer);
+  detailPollTimer=null;
+}
+async function pollDetailReadiness(){
+  stopDetailPolling();
+  detailPollAttempts+=1;
+  const note=$('onboardingStatus');
+  try{
+    const next=await (await fetch(`/api/stock/${encodeURIComponent(code)}/detail`,{cache:'no-store'})).json();
+    const status=next.bootstrap_status||'';
+    const ready=!!(next.ok===true || (next.readiness&&next.readiness.overall_ready===true));
+    if(ready){
+      if(note) note.textContent='資料已補齊，正在重新整理...';
+      detailPollAttempts=0;
+      load();
+      return;
+    }
+    if(['unsupported','manual_required','failed'].includes(status)){
+      if(note) note.textContent=onboardingStatusText(status);
+      return;
+    }
+    if(detailPollAttempts>=24){
+      if(note) note.textContent='資料仍在補齊中，稍後重新整理即可查看完整分析。';
+      return;
+    }
+    if(note) note.textContent=`${onboardingStatusText(status||'queued')}，第 ${detailPollAttempts}/24 次確認`;
+    detailPollTimer=setTimeout(pollDetailReadiness,5000);
+  }catch(e){
+    if(note) note.textContent='資料補齊狀態確認失敗，請稍後再試。';
+  }
+}
+async function addWatchlistAndBootstrap(){
+  const btn=$('onboardingBtn');
+  const note=$('onboardingStatus');
+  if(btn) btn.disabled=true;
+  if(note) note.textContent='已送出，正在加入自選並啟動資料補齊...';
+  try{
+    const res=await fetch('/api/watchlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+    const payload=await res.json();
+    if(!payload.ok){
+      if(note) note.textContent=payload.error||'加入自選或補資料流程啟動失敗，請稍後再試。';
+      if(btn) btn.disabled=false;
+      return;
+    }
+    const status=payload.bootstrap_status||'queued';
+    if(note) note.textContent=payload.message||onboardingStatusText(status);
+    if(['unsupported','manual_required','failed'].includes(status)){
+      if(btn) btn.disabled=false;
+      return;
+    }
+    detailPollAttempts=0;
+    detailPollTimer=setTimeout(pollDetailReadiness,1000);
+  }catch(e){
+    if(note) note.textContent='加入自選或補資料流程啟動失敗，請稍後再試。';
+    if(btn) btn.disabled=false;
+  }
+}
+function showLoadError(d){
+  const readiness=(d&&d.readiness)||{};
+  const failed=Array.isArray(readiness.failed)?readiness.failed:[];
+  const thisCode=String(code||'').padStart(4,'0');
+  const item=failed.find(x=>String(x.code||'').padStart(4,'0')===thisCode)||failed[0]||{};
+  const issues=Array.isArray(item.issues)?item.issues.map(cleanText).filter(Boolean).slice(0,4):[];
+  const issueHtml=issues.length
+    ? `<div class="small" style="margin-top:8px">目前缺少：${issues.map(esc).join('、')}</div>`
+    : '';
+  const onboarding=!!(d&&d.onboarding_available);
+  const status=d&&d.bootstrap_status;
+  const humanMsg=(d&&d.message)||(d&&d.error)||(
+    onboarding
+      ? '這檔股票尚未建立完整分析資料。加入自選股後，系統會開始補齊 K 線、估值、籌碼與支撐賣壓資料。'
+      : '分析資料尚未完整，完成後會顯示完整詳細分析。'
+  );
+  const actionHtml=onboarding
+    ? `<div style="margin-top:12px"><button id="onboardingBtn" type="button">加入自選並補資料</button><div id="onboardingStatus" class="small" style="margin-top:8px">${esc(onboardingStatusText(status||'not_started'))}</div></div>`
+    : `<div id="onboardingStatus" class="small" style="margin-top:8px">${esc(onboardingStatusText(status||'manual_required'))}</div>`;
+  $('subtitle').innerHTML='資料尚未完整';
+  $('summary').innerHTML=`<div class="notice"><b>資料尚未完整</b><div style="margin-top:8px">${esc(humanMsg)}</div>${issueHtml}${actionHtml}</div>`;
+  const btn=$('onboardingBtn');
+  if(btn) btn.onclick=addWatchlistAndBootstrap;
+  $('actionHint').textContent=onboarding?'請點選「加入自選並補資料」，完成後頁面會自動重新檢查。':'資料補齊後會顯示完整技術、估值、籌碼與展望內容。';
+  $('diagnosticsCard').style.display=issues.length?'block':'none';
+  $('diagnostics').innerHTML=issues.length?issues.map(x=>`<div>${esc(x)}</div>`).join(''):'';
+  $('techHints').innerHTML='';
+  $('techRows').innerHTML=`<tr><td colspan="4">${esc(humanMsg)}</td></tr>`;
+  ['valuation','themeProfile','chipMomentum','costs','sr','equityConcentration','priceVolume','nextDayOutlook','futuresNight','corpAction','usSummary'].forEach(id=>$(id).innerHTML=`<div class="small">${esc(humanMsg)}</div>`);
+  $('klineMeta').textContent=humanMsg;
+  $('klineSummary').innerHTML='';
+  $('klineChart').innerHTML=`<div class="small" style="padding:16px">${esc(humanMsg)}</div>`;
+  $('klineHistoryTable').innerHTML='';
+  $('usRows').innerHTML=`<tr><td colspan="5">${esc(humanMsg)}</td></tr>`;
+}
+function renderValuation(v){
+  const fmtNum=(x,suffix='')=>{
+    if(x===null||x===undefined||x===''||x==='--') return '資料不足';
+    const n=Number(x);
+    if(Number.isFinite(n)) return n.toLocaleString('zh-TW',{maximumFractionDigits:2})+suffix;
+    return String(x)+suffix;
+  };
+  const metricText=(value,status,suffix='')=>{
+    if(status==='dividend_yield_suspicious'||status==='source_unit_unknown'||status==='pe_extreme_outlier'||status==='pb_extreme_outlier'||status==='parse_warning') return '資料待確認';
+    if(status==='pe_loss_or_non_meaningful'||status==='pb_net_worth_non_positive') return '資料不足';
+    return fmtNum(value,suffix);
+  };
+  const sourceStatus=String(v['s'+'ource_status']||'ok').toLowerCase();
+  const needsFreshnessNote=['stale','source_delayed','cannot_verify'].includes(sourceStatus);
+  const rows=[
+    ['本益比', metricText(v.pe_ratio,v.pe_status)],
+    ['股價淨值比', metricText(v.pb_ratio,v.pb_status)],
+    ['殖利率', metricText(v.dividend_yield,v.dividend_yield_status,'%')],
+    ['估值資料日期', v.data_date || '資料不足'],
+  ];
+  if(v.financial_year_quarter) rows.push(['財報年季', v.financial_year_quarter]);
+  if(v.dividend_year) rows.push(['股利年度', v.dividend_year]);
+  const freshnessNote=needsFreshnessNote
+    ? `<div class="small" style="margin-top:8px">估值資料待更新：目前顯示 ${esc(v.data_date||'最近一次')} 資料，尚未追上最新官方日線。</div>`
+    : '';
+  $('valuation').innerHTML=`<div class="h2">估值</div>${rows.map(([k,x])=>`<div class="kv"><div>${esc(k)}</div><div>${esc(x)}</div></div>`).join('')}${freshnessNote}`;
+}
+function renderThemeProfile(tp,iv){
+  const fine=(tp&&Array.isArray(tp.fine_categories_display))?tp.fine_categories_display:[];
+  const display=(tp&&Array.isArray(tp.display_tags))?tp.display_tags:[];
+  const tagText=(fine.length?fine:display).map(displayName).filter(Boolean).slice(0,4).join('、')||'資料不足';
+  const officialIndustry=displayName(tp&&tp.official_category_display)||displayName(iv&&iv.industry)||'資料不足';
+  const peerType=(iv&&iv.peer_group_type)||'official_industry';
+  const peerName=displayName(iv&&iv.peer_group_name)||displayName(tp&&tp.peer_basis_display)||officialIndustry;
+  const peerBasis=peerType==='official_industry'?'官方產業大類':peerName;
+  $('themeProfile').innerHTML=`<div class="h2">產業分類</div>
+    <div class="kv"><div>官方產業</div><div>${esc(officialIndustry)}</div></div>
+    <div class="kv"><div>細分分類</div><div>${esc(tagText)}</div></div>
+    <div class="kv"><div>估值比較基準</div><div>${esc(peerBasis)}</div></div>`;
+}
+function renderChipMomentum(cm){
+  if(!cm||!cm.available){
+    $('chipMomentum').innerHTML=`<div class="h2">每日籌碼動能</div><div class="small">${esc((cm&&cm.reason)||'籌碼動能資料尚未建立完整資料。')}</div>`;
+    return;
+  }
+  const rows=[
+    ['籌碼摘要', cm.chip_summary||'--'],
+  ];
+  $('chipMomentum').innerHTML=`<div class="h2">每日籌碼動能</div>${rows.map(([k,v])=>`<div class="kv"><div>${esc(k)}</div><div>${esc(v)}</div></div>`).join('')}`;
+}
+function renderCosts(d){
+  const c=d.costs||{};
+  const defs=[['外資近期增量部位均價推估',c.foreign_cost_estimate],['投信近期增量部位均價推估',c.trust_buy_cost_estimate]];
+  const costRows=defs.filter(([,x])=>x&&x.available&&x.value!==null&&x.value!==undefined&&x.value!=='').map(([label,x])=>`<div class="kv"><div>${esc(label)}</div><div>${esc(x.value)}</div></div>`);
+  const costNote='<div class="small" style="margin-top:8px">此為官方盤後資料的近期增量部位均價推估，非完整真實持倉成本，且不納入主判斷。</div>';
+  const chipPeriods=d.chip_periods||[];
+  const chipHtml=chipPeriods.length?`<div class="sectionLine"></div><div class="h2">多週期籌碼</div><div class="tableWrap"><table><thead><tr><th>期間</th><th>外資</th><th>投信</th><th>自營</th><th>融資變化</th></tr></thead><tbody>${chipPeriods.map(x=>`<tr><td>${esc(x.label)}</td><td>${esc(x.foreign_net??'--')}</td><td>${esc(x.trust_net??'--')}</td><td>${esc(x.dealer_net??'--')}</td><td>${esc(x.margin_delta??'--')}</td></tr>`).join('')}</tbody></table></div>`:'';
+  $('costs').innerHTML=`<div class="h2">籌碼成本</div>${costRows.join('')||'<div class="small">籌碼成本暫無可顯示數值。</div>'}${costRows.length?costNote:''}${chipHtml}`;
+}
+function renderSupportResistance(d){
+  const b=d.base||{};
+  const srLevelRows=srRows(d,b).map(([k,v])=>`<div class="kv"><div>${esc(k)}</div><div>${safeText(v)}</div></div>`).join('');
+  const quality='<div class="small" style="margin-top:8px">此處與 LINE Bot 使用同一份盤後裁判快照；不另算第二套支撐或賣壓。</div>';
+  $('sr').innerHTML=`<div class="h2">支撐 / 賣壓</div>${srLevelRows}${quality}`;
+}
+function renderPriceVolume(pv){
+  const card=$('priceVolumeCard');
+  if(!(pv&&(pv.display_available??pv.is_true_price_volume)&&Array.isArray(pv.profile_rows)&&pv.profile_rows.length)){
+    card.style.display='block';
+    const reason=(pv&&pv.quality_reason)||(pv&&pv.reason)||'最近完成交易日沒有通過官方成交量核對的分價量資料。';
+    $('priceVolume').innerHTML=`<div class="notice"><b>分價量資料暫不可用</b><br><span class="small">${esc(reason)}</span></div>`;
+    return;
+  }
+  card.style.display='block';
+  const scoped=pv.quality==='scoped';
+  const scopeLabel=pv.trade_scope==='regular_intraday'?'一般交易時段':pv.trade_scope==='captured_session'?'已收集交易時段':'限定交易範圍';
+  const coverage=typeof pv.official_coverage_pct==='number'&&Number.isFinite(pv.official_coverage_pct)?`占官方總成交量 ${pv.official_coverage_pct.toFixed(2)}%`:'覆蓋率未提供';
+  const notice=scoped?`<div class="notice"><b>限定交易範圍分價量（${esc(scopeLabel)}）</b><br><span class="small">${esc(coverage)}；不是全日完整分布，不參與評分。只顯示已取得的價量，未補造差額。</span></div>`:'';
+  const header=`<div class="small">資料日期 ${esc(pv.trade_date||'--')}${pv.snapshot_time?`，時間 ${esc(pv.snapshot_time)}`:''}${pv.total_volume_lots?`，${scoped?'範圍內合計':'總量'} ${esc(pv.total_volume_lots)} 張`:''}${pv.weighted_price?`，分價均價 ${esc(pv.weighted_price)}`:''}</div>`;
+  const bars=pv.profile_rows.map(x=>`<div class="volumeBar"><div>${esc(x.price)}</div><div class="volumeTrack"><div class="volumeFill" style="width:${Number(x.bar_pct||0)}%"></div></div><div>${esc(x.volume_lots)} 張</div></div>`).join('');
+  const dense=(pv.dense_price_levels||[]).length?`<div class="small" style="margin-top:10px">成交密集價：${pv.dense_price_levels.map(x=>`${esc(x.price)}（${esc(x.volume_lots)}張）`).join('、')}</div>`:'';
+  const truncated=pv.price_levels_truncated?`<div class="small">共 ${esc(pv.price_level_count)} 個價位，目前顯示 ${pv.profile_rows.length} 個；合計量包含未展開價位。</div>`:'';
+  $('priceVolume').innerHTML=notice+header+`<div style="margin-top:10px">${bars}</div>`+truncated+dense;
+}
+function fmtKlinePrice(x){
+  const n=num(x);
+  return n===null?'--':n.toLocaleString('zh-TW',{maximumFractionDigits:4});
+}
+function fmtKlineShares(x){
+  const n=num(x);
+  return n===null?'--':Math.round(n).toLocaleString('zh-TW');
+}
+function renderKline(kline){
+  const rows=(Array.isArray(kline.items)?kline.items:[]).map(x=>({
+    trade_date:String(x.trade_date||''),
+    open:num(x.open),high:num(x.high),low:num(x.low),close:num(x.close),volume_shares:num(x.volume_shares)
+  })).filter(x=>x.trade_date&&[x.open,x.high,x.low,x.close,x.volume_shares].every(Number.isFinite));
+  if(!kline.available||!rows.length){
+    const message=String(kline.message||'沒有通過交易所來源與 OHLCV 品質檢查的歷史日線。');
+    $('klineMeta').textContent=message;
+    $('klineSummary').innerHTML='';
+    $('klineChart').innerHTML=`<div class="notice" style="margin:12px"><b>歷史日 K 暫不可用</b><br><span class="small">${esc(message)}</span></div>`;
+    $('klineHistoryTable').innerHTML='';
+    return;
+  }
+
+  const summary=kline.summary||{};
+  $('klineMeta').textContent=`${kline.first_trade_date} 至 ${kline.latest_trade_date}｜${rows.length} 個交易日｜原始值，未推估`;
+  const boxes=[
+    ['最近收盤',fmtKlinePrice(summary.latest_close),kline.latest_trade_date||'--'],
+    ['期間最高',fmtKlinePrice(summary.period_high),'當日最高價的期間最大值'],
+    ['期間最低',fmtKlinePrice(summary.period_low),'當日最低價的期間最小值'],
+    ['日均成交量',`${fmtKlineShares(summary.average_volume_shares)} 股`,'官方成交股數平均'],
+  ];
+  $('klineSummary').innerHTML=boxes.map(([label,value,note])=>`<div class="metricBox"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div><div class="small">${esc(note)}</div></div>`).join('');
+
+  const width=Math.max(720,rows.length*9+90),height=420;
+  const left=58,right=18,priceTop=22,priceBottom=282,volumeTop=314,volumeBottom=392;
+  const rawMin=Math.min(...rows.map(x=>x.low)),rawMax=Math.max(...rows.map(x=>x.high));
+  const spread=Math.max(rawMax-rawMin,Math.abs(rawMax)*0.01,1);
+  const priceMin=rawMin-spread*0.05,priceMax=rawMax+spread*0.05;
+  const volumeMax=Math.max(...rows.map(x=>x.volume_shares),1);
+  const plotWidth=width-left-right,step=plotWidth/rows.length,candleWidth=Math.max(2,Math.min(7,step*.62));
+  const xAt=i=>left+step*(i+.5);
+  const yPrice=p=>priceTop+(priceMax-p)/(priceMax-priceMin)*(priceBottom-priceTop);
+  const yVolume=v=>volumeBottom-v/volumeMax*(volumeBottom-volumeTop);
+  const svg=[`<svg class="klineSvg" viewBox="0 0 ${width} ${height}" style="min-width:${width}px" role="img" aria-label="${esc(code)} 歷史日 K 與成交量圖">`];
+  svg.push('<rect width="100%" height="100%" fill="#111418"/>');
+  for(let i=0;i<=4;i++){
+    const y=priceTop+(priceBottom-priceTop)*i/4;
+    const price=priceMax-(priceMax-priceMin)*i/4;
+    svg.push(`<line x1="${left}" y1="${y}" x2="${width-right}" y2="${y}" stroke="#2b3037" stroke-width="1"/>`);
+    svg.push(`<text x="${left-7}" y="${y+4}" fill="#9b9fa8" font-size="11" text-anchor="end">${esc(fmtKlinePrice(price))}</text>`);
+  }
+  svg.push(`<line x1="${left}" y1="${volumeTop-12}" x2="${width-right}" y2="${volumeTop-12}" stroke="#343941" stroke-width="1"/>`);
+  rows.forEach((x,i)=>{
+    const cx=xAt(i),yo=yPrice(x.open),yc=yPrice(x.close),yh=yPrice(x.high),yl=yPrice(x.low);
+    const color=x.close>x.open?'#ff5f57':(x.close<x.open?'#31d07b':'#ffd166');
+    const bodyY=Math.min(yo,yc),bodyHeight=Math.max(Math.abs(yc-yo),1.4),volumeY=yVolume(x.volume_shares);
+    const title=`${x.trade_date}　開 ${fmtKlinePrice(x.open)}　高 ${fmtKlinePrice(x.high)}　低 ${fmtKlinePrice(x.low)}　收 ${fmtKlinePrice(x.close)}　量 ${fmtKlineShares(x.volume_shares)} 股`;
+    svg.push(`<g><title>${esc(title)}</title><line x1="${cx}" y1="${yh}" x2="${cx}" y2="${yl}" stroke="${color}" stroke-width="1.2"/><rect x="${cx-candleWidth/2}" y="${bodyY}" width="${candleWidth}" height="${bodyHeight}" fill="${color}"/><rect x="${cx-candleWidth/2}" y="${volumeY}" width="${candleWidth}" height="${Math.max(volumeBottom-volumeY,1)}" fill="${color}" opacity=".62"/></g>`);
+  });
+  const labelIndexes=[0,Math.floor((rows.length-1)/2),rows.length-1];
+  [...new Set(labelIndexes)].forEach(i=>svg.push(`<text x="${xAt(i)}" y="${height-8}" fill="#9b9fa8" font-size="11" text-anchor="middle">${esc(rows[i].trade_date)}</text>`));
+  svg.push(`<text x="${left-7}" y="${volumeTop+2}" fill="#9b9fa8" font-size="11" text-anchor="end">量</text></svg>`);
+  $('klineChart').innerHTML=svg.join('');
+
+  const tableRows=[...rows].reverse().map(x=>`<tr><td>${esc(x.trade_date)}</td><td>${esc(fmtKlinePrice(x.open))}</td><td>${esc(fmtKlinePrice(x.high))}</td><td>${esc(fmtKlinePrice(x.low))}</td><td>${esc(fmtKlinePrice(x.close))}</td><td>${esc(fmtKlineShares(x.volume_shares))}</td></tr>`).join('');
+  $('klineHistoryTable').innerHTML=`<details class="klineRows"><summary>查看 ${rows.length} 個交易日的原始日線數值</summary><div class="tableWrap"><table><thead><tr><th>日期</th><th>開盤</th><th>最高</th><th>最低</th><th>收盤</th><th>成交量（股）</th></tr></thead><tbody>${tableRows}</tbody></table></div></details>`;
+}
+function renderTechHints(hints){
+  const rows=Array.isArray(hints)?hints.map(cleanText).filter(Boolean):[];
+  $('techHints').innerHTML=rows.length
+    ? rows.map(x=>`<span class="hintChip">${esc(x)}</span>`).join('')
+    : '<span class="hintChip muted">暫無額外技術提示</span>';
+}
+function fmtPct(x){
+  if(x===null||x===undefined||x==='') return '--';
+  const n=Number(x);
+  return Number.isFinite(n)?`${n.toFixed(2)}%`:esc(x);
+}
+function fmtChange(x,suffix=''){
+  if(x===null||x===undefined||x==='') return '--';
+  const n=Number(x);
+  return Number.isFinite(n)?`${n>=0?'+':''}${n.toFixed(2)}${suffix}`:esc(x);
+}
+function renderEquityConcentration(ec){
+  if(!ec||!ec.available){
+    $('equityConcentration').innerHTML=`<div class="notice"><b>${esc((ec&&ec.label)||'股權集中度資料不足')}</b><br><span class="small">${esc((ec&&ec.reason)||'尚未匯入股權分散週資料。')}</span></div>`;
+    return;
+  }
+  const m=ec.metrics||{}, c=ec.changes||{};
+  const quality=ec.quality==='stale'?'資料較舊，請留意更新日期':'資料可用';
+  const boxes=[
+    ['400張以上持股', fmtPct(m.big_400_share_pct), `近4週 ${fmtChange(c.big_400_change_4w,'百分點')}`],
+    ['千張以上持股', fmtPct(m.big_1000_share_pct), `近4週 ${fmtChange(c.big_1000_change_4w,'百分點')}`],
+    ['小戶持股占比', fmtPct(m.small_10_share_pct), `近4週 ${fmtChange(c.small_10_change_4w,'百分點')}`],
+    ['股東人數', m.total_holders?Number(m.total_holders).toLocaleString('zh-TW'):'--', `近4週 ${fmtChange(c.holder_count_change_4w)} 人`],
+    ['股權分數', ec.score===null||ec.score===undefined?'--':Number(ec.score).toFixed(0), quality],
+    ['資料截至', ec.date||'--', '週資料'],
+  ];
+  $('equityConcentration').innerHTML=`<div class="kv"><div>狀態</div><div><b>${esc(ec.label)}</b></div></div><div class="small">${esc(ec.note||'週資料；反映中期持股結構，不代表短線分點買賣流向。')}</div><div class="metricGrid">${boxes.map(([k,v,n])=>`<div class="metricBox"><div class="label">${esc(k)}</div><div class="value">${esc(v)}</div><div class="small">${esc(n)}</div></div>`).join('')}</div><div class="small" style="margin-top:10px">${esc(ec.reason||'')}</div>`;
+}
+function factorReason(x){return cleanText((x&&x.reason)||'');}
+function renderNextDay(nd){
+  if(!nd.available){
+    const msg=nd.message||'目前不是下一個台股交易日展望有效時段，等待收盤後資料更新。';
+    const next=nd.next_update_time?` 預計更新：${nd.next_update_time}`:'';
+    $('nextDayOutlook').innerHTML=`<div class="notice"><b>${esc(nd.label||'下一個台股交易日展望暫停顯示')}</b><br><span class="small">${esc(msg+next)}</span></div>`;
+    return;
+  }
+  const ndCls=nd.label==='偏多'?'green':(nd.label==='偏空'?'red':'yellow');
+  const f=nd.factors||{};
+  const gate=nd.display_gate||{};
+  const gateNext=gate.next_update_time?` 預計更新：${gate.next_update_time}`:'';
+  const gateNote=gate.status&&gate.status!=='available_window'?`<div class="notice"><b>${esc(gate.label||'資料時段提醒')}</b><br><span class="small">${esc((gate.message||'')+gateNext)}</span></div>`:'';
+  const rows=[
+    ['開盤傾向', `${nd.opening_label??'--'}（定性）`],
+    ['盤中續航', `${nd.sustainability_label??'--'}（定性）`],
+    ['海外關聯', factorReason(f.us)||'海外關聯行情僅作情緒參考。'],
+    ['台灣夜盤', factorReason(f.night)||'夜盤訊號暫不列入本次判斷。'],
+    ['個股籌碼', factorReason(f.chip)||'籌碼訊號暫無明確方向。'],
+    ['技術位置', factorReason(f.tech)||'技術位置以支撐與賣壓同步觀察。'],
+  ];
+  const warns=(nd.warnings||[]).map(cleanText).filter(Boolean);
+  const caveat='<div class="small" style="margin-bottom:8px">尚未完成走勢外校準，只顯示定性方向，不顯示虛假的精確機率；也不可單獨作為買賣依據。</div>';
+  $('nextDayOutlook').innerHTML=`${gateNote}${caveat}<div class="kv"><div>綜合方向</div><div><b class="${ndCls}">${esc(nd.label)}</b></div></div>${rows.map(([k,v])=>`<div class="kv"><div>${esc(k)}</div><div>${esc(v)}</div></div>`).join('')}${warns.length?`<div class="notice"><b>需要留意</b><br><span class="small">${warns.map(x=>'・'+esc(x)).join('<br>')}</span></div>`:''}`;
+}
+function renderFuturesNight(fn){
+  if(!fn.available){
+    const gate=fn.display_gate||{};
+    const reason=fn.quality_reason||fn.message||gate.message||'等待夜盤資料更新後再列入情緒參考。';
+    const next=gate.next_update_time?` 預計更新：${gate.next_update_time}`:'';
+    $('futuresNight').innerHTML=`<div class="notice"><b>${esc(fn.label||'夜盤訊號暫不列入本次判斷')}</b><br><span class="small">${esc(reason+next)}</span></div>`;
+    return;
+  }
+  const dir=fn.direction==='bullish'?'偏多':(fn.direction==='bearish'?'偏空':'中性');
+  const clsName=fn.direction==='bullish'?'green':(fn.direction==='bearish'?'red':'yellow');
+  const gate=fn.display_gate||{};
+  const gateNext=gate.next_update_time?` 預計更新：${gate.next_update_time}`:'';
+  const gateNote=gate.status&&gate.status!=='available_window'?`<div class="notice"><b>${esc(gate.label||'資料時段提醒')}</b><br><span class="small">${esc((gate.message||'')+gateNext)}</span></div>`:'';
+  $('futuresNight').innerHTML=`${gateNote}<div class="kv"><div>夜盤方向</div><div><b class="${clsName}">${esc(dir)}</b>｜${esc(fn.label||'')}</div></div><div class="small">夜盤只作下一個交易日情緒參考，不覆蓋個股主結論。</div>`;
+}
+function renderUs(d){
+  const rel=d.us_related||{};
+  const us=Array.isArray(rel)?rel:(rel.assets||[]);
+  const usTable=$('usRows')&&$('usRows').closest('table');
+  if(!us.length){
+    $('usRelationNote').innerHTML=`<b>${esc(displayName(rel.category)||'海外關聯行情')}</b><br>${safeText(rel.note||'目前沒有明確高相關海外標的對照，僅保留本地分析。')}`;
+    if(usTable) usTable.style.display='none';
+    $('usRows').innerHTML='';
+    $('usSummary').innerHTML='海外關聯行情暫不列入本次判斷。';
+    return;
+  }
+  if(usTable) usTable.style.display='';
+  $('usRelationNote').innerHTML=`<b>${esc(displayName(rel.category)||'海外關聯行情')}</b><br>${safeText(rel.note||'海外關聯行情，僅作情緒參考。')}`;
+  $('usRows').innerHTML=us.map(x=>{
+    const q=x.quote||{}; const cp=q.change_pct;
+    const interp=x.special_interpretation?`<br><span class="yellow">${esc(x.special_interpretation)}</span>`:'';
+    return `<tr><td><b>${esc(x.ticker)}</b><br><span class="muted">${esc(x.name)}</span></td><td>${esc(x.type)}</td><td>${q.ok?`${val(q.price)} ${val(q.currency)}`:'--'}</td><td class="${cls(cp)}">${q.ok&&cp!==null&&cp!==undefined?`${val(cp)}%`:'--'}</td><td>${esc(x.reason||x.relation||'')}<br><span class="small">${esc(x.usage||'')}</span>${interp}</td></tr>`;
+  }).join('');
+  const fc=d.us_forecast||{};
+  if(fc.available){
+    const label=fc.label==='偏多'?'偏正面':(fc.label==='偏空'?'偏逆風':'中性');
+    $('usSummary').innerHTML=`海外關聯行情${label}，僅作情緒參考。`;
+  }else{
+    $('usSummary').innerHTML='海外關聯行情暫不列入本次判斷。';
+  }
+}
+function renderCosts(d){
+  const c=d.costs||{};
+  const defs=[['外資近期增量部位均價推估',c.foreign_cost_estimate],['投信近期增量部位均價推估',c.trust_buy_cost_estimate]];
+  const costRows=defs
+    .filter(([,x])=>x&&x.available&&x.value!==null&&x.value!==undefined&&x.value!==''&&String(x.value).trim()!=='—')
+    .map(([label,x])=>`<div class="kv"><div>${esc(label)}</div><div>${esc(x.value)}</div></div>`);
+  const chipPeriods=d.chip_periods||[];
+  const chipHtml=chipPeriods.length?`<div class="sectionLine"></div><div class="h2">多週期籌碼</div><div class="tableWrap"><table><thead><tr><th>期間</th><th>外資</th><th>投信</th><th>自營</th><th>融資變化</th></tr></thead><tbody>${chipPeriods.map(x=>`<tr><td>${esc(x.label)}</td><td>${esc(x.foreign_net??'--')}</td><td>${esc(x.trust_net??'--')}</td><td>${esc(x.dealer_net??'--')}</td><td>${esc(x.margin_delta??'--')}</td></tr>`).join('')}</tbody></table></div>`:'';
+  $('costs').innerHTML=`<div class="h2">籌碼成本</div>${costRows.join('')}${chipHtml}`;
+}
+
+function validCostValue(x){
+  if(x===null||x===undefined)return '';
+  const s=String(x).trim();
+  if(!s||s==='—'||s==='--'||rawDisplayLeak(s))return '';
+  const n=Number(s.replace(/,/g,''));
+  return Number.isFinite(n)&&n>0?s:'';
+}
+function addCostRow(rows,label,value){
+  const v=validCostValue(value);
+  if(v)rows.push(`<div class="kv"><div>${esc(label)}</div><div>${esc(v)}</div></div>`);
+}
+function renderCosts(d){
+  const c=d.costs||{};
+  const rows=[];
+  const basis=c.market_cost_basis||(d.base||{}).market_cost_basis||{};
+  if(basis&&validCostValue(basis.value))addCostRow(rows,basis.label||'收盤基準',basis.value);
+  addCostRow(rows,'外資近期增量部位均價推估',(c.foreign_cost_estimate||{}).value);
+  addCostRow(rows,'投信近期增量部位均價推估',(c.trust_buy_cost_estimate||{}).value);
+  addCostRow(rows,'成交密集價參考區',(c.price_volume_reference||c.poc60_estimate||{}).value);
+  const unavailableNotes=[c.foreign_cost_estimate,c.trust_buy_cost_estimate]
+    .filter(x=>x&&!x.available&&x.note).map(x=>`<div class="small">${esc(x.label||'成本推估')}：${esc(x.note)}</div>`).join('');
+  const chipPeriods=d.chip_periods||[];
+  const chipHtml=chipPeriods.length?`<div class="sectionLine"></div><div class="h2">多週期籌碼</div><div class="tableWrap"><table><thead><tr><th>期間</th><th>外資</th><th>投信</th><th>自營</th><th>融資變化</th></tr></thead><tbody>${chipPeriods.map(x=>`<tr><td>${esc(x.label)}</td><td>${esc(x.foreign_net??'--')}</td><td>${esc(x.trust_net??'--')}</td><td>${esc(x.dealer_net??'--')}</td><td>${esc(x.margin_delta??'--')}</td></tr>`).join('')}</tbody></table></div>`:'';
+  $('costs').innerHTML=`<div class="h2">籌碼成本與價量參考</div>${rows.join('')}${unavailableNotes}${chipHtml}`;
+}
+
+async function load(){
+  if(!code){$('subtitle').textContent='缺少股票代號';return;}
+  try{
+    const d=await (await fetch(`/api/stock/${encodeURIComponent(code)}/detail`,{cache:'no-store'})).json();
+    if(!d.ok){showLoadError(d);return;}
+    const b=d.base||{}, sig=d.score_signal||{}, p=d.practical||{};
+    const safeTitleName=displayName(d.name)||displayName(b.name);
+    $('title').textContent=safeTitleName?`${d.code} ${safeTitleName}`:`${d.code}`;
+    $('subtitle').innerHTML=`更新 ${esc(d.updated_at||'')}｜價格 <span class="priceBig">${esc(b.price||'--')}</span> <span class="${String(b.change_pct).startsWith('-')?'red':'green'}">${esc(b.change_pct||'')}</span>`;
+    const levels=srRows(d,b);
+    $('summary').innerHTML=`<span class="${badgeClass(sig.status_badge||b.status_badge)}">${esc(sig.main_status||b.main_status||'狀態')}</span><div style="font-weight:800;margin-top:8px">${esc(cleanText(sig.main_status||b.main_status||''))}</div><div class="small" style="margin-top:6px">${levels.map(([k,v])=>`${esc(k)}：${safeText(v)}`).join('<br>')}</div>`;
+    renderKline(d.kline_history||{});
+    $('actionHint').textContent=[buildHumanAdvice(d), cleanText(d.valuation_summary||'')].filter(Boolean).join('\n\n');
+    const warnings=[...(sig.blockers||[]),...(sig.warnings||[])].map(cleanText).filter(Boolean);
+    if(warnings.length){
+      $('diagnosticsCard').style.display='block';
+      $('diagnostics').innerHTML=warnings.map(x=>'・'+esc(x)).join('<br>');
+    }else{
+      $('diagnosticsCard').style.display='none';
+    }
+    const techObj=d.technical||{};
+    const tech=Array.isArray(techObj)?techObj:(techObj.items||[]);
+    $('techRows').innerHTML=tech.length?tech.map(x=>`<tr><td>${esc(x.name||x.item)}</td><td>${esc(x.value)}</td><td>${esc(x.explain)}</td><td>${esc(x.risk)}</td></tr>`).join(''):'<tr><td colspan="4">技術資料暫無可顯示數值。</td></tr>';
+    renderTechHints(d.tech_hints||[]);
+    renderValuation(d.valuation||{});
+    renderThemeProfile(d.theme_profile||{},d.industry_valuation||{});
+    renderChipMomentum(d.chip_momentum||{});
+    renderCosts(d);
+    renderSupportResistance(d);
+    renderEquityConcentration(d.equity_concentration||{});
+    renderPriceVolume(d.price_volume||{});
+    renderNextDay(d.next_day_outlook||{});
+    renderFuturesNight(d.futures_night||{});
+    const ex=sig.ex_dividend||p.ex_dividend;
+    const corpCard=$('corpAction').closest('.card');
+    if(ex){
+      corpCard.style.display='block';
+      $('corpAction').innerHTML=`日期：${esc(ex.date)}｜類型：${esc(ex.action_type)}<br>現金股利：${val(ex.cash_dividend)}｜股票股利：${val(ex.stock_dividend)}<br>${Number(ex.is_confirmed)?'已確認':'預告待確認'}｜距除權息日：${esc(ex.days_from_action)}`;
+    }else{
+      corpCard.style.display='none';
+    }
+    renderUs(d);
+  }catch(e){$('subtitle').textContent='讀取失敗：'+e.message;}
+}
+load();
+</script>
+</body>
+</html>

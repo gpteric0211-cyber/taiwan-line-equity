@@ -1,0 +1,97 @@
+{
+  "audit_version": "stage6-v11-prospective-evidence-audit-v1",
+  "captured_at": "2026-09-03T10:58:33+08:00",
+  "git_head": "6d9e34b2875058394004800a605509f049b45ea2",
+  "scope": "source_contract_and_offline_tests_only",
+  "contracts": {
+    "direction_gate_version": "StatisticalReleaseGateV1",
+    "direction_gate_spec_hash": "59958b9838f3944ea4f0d360031578334ad63275b728320f4ff8acf527333b89",
+    "prospective_evidence_contract": "ProspectivePredictionEvidenceContractV1",
+    "denominator_contract": "PairedPredictionDenominatorV1",
+    "magnitude_calibrator": "OrdinalMagnitudeCalibratorV1",
+    "magnitude_bins": "MagnitudeBinsAbsZV1",
+    "bootstrap_iterations": 10000,
+    "bootstrap_seed": 20260901
+  },
+  "implemented_guards": [
+    "stable_candidate_stock_target_cutoff_identity",
+    "calendar_revision_identity",
+    "event_cluster_and_revision_identity",
+    "outcome_revision_identity",
+    "eligible_and_excluded_member_manifest",
+    "denominator_digest_and_zero_shrinkage",
+    "prospective_prediction_sealed_before_outcome",
+    "historical_training_cutoff_proof",
+    "chronological_walk_forward_cutoff",
+    "synthetic_calibration_rows_forbidden",
+    "hard_safety_gate_counts",
+    "ranked_probability_score",
+    "ordinal_log_loss",
+    "high_impact_recall"
+  ],
+  "current_evidence": {
+    "prospective_eligible_member_count": 0,
+    "explicitly_excluded_member_count": 0,
+    "denominator_count": 0,
+    "denominator_digest": "2bca114186b64aa662ea29447d2b2ff4b4a24d3df8da02a07bf9370c38b60965",
+    "denominator_shrinkage": 0,
+    "normal_result": "remain_shadow_insufficient_power",
+    "material_event_result": "remain_shadow_insufficient_power",
+    "overall_result": "remain_shadow_insufficient_power",
+    "predictive_claim_allowed": false,
+    "candidate_formal_weight": 0.0,
+    "released": false
+  },
+  "floor_status": {
+    "normal": {
+      "targets": [
+        "next_open_gap",
+        "continuation_reversal",
+        "next_close_direction"
+      ],
+      "paired_observations": 0,
+      "minimum_paired_observations_per_target": 2000,
+      "minimum_distinct_target_dates": 120,
+      "minimum_stocks": 30,
+      "minimum_per_class": 100,
+      "minimum_power": 0.8,
+      "ready": false
+    },
+    "material_event": {
+      "targets": [
+        "next_open_gap",
+        "continuation_reversal",
+        "next_close_direction"
+      ],
+      "paired_target_event_observations": 0,
+      "minimum_paired_target_event_observations_per_target": 300,
+      "minimum_independent_event_clusters": 50,
+      "minimum_distinct_target_dates": 60,
+      "minimum_stocks": 20,
+      "minimum_event_types": 3,
+      "minimum_clusters_per_event_type": 10,
+      "minimum_clusters_per_class": 20,
+      "minimum_large_impact_clusters": 30,
+      "minimum_power": 0.8,
+      "ready": false
+    }
+  },
+  "verification": {
+    "stage6_targeted_tests": "31 passed in 1.26s",
+    "full_suite": "1832 passed in 45.01s",
+    "python_compile": "pass",
+    "production_database_read": false,
+    "production_database_write": false,
+    "production_database_migration": false,
+    "scheduler_installed_or_enabled": false,
+    "rollout_changed": false,
+    "nonzero_candidate_weight_created": false,
+    "public_release_performed": false,
+    "legal_approval_claimed": false
+  },
+  "decision": {
+    "state": "shadow_only_insufficient_power",
+    "reason": "No prospectively sealed paired prediction denominator has matured; approved floors cannot be shortened or replaced with historical replay, synthetic rows, or a five-day load test.",
+    "next_gate": "collect_prospectively_sealed_shadow_predictions_under_an_authorized_unchanged_code_freeze"
+  }
+}

@@ -1,0 +1,511 @@
+{
+  "manifest_version": "single-track-v3-stage0-contract-approval-manifest-v11",
+  "captured_at": "2026-09-03T01:15:23+08:00",
+  "timezone": "Asia/Taipei",
+  "stage": 0,
+  "stage_status": "approved",
+  "approval": {
+    "required": true,
+    "approved": true,
+    "approved_at": "2026-09-03T09:13:32+08:00",
+    "approval_text": "核准 Stage 0 V11 的 A–O 契約與候選數值；此核准不授權 rollout、scheduler、非零候選權重、公開發布或法律核准。",
+    "approval_scope": "A-O contract semantics and candidate values only",
+    "does_not_authorize": [
+      "production_behavior_change",
+      "database_migration",
+      "scheduler_installation",
+      "rollout_change",
+      "nonzero_candidate_weight",
+      "predictive_claim",
+      "public_launch",
+      "legal_clearance"
+    ]
+  },
+  "objective": {
+    "path": "var/migration/legacy-objective-v11.md",
+    "title": "Codex 單一主軌最終目標指令 V11",
+    "sha256": "fd51f3b004d9a2d05394d490eb950f095867d9980c93df91faebf012bf086fba",
+    "line_count": 1495,
+    "fully_read": true,
+    "relocation_note": "Byte-identical private evidence relocated during the new-project migration; approval scope and historical results are unchanged."
+  },
+  "contract_set": {
+    "version": "SingleTrackV3Stage0ContractSetV11",
+    "document": "docs/contracts/SINGLE_TRACK_V3_STAGE0_CONTRACTS_V11.md",
+    "document_sha256": "bdfbef70ff30cf7412a205f39627a2fc4f9afb1e5e117f6800ab7b54c457d19b",
+    "document_line_count": 409,
+    "contracts": [
+      {
+        "id": "A",
+        "version": "StockUniverseContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "83ced55b80beda92734e0a7ffe7d509ffb9837799653a1a71b8e20df0b9e37f3"
+      },
+      {
+        "id": "B",
+        "version": "StableBaselineContractV1",
+        "implementation_state": "invalid_or_stale",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "b1190a7b1c40990117f4f99fc0bf834aa6d64441d4b288d508ae93cc471091e0"
+      },
+      {
+        "id": "C",
+        "version": "RequestNormalizationAndProfileContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "720955776ec7590f916c3780e3a092f44469b2fbf21270721d6a860a6fd4df7b"
+      },
+      {
+        "id": "D",
+        "version": "ScoreAggregationContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "ba5e2b5900808b7b610701fc6af2c0aefbd613cd2451a3e2e84af3ff373cb30d"
+      },
+      {
+        "id": "E",
+        "version": "MaterialityClassificationContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "2543e99651fa1186e8f372d085857149324a442fa2f3028a37286eb6282ddf75"
+      },
+      {
+        "id": "F",
+        "version": "ChipAnalysisContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "c90939fce3b21fe02b1e5e0d07fc1e9085650e1e48a0db7b57de698944fbf3dc"
+      },
+      {
+        "id": "G",
+        "version": "TechnicalFormulaAndAdjustmentContractV1",
+        "implementation_state": "implemented_but_unverified",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "230b2af73485b8d1e839da1d17920b4d008e15ecc5def23b23af9d746d4f6112"
+      },
+      {
+        "id": "H",
+        "version": "EntityResolutionContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "38dff9e52063fdb0b9409c2bf47048b7d55f3a264d8725db8dc20c4760562e89"
+      },
+      {
+        "id": "I",
+        "version": "LegalComplianceLaunchContractV1",
+        "implementation_state": "missing",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "33c4103f13d4c68404689e6bac1cba7bea1ed26a26b890b0ef4687163aaee35b"
+      },
+      {
+        "id": "J",
+        "version": "SourceRightsAndNewsGovernanceContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "580cdb8e8047898d93452a8e639215e89c26c32443f3c15242cc95b235c6a161"
+      },
+      {
+        "id": "K",
+        "version": "PrivacyImageSecurityContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "17fc2e1a98b9e8fbddebad57541930df8bb9c5369216d1098c4eb7b587908411"
+      },
+      {
+        "id": "L",
+        "version": "OperationalMonitoringContractV1",
+        "implementation_state": "invalid_or_stale",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "8f350f4ed9f952c4b58b792f70f86f207a74edacda75b7268e390b40e654c36f"
+      },
+      {
+        "id": "M",
+        "version": "ConcurrencyAndTerminalCascadeContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "7262e6046c238b65d96e7cfe96f3f2a02ae3da82261c24e6877a4bf896a0a949"
+      },
+      {
+        "id": "N",
+        "version": "ImpactMagnitudeAndCalibrationContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "80894aa2ab56e3eb6b09853fe86f8f67fdfd0cf8af06cee876af05b3409ae76a"
+      },
+      {
+        "id": "O",
+        "version": "AnalysisSessionBoundaryContractV1",
+        "implementation_state": "partial",
+        "approval_state": "approved_for_implementation_not_release",
+        "section_sha256": "f7d43a4ebb76abe44481c9da524ad48347ab6790c8c5a03d5f1be8439b9ceeb7"
+      }
+    ],
+    "implementation_state_counts": {
+      "implemented": 0,
+      "implemented_but_unverified": 1,
+      "partial": 11,
+      "missing": 1,
+      "invalid_or_stale": 2,
+      "out_of_scope": 0
+    }
+  },
+  "current_characterization": {
+    "git": {
+      "head": "6d9e34b2875058394004800a605509f049b45ea2",
+      "working_tree_clean": false,
+      "worktree_status_digest_contract": "sha256(git status --porcelain=v1 -z)",
+      "worktree_status_digest_at_contract_freeze": "797e54b3576897560a0d5398eb35e7cb911b6a93f166f45bbe25185a8f93fa43",
+      "worktree_status_entry_count_at_contract_freeze": 507,
+      "preexisting_unapproved_additive_changes_present": true
+    },
+    "protected_baseline": {
+      "manifest": "docs/LINE_MODEL_SPEC_V2_BASELINE.json",
+      "matched": 10,
+      "expected": 11,
+      "passed": false,
+      "mismatches": [
+        {
+          "path": "review_src/services/price_volume_service.py",
+          "expected_sha256": "ab1e9990efa081e25c3f30407f7babd15f058a9846b6c1b8187ccdfb3148ebed",
+          "actual_sha256": "c51a03e8c29ef79808f1f56ab96342fedd6f7f00bf00cd5d4af4c4128995789c"
+        }
+      ],
+      "disposition": "must_be_reviewed_or_explicitly_rebaselined_before_a_later_code_freeze"
+    },
+    "schema": {
+      "source_version": "single-track-v3-stage8.13",
+      "production_read_only_probe_version": "single-track-v3-stage8.13",
+      "required_tables": 44,
+      "present_required_tables": 44,
+      "missing_required_tables": [],
+      "production_writes": 0
+    },
+    "rollout": {
+      "line_model_v2": "shadow",
+      "line_model_research": "shadow",
+      "requested_profile_override": null,
+      "configured_canary_percentage": null,
+      "release_authorized": false,
+      "release_reason_codes": [
+        "candidate_delivery_kill_switch_active"
+      ]
+    },
+    "scheduler": {
+      "source_contract": "SingleTrackV3DurableScheduleV1",
+      "windows_task_name": "Taiwan Stock Single Track V3 Scheduler",
+      "windows_task_installed": false,
+      "windows_task_enabled": false,
+      "stored_audit": "docs/STAGE8_SCHEDULER_AUDIT.json",
+      "stored_audit_gate_passed": false,
+      "stored_audit_state": "invalid_or_stale",
+      "stale_reasons": [
+        "stored date-only probe references single-track-v3-stage8.11 while source and production DB are stage8.13",
+        "stored U.S. policy probe references SingleTrackV3EventSourcePlanV2 while source is V3",
+        "actual Windows boot, sleep/wake, task launch, and production catch-up remain unverified"
+      ]
+    },
+    "runtime_source_fingerprint": {
+      "contract_version": "line-model-runtime-source-fingerprint-v1",
+      "source_digest": "08b6b7a6984c07112d0984d295f06c00e17d0d00706b09e55d9ac2d3e7d172b9",
+      "complete": true,
+      "captured_at": "2026-09-03T01:09:20+08:00"
+    },
+    "profiles": {
+      "focused-16k-v1": {
+        "prompt_token_cap": 6000,
+        "minimum_context": 16384,
+        "release_state": "stable"
+      },
+      "comprehensive-16k-v1": {
+        "prompt_token_cap": 11000,
+        "minimum_context": 16384,
+        "release_state": "stable"
+      },
+      "comprehensive-32k-candidate-v1": {
+        "prompt_token_cap": 20000,
+        "minimum_context": 32768,
+        "release_state": "candidate"
+      }
+    },
+    "privacy_and_image": {
+      "image_contract": "ImageInputContractV1",
+      "web_post_present": true,
+      "supported_formats": [
+        "PNG",
+        "JPEG",
+        "WEBP"
+      ],
+      "max_input_bytes": 8388608,
+      "max_side_pixels": 8192,
+      "max_total_pixels": 40000000,
+      "remote_user_image_url_allowed": false,
+      "memory_storage": "encrypted_sqlite",
+      "raw_retention_seconds": 86400,
+      "summary_retention_seconds": 2592000,
+      "privacy_notice_version": "2026-08-28",
+      "long_term_approved_config": true
+    },
+    "source_plan": {
+      "version": "SingleTrackV3EventSourcePlanV3",
+      "complete_scan_claim_allowed": false,
+      "missing_source": "geopolitical_official_or_licensed",
+      "all_new_event_direction_weights_released": false
+    },
+    "statistical_gate": {
+      "version": "StatisticalReleaseGateV1",
+      "spec_sha256": "59958b9838f3944ea4f0d360031578334ad63275b728320f4ff8acf527333b89",
+      "prospective_predictive_evidence_mature": false,
+      "public_predictive_canary_eligible": false
+    },
+    "legal_gate": {
+      "state": "external_gate_not_started",
+      "legal_review_packet_present": false,
+      "public_directional_candidate_allowed": false
+    }
+  },
+  "candidate_values": {
+    "profiles_and_line_reply_only_budget_seconds": {
+      "focused-16k-v1": 31,
+      "comprehensive-16k-v1": 45,
+      "comprehensive-32k-candidate-v1": null
+    },
+    "score_weights_percent": {
+      "normal": {
+        "event_company": 10,
+        "overseas_industry": 15,
+        "target_price_trend_volume_volatility": 30,
+        "us_market_taiwan_night": 15,
+        "chips": 20,
+        "dilution_valuation_other_risk": 10
+      },
+      "material_event": {
+        "event_company": 35,
+        "overseas_industry": 20,
+        "target_price_trend_volume_volatility": 15,
+        "us_market_taiwan_night": 15,
+        "chips": 10,
+        "dilution_valuation_other_risk": 5
+      },
+      "missing_weight_redistribution": false,
+      "released_to_stable": false
+    },
+    "chip_family_weights_percent": {
+      "institutions": 50,
+      "credit_and_sbl": 30,
+      "tdcc": 20,
+      "broker_branch": 0,
+      "estimated_cost": 0,
+      "released_to_stable": false
+    },
+    "credit_sbl_subweights": {
+      "candidate": null,
+      "reason": "insufficient_unit_correct_correlation_and_walk_forward_evidence",
+      "current_new_subfactor_contribution": 0
+    },
+    "tdcc_freshness": {
+      "expected_next_publish_rule": "23:59:59 Asia/Taipei on the next official weekly source business day",
+      "grace_hours": 72,
+      "hard_stale_calendar_days_after_expected_publish": 14,
+      "hard_stale_alternate": "two expected weekly releases missed",
+      "decay_before_walk_forward_evidence": false,
+      "released_to_stable": false
+    },
+    "technical_family_weights_percent": {
+      "trend_direction_strength": 30,
+      "momentum_rate_of_change": 25,
+      "volume_accumulation": 25,
+      "volatility_range": 10,
+      "psychology_pressure": 10,
+      "missing_weight_redistribution": false,
+      "released_to_stable": false
+    },
+    "magnitude_bins_abs_z": {
+      "negligible": "[0,0.5)",
+      "low": "[0.5,1)",
+      "medium": "[1,2)",
+      "high": "[2,3)",
+      "extreme": "[3,infinity)",
+      "released": false
+    },
+    "concurrency": {
+      "resolution_start_minutes": 10,
+      "resolution_sla_minutes": 20,
+      "target_recovery_minutes": 60,
+      "max_total_attempts_per_content_or_target": 4,
+      "retry_delay_minutes": [
+        1,
+        5,
+        15
+      ],
+      "deterministic_jitter_seconds": [
+        0,
+        30
+      ],
+      "max_lifetime_qwen_repairs": 1,
+      "attempt_hard_cap_seconds": 300,
+      "default_inference_slots": 1
+    },
+    "retention": {
+      "event_hot_excerpt_days": 7,
+      "conversation_raw_hours": 24,
+      "conversation_encrypted_summary_days": 30,
+      "technical_trading_days_minimum": 600
+    },
+    "statistical_minimums": {
+      "normal": {
+        "paired_observations": 2000,
+        "target_trading_dates": 120,
+        "asof_universe_stocks": 30,
+        "observations_per_class": 100,
+        "power": 0.8
+      },
+      "material_event": {
+        "paired_target_event_observations": 300,
+        "independent_event_clusters": 50,
+        "target_trading_dates": 60,
+        "asof_universe_stocks": 20,
+        "event_types": 3,
+        "clusters_per_event_type": 10,
+        "clusters_per_outcome_class": 20,
+        "large_impact_safety_clusters": 30,
+        "power": 0.8
+      },
+      "bootstrap_iterations": 10000,
+      "family_wise_alpha": 0.05,
+      "synthetic_denominator_allowed": false
+    },
+    "statistical_margins": {
+      "brier": "min(0.002,stable*0.01)",
+      "log_loss": "min(0.005,stable*0.01)",
+      "ece": 0.005,
+      "balanced_accuracy": -0.005,
+      "high_confidence_wrong": 0.005,
+      "high_confidence_correct_coverage": -0.01,
+      "material_miss": 0.01,
+      "completion": 0.0,
+      "superiority_target_and_macro_brier": "max(0.002,stable*0.02)",
+      "minimum_target_wins": 2
+    }
+  },
+  "unresolved_decisions": [
+    "review_or_explicitly_rebaseline_the_price_volume_service_protected_hash_mismatch",
+    "freeze_immutable_official_asof_stock_universe_membership_revisions",
+    "derive_credit_sbl_subweights_from_unit_correct_walk_forward_evidence",
+    "implement_five_level_analysis_layer_materiality_and_target_relationship_rules",
+    "implement_one_request_normalization_key_and_three_digest_layers",
+    "complete_legal_review_packet_and_external_written_decision",
+    "fill_geopolitical_official_or_licensed_source_coverage_and_recheck_rights",
+    "install_and_verify_scheduler_only_during_later_authorized_deployment",
+    "implement_backend_magnitude_calibrator_and_prospective_gate",
+    "run_one_bound_phase_a_through_e_code_freeze_cycle"
+  ],
+  "risk_register": [
+    {
+      "id": "R1",
+      "level": "high",
+      "risk": "protected_analysis_baseline_is_not_intact",
+      "control": "no_promotion_until_mismatch_review_or_explicit_rebaseline"
+    },
+    {
+      "id": "R2",
+      "level": "high",
+      "risk": "predictive_and_legal_evidence_are_not_mature",
+      "control": "shadow_only_and_public_directional_output_disabled"
+    },
+    {
+      "id": "R3",
+      "level": "medium",
+      "risk": "scheduler_and_restart_wake_runtime_are_not_deployed_or_verified",
+      "control": "no_current_scheduler_readiness_claim"
+    },
+    {
+      "id": "R4",
+      "level": "medium",
+      "risk": "materiality_chip_and_magnitude_contracts_exceed_current_implementation",
+      "control": "weight_zero_or_shadow_and_explicit_implementation_matrix"
+    },
+    {
+      "id": "R5",
+      "level": "medium",
+      "risk": "tdcc_exact_publication_time_is_not_officially_promised",
+      "control": "conservative_candidate_window_and_no_decay_or_stable_weight"
+    }
+  ],
+  "validation": {
+    "python_compile": {
+      "status": "pass",
+      "file_count": 8
+    },
+    "targeted_tests": {
+      "status": "pass",
+      "passed": 30,
+      "failed": 0,
+      "duration_seconds": 0.49
+    },
+    "full_tests": {
+      "status": "pass",
+      "passed": 1735,
+      "failed": 0,
+      "duration_seconds": 34.41
+    },
+    "api_smoke": {
+      "status": "not_run",
+      "reason": "this_stage0_tranche_changes_documentation_only"
+    },
+    "protected_hashes": {
+      "status": "fail",
+      "matched": 10,
+      "expected": 11,
+      "mismatch_count": 1
+    },
+    "json_validation": {
+      "status": "pass",
+      "command": "python -m json.tool docs/contracts/STAGE0_CONTRACT_APPROVAL_MANIFEST.json"
+    },
+    "contract_hash_recalculation": {
+      "status": "pass",
+      "contract_count": 15,
+      "evidence_file_count": 25,
+      "mismatch_count": 0
+    }
+  },
+  "stage0_effects": {
+    "scope": "V11_contract_freeze_documentation_tranche",
+    "production_behavior_changes": 0,
+    "stock_formula_changes": 0,
+    "referee_changes": 0,
+    "database_schema_changes": 0,
+    "production_database_writes": 0,
+    "scheduler_install_or_update_changes": 0,
+    "rollout_changes": 0,
+    "external_messages_or_legal_actions": 0
+  },
+  "evidence_sha256": {
+    "AGENTS.md": "76effa11600dec7ce23dde7dc6fad3f417376762826954729a5332b870f8f16a",
+    "docs/LINE_MODEL_SPEC_V2_BASELINE.json": "ffde5ea72b8bb4f2a0faf99b798b832ea3a75ee5db0cfe4a40d7b7aabfd3bdb0",
+    "docs/SINGLE_TRACK_V3_CONTRACTS.md": "696bc470a8d9b094a9b92b8fe5fef09836866caffcff0fcbf9d493cd3fe8747c",
+    "docs/SINGLE_TRACK_V3_STAGE0_BASELINE.json": "9e7a29cd2b34b7ba503a857b95ff9445e6a56808d3f297d75f92684435791809",
+    "docs/STAGE8_SCHEDULER_AUDIT.json": "e886ee7e3ef35fd9e8cf5252dc36b654bb3344133555bddd8e9058a3d27246b5",
+    "review_src/analysis/target_label_contract_v1.py": "f353d2fc63cdd1a91a9641a2cbf400f05fafa031f874cfa1cf9651455f54209b",
+    "review_src/analysis/technical_ensemble_v1.py": "7ba475b1b82dd16ae0f13165b1919d2ed7b50df97ae6e17d7f7336811d8aae79",
+    "review_src/core/line_memory_config.py": "79f7609aa438bf186b499f911c4ea3eb326f7f4976a4ac4cfede136863056f1e",
+    "review_src/core/line_model_contract.py": "e11f89f6f151de6b08324ecc1b377a8a2a02ded50db07536fde52cdd210b4797",
+    "review_src/core/line_model_release_config.py": "a12f1a0a60b92e10b11b73ff84a72fe7477747d75f3f44b68d8b12be7a96ec38",
+    "review_src/core/news_research_policy.py": "f750e4da7a79756dd79858fd905b1e7797305bfeaf0160e7d061b5f06de23345",
+    "review_src/core/single_track_v3_event_source_plan.py": "185b65293fc07a5c7f9b85fe6fd5979cc2fc5c854b1e645e2ebc30435c080408",
+    "review_src/core/single_track_v3_schema.py": "231dfb7f315923c87880c0606f347e355144987de7d26344e8996c163ebba88e",
+    "review_src/evaluation/statistical_release_gate_v1.py": "0f911290d524187be08f004b3486e5db316dd1d51dc3cfcf3a96bc6a9a473e58",
+    "review_src/repository/single_track_v3_artifact_production_repository.py": "dec037cf9c25eb1b51a5bb1000eabcfbe32f19c7845e5bdbbe018df35db73a58",
+    "review_src/repository/single_track_v3_assessment_repository.py": "1de97138685acc3775b611a08f71db6e11f068b169c8d03ef825ec8ac2f23924",
+    "review_src/repository/single_track_v3_content_assessment_state_repository.py": "2b4e1de60a403382a94219fa8b9cb557478dc9e27241185834fb65b0a0aa2d72",
+    "review_src/repository/single_track_v3_target_assessment_state_repository.py": "2548219c1da4297e7c74f2f2232e6f84e9613b8f5f1fa967cc5d2f351a6e685d",
+    "review_src/services/canonical_analysis_orchestrator.py": "41b8d6863af380e86e63b053ce9b6bbd8a259723a69113c64933272181fbceee",
+    "review_src/services/event_safety_scan_service.py": "ff7efe5a4bbfde97ef6442b41834caf55b7bc5ceb513e50b4a00c546e0ee5d6a",
+    "review_src/services/image_input_service.py": "d6dcc95780759dbfd5b4c50a2e09baeaee6f0c59649df544dc643dba56453e84",
+    "review_src/services/stock_entity_registry_service.py": "b97dc6f47f80b74fff557be82d6b758c2e11062ea6ecec3572692ae8b2ddc6bf",
+    "review_src/services/technical_ensemble_materializer.py": "c2aa5d5575eee801939c2f4ae04a940bf8c8db4c1058f066e240626bf113fd46",
+    "review_src/task/single_track_v3_event_reconciler.py": "7bccc110ff20c2e4bb92f84b646c008208ff627e34bd46b7d21f41740312b15f",
+    "review_src/task/single_track_v3_scheduler.py": "a290dd6b9cd8dcd684ae881ae017141dac0eea11a4b9f02fd027535f9a66fd1c"
+  }
+}

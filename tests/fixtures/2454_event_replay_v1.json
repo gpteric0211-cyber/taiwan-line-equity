@@ -1,0 +1,59 @@
+{
+  "fixture_version": "2454-event-replay-v1",
+  "stock_code": "2454",
+  "previous_artifact": {
+    "analysis_id": "frozen-2454-before-cb-pricing",
+    "analysis_cutoff": "2026-08-31T13:30:00+08:00",
+    "canonical_answer_text": "聯發科舊隔日展望；尚未包含盤後可轉債完成訂價事件。"
+  },
+  "replay_cutoff": "2026-09-01T07:00:00+08:00",
+  "source_results": {
+    "official_company": "ok",
+    "taiwan_policy": "ok",
+    "us_policy_geopolitics": "ok",
+    "company_industry_news": "ok",
+    "related_overseas_price_reaction": "ok",
+    "us_market_taiwan_night": "ok",
+    "dilution_valuation_risk": "ok"
+  },
+  "events": [
+    {
+      "event_id": "d833b818a318cc8e71c751631b1d3bf01d4c8feadb045c0db9c9a6ccc1e1be0b",
+      "event_key": "d833b818a318cc8e71c751631b1d3bf01d4c8feadb045c0db9c9a6ccc1e1be0b",
+      "code": "2454",
+      "entity_refs": ["2454"],
+      "event_type": "convertible_bond_pricing",
+      "source_id": "TWSE_MOPS_DAILY_EVENT",
+      "source_class": "canonical_official",
+      "source_quality": "official",
+      "publisher": "公開資訊觀測站",
+      "source_url": "https://mops.twse.com.tw/",
+      "publisher_published_at": "2026-08-31T20:25:11+08:00",
+      "retrieved_at": "2026-09-01T06:15:06+08:00",
+      "available_at": "2026-09-01T06:15:06+08:00",
+      "effective_tw_trade_date": "2026-09-01",
+      "verification_state": "verified",
+      "rights": "official_metadata_and_short_excerpt",
+      "title": "公告本公司海外第一次無擔保轉換公司債完成訂價",
+      "fingerprint": "2454-cb-pricing-20260831",
+      "dedup_cluster": "2454-cb-pricing-20260831",
+      "relevance": 1.0,
+      "directness": 1.0,
+      "materiality": "material",
+      "magnitude": 0.8,
+      "surprise": 0.7,
+      "direction": "mixed",
+      "confidence": 1.0,
+      "horizon": "next_session",
+      "affected_claim_ids": ["next_day_outlook"],
+      "invalidation_scope": "next_day_outlook",
+      "corroborating_event_ids": [],
+      "recorded_at": "2026-09-01T06:15:06+08:00"
+    }
+  ],
+  "expected": {
+    "scan_state": "verified_material",
+    "event_direction_score": 0.0,
+    "superseded": true
+  }
+}

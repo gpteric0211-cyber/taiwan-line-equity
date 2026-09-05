@@ -1,0 +1,79 @@
+{
+  "contract_version": "Stage5V11UnifiedOrchestratorCodeFreezeAuditV1",
+  "generated_date": "2026-09-03",
+  "source_head": "6d9e34b2875058394004800a605509f049b45ea2",
+  "status": "source_parity_pass_formal_code_freeze_blocked",
+  "authorization_boundary": {
+    "stage0_contracts_approved": true,
+    "rollout_authorized": false,
+    "scheduler_authorized": false,
+    "nonzero_candidate_weight_authorized": false,
+    "public_release_authorized": false,
+    "legal_approval_granted": false
+  },
+  "unified_orchestrator": {
+    "web_entrypoint": "services.canonical_analysis_orchestrator.run_canonical_analysis",
+    "line_transport_entrypoint": "api.bot_market_data.api_bot_canonical_analysis",
+    "line_transport_calls_same_service": true,
+    "shared_close_batch_builder": "services.bot_market_data_service.build_canonical_close_batch_snapshot",
+    "shared_model_packet_orchestrator": "services.canonical_model_packet_orchestrator.build_canonical_question_model_packet",
+    "channel_renderer_can_override_referee": false,
+    "shadow_candidate_can_replace_stable": false,
+    "source_level_parity_test_result": {
+      "passed": 74,
+      "failed": 0,
+      "duration_seconds": 4.27
+    }
+  },
+  "protected_analysis": {
+    "baseline_file": "docs/LINE_MODEL_SPEC_V2_BASELINE.json",
+    "matched": 10,
+    "total": 11,
+    "passed": false,
+    "mismatches": [
+      "review_src/services/price_volume_service.py"
+    ],
+    "rebaseline_authorized": false
+  },
+  "dependency_invalidation": {
+    "prior_phase_a_reusable": false,
+    "prior_phase_b_reusable": false,
+    "prior_phase_c_reusable_as_formal_cycle": false,
+    "reasons": [
+      "protected_hash_mismatch",
+      "v11_packet_validator_and_assessment_dependencies_changed_after_prior_evidence",
+      "old_evidence_is_not_bound_to_the_current_v11_contract_versions",
+      "formal_rollout_or_phase_cycle_not_authorized"
+    ],
+    "historical_artifacts_retained_for_reference_only": true
+  },
+  "phase_status": {
+    "A": {
+      "status": "blocked_before_start",
+      "requirements_not_met": [
+        "protected_hashes_11_of_11",
+        "current_bound_hash_cycle",
+        "rollout_authorization"
+      ],
+      "new_shadow_calls_claimed": 0
+    },
+    "B": {
+      "status": "not_started_phase_a_not_completed",
+      "historical_best_attempt_selection_prohibited": true
+    },
+    "C": {
+      "status": "source_contract_tests_pass_formal_cycle_not_started",
+      "legacy_mock_only_evidence_accepted": false
+    }
+  },
+  "production_actions": {
+    "production_database_read": false,
+    "production_database_write": false,
+    "production_schema_migration": false,
+    "service_restart": false,
+    "scheduler_install_or_enable": false,
+    "rollout_change": false,
+    "public_release": false
+  },
+  "next_gate": "Resolve the protected 10/11 mismatch through separate authorized restoration or explicit rebaseline with representative golden evidence before starting one new bound Phase A-C cycle."
+}

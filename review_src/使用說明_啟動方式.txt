@@ -1,0 +1,41 @@
+台股分析系統 v2.44
+
+啟動方式
+
+1. 第一次使用，或 Python 套件壞掉時：
+   雙擊「首次設定環境.cmd」
+
+2. 平常要開啟系統時：
+   雙擊「啟動台股分析系統.cmd」
+
+3. 看到伺服器啟動後，用瀏覽器開啟：
+   http://127.0.0.1:8000
+
+檔案用途
+
+- 啟動台股分析系統.cmd
+  只啟動本機服務，不會安裝套件、不會刪資料、不會自動修改系統。
+
+- 首次設定環境.cmd
+  建立 .venv 並安裝 requirements.txt 裡的必要 Python 套件。
+  第一次使用或套件缺失時才需要執行。
+
+- 更新必要套件.cmd
+  只顯示安全更新方式，不會自動刪除任何檔案。
+
+資料庫
+
+- 預設使用：
+  data\taiwan50.db
+
+- 如果 .env 或系統環境變數設定了 TAIWAN50_DB_PATH，程式會優先使用該路徑。
+
+Norton 提醒
+
+舊版 START_HERE.bat / CHECK_ENV.bat 已不再使用。
+如果 Norton 隔離了舊檔案，不需要還原。
+
+若批次檔仍被阻擋，也可以手動用命令提示字元啟動：
+
+cd /d <repo-root>\review_src
+.venv\Scripts\python.exe -m uvicorn app:app --host 127.0.0.1 --port 8000 --workers 1

@@ -1,0 +1,154 @@
+{
+  "audit_version": "single-track-v3-v11-stage1-schema-migration-audit-v1",
+  "captured_at": "2026-09-03T09:32:07+08:00",
+  "timezone": "Asia/Taipei",
+  "stage": 1,
+  "status": "source_ready_production_migration_not_authorized",
+  "approval_boundary": {
+    "stage0_contracts_approved": true,
+    "production_database_migration_authorized": false,
+    "production_database_writes": 0,
+    "rollout_changes": 0,
+    "scheduler_changes": 0,
+    "nonzero_candidate_weight_changes": 0
+  },
+  "schema": {
+    "previous_source_version": "single-track-v3-stage8.13",
+    "candidate_source_version": "single-track-v3-v11-stage1.1",
+    "migration_contract_version": "SingleTrackV3V11Stage1SchemaContractV1",
+    "existing_v3_table_count": 44,
+    "new_business_tables": 0,
+    "affected_existing_tables": 10,
+    "additive_columns": 42,
+    "additive_indexes": 8,
+    "rollback_strategy": "verified_backup_restore",
+    "idempotency": "verified_no_state_change_on_same_version_retry"
+  },
+  "contract_surface": {
+    "canonical_analysis_artifact": [
+      "normalized_request_key",
+      "target_entity_id",
+      "target_trade_date",
+      "analysis_session",
+      "selected_profile",
+      "canonical_core_digest",
+      "projection_digest",
+      "render_digest",
+      "source_revision_ids_json",
+      "artifact_contract_version"
+    ],
+    "event_revision": [
+      "content_materiality",
+      "materiality_contract_version"
+    ],
+    "target_impact_assessment": [
+      "target_materiality",
+      "target_direction",
+      "target_impact_magnitude",
+      "regime_selection",
+      "target_relationship_type",
+      "weight_version"
+    ],
+    "stock_entity_alias": [
+      "approved",
+      "approval_id",
+      "source_evidence_digest"
+    ],
+    "single_track_v3_source_snapshot_receipt": [
+      "source_revision_id",
+      "publisher_published_at",
+      "first_seen_at",
+      "usable_from",
+      "source_policy_version"
+    ],
+    "canonical_evidence_fact": [
+      "unit",
+      "source_revision_id",
+      "first_seen_at",
+      "usable_from"
+    ],
+    "technical_indicator_component": [
+      "available_at",
+      "usable_from"
+    ],
+    "technical_indicator_vector_daily": [
+      "available_at",
+      "usable_from"
+    ],
+    "analysis_target_prediction": [
+      "event_revision_id",
+      "target_entity_id",
+      "target_trade_date",
+      "weight_version",
+      "contribution_state"
+    ],
+    "single_track_v3_schema_state": [
+      "previous_schema_version",
+      "migration_contract_version",
+      "rollback_strategy"
+    ]
+  },
+  "reuse_decisions": {
+    "stock_universe_revision_storage": "reuse data_observation_version with a stock-universe dataset key during Stage 2; do not add a parallel stock-master table",
+    "tdcc_revision_storage": "reuse data_observation_version and canonical evidence provenance during Stage 2; do not add a second chip schema",
+    "magnitude_storage": "reuse target_impact_assessment magnitude_probabilities_json and add only classification/version fields",
+    "artifact_storage": "extend canonical_analysis_artifact; do not create a channel-specific artifact table"
+  },
+  "production_read_only_preflight": {
+    "database_size_bytes": 12451524608,
+    "schema_version": "single-track-v3-stage8.13",
+    "schema_applied_at": "2026-09-02 06:33:42",
+    "affected_table_row_counts": {
+      "canonical_analysis_artifact": 0,
+      "event_revision": 0,
+      "target_impact_assessment": 0,
+      "stock_entity_alias": 3657,
+      "single_track_v3_source_snapshot_receipt": 0,
+      "canonical_evidence_fact": 0,
+      "technical_indicator_component": 122636,
+      "technical_indicator_vector_daily": 1121328,
+      "analysis_target_prediction": 0
+    },
+    "pre_migration_active_target_duplicate_groups": 0,
+    "query_only": true,
+    "writes": 0,
+    "migration_executed": false,
+    "backup_created": false,
+    "integrity_scan": "not_run_against_12.45GB_production_database_in_this_unapproved_migration_tranche"
+  },
+  "temporary_migration_verification": {
+    "additive_columns_present": true,
+    "existing_legacy_table_preserved": true,
+    "table_count_unchanged": true,
+    "integrity_check": "ok",
+    "duplicate_audit": "pass",
+    "same_version_retry_writes": 0,
+    "consistent_backup_restore": "pass",
+    "restored_pre_migration_schema": true,
+    "production_database_used": false
+  },
+  "tests": {
+    "python_compile": "pass",
+    "targeted": {
+      "passed": 79,
+      "failed": 0,
+      "duration_seconds": 5.34
+    },
+    "full": {
+      "passed": 1738,
+      "failed": 0,
+      "duration_seconds": 37.98
+    },
+    "api_smoke": {
+      "status": "not_run",
+      "reason": "starting request paths against production could invoke the new schema ensure path and would violate the explicit no-production-migration boundary"
+    }
+  },
+  "remaining_gates": [
+    "take_and_verify_a_consistent_production_backup_before_any_authorized_migration",
+    "run_full_production_integrity_check_in_an_authorized_maintenance_window",
+    "apply_schema_only_after_separate_database_migration_authorization",
+    "keep_protected_hash_mismatch_as_stage5_code_freeze_blocker",
+    "materialize_stock_universe_and_tdcc_revisions_in_stage2_without_parallel_tables"
+  ]
+}

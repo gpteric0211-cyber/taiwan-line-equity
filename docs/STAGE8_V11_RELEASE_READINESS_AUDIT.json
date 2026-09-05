@@ -1,0 +1,167 @@
+{
+  "audit_version": "stage8-v11-release-readiness-audit-v1",
+  "captured_at": "2026-09-03T11:46:58+08:00",
+  "scope": "fail_closed_readiness_audit_no_phase_e_actions",
+  "release_ready": false,
+  "phase_e_authorized": false,
+  "phase_e_started": false,
+  "engineering_state": "shadow_only",
+  "protected_analysis": {
+    "baseline_file": "docs/LINE_MODEL_SPEC_V2_BASELINE.json",
+    "matched": 9,
+    "total": 11,
+    "passed": false,
+    "mismatches": [
+      "review_src/analysis/recommendation_safety.py",
+      "review_src/services/price_volume_service.py"
+    ],
+    "rebaseline_authorized": false
+  },
+  "temporary_migration_rollback": {
+    "database_scope": "temporary_sqlite_only",
+    "schema_version": "single-track-v3-v11-stage1.1",
+    "migration_ready": true,
+    "rollback_leftover_tables": [],
+    "temporary_database_destroyed": true,
+    "production_database_writes": 0,
+    "passed": true
+  },
+  "parallel_corporate_action_maintenance": {
+    "outside_this_stage8_release_audit": true,
+    "production_database_repair_and_write_observed": true,
+    "scope": "credit_balance_daily B-tree repair plus permanent 6669 corporate-action fact and compatibility projection",
+    "v11_single_track_release_schema_migration": false,
+    "release_rollout_or_candidate_delivery": false,
+    "evidence": "docs/CODEX_REVIEW_PACKET.md"
+  },
+  "kill_switch": {
+    "contract_version": "LineModelReleaseAuthorizationV1",
+    "observed_rollout": "shadow",
+    "changed_by_this_stage": false,
+    "candidate_delivery_authorized": false,
+    "configured_canary_percentage": null,
+    "reason_codes": [
+      "candidate_delivery_kill_switch_active"
+    ]
+  },
+  "runtime": {
+    "market_8010_ready": true,
+    "ollama_8020_ready": true,
+    "line_8021_ready": true,
+    "running_source_matches_workspace": true,
+    "remote_loaded_at": "2026-09-03T11:40:55+08:00",
+    "remote_loaded_source_digest": "0feff6c6247680d61c34e4b638393b23cf316af6a890a2d9296a5e132595daee",
+    "current_source_digest": "0feff6c6247680d61c34e4b638393b23cf316af6a890a2d9296a5e132595daee",
+    "restart_performed_by_this_stage": false,
+    "current_phase_d_complete": false,
+    "current_phase_d_trading_days": 0,
+    "current_focused_completed_samples": 0,
+    "current_comprehensive_completed_samples": 0
+  },
+  "scheduler": {
+    "audit_file": "docs/STAGE8_SCHEDULER_AUDIT.json",
+    "required_tasks_installed": false,
+    "required_tasks_enabled": false,
+    "restart_wake_catch_up_verified_on_actual_windows_task": false,
+    "gate_passed": false,
+    "changed_by_this_stage": false,
+    "reason_codes": [
+      "stage8_single_track_v3_scheduler_tasks_not_ready",
+      "stage8_single_track_v3_restart_wake_catch_up_unverified",
+      "stage8_single_track_v3_scheduler_gate_not_passed"
+    ]
+  },
+  "statistical_release": {
+    "normal": "remain_shadow_insufficient_power",
+    "material_event": "remain_shadow_insufficient_power",
+    "prospective_denominator": 0,
+    "predictive_canary_eligible": false,
+    "candidate_formal_weight": 0.0
+  },
+  "human_quality": {
+    "status": "unavailable",
+    "passed": false,
+    "reason_codes": [
+      "independent_human_quality_evidence_incomplete"
+    ]
+  },
+  "legal": {
+    "packet": "docs/LEGAL_REVIEW_PACKET_V11.json",
+    "packet_status": "draft_incomplete",
+    "external_gate_state": "external_gate_not_started",
+    "written_external_decision_present": false,
+    "legal_approval_claimed": false,
+    "public_directional_candidate_allowed": false
+  },
+  "release_authorization_contract": {
+    "validator_source": "review_src/core/line_model_release_config.py",
+    "legacy_pass_for_canary_string_accepted": false,
+    "required_statistical_contract": "ProspectivePredictionEvidenceContractV1",
+    "required_statistical_result": "predictive_canary",
+    "required_denominator_shrinkage": 0,
+    "required_candidate_safety_hard_gates_zero": true,
+    "required_legal_packet": "LegalReviewPacketV1",
+    "required_legal_state": "external_gate_approved_with_conditions",
+    "required_written_decision_digest": true
+  },
+  "backup_and_rollback": {
+    "source_contract_tests_present": true,
+    "temporary_schema_rollback_passed": true,
+    "release_specific_production_backup_restore_drill": "not_run_not_authorized",
+    "v11_single_track_release_schema_production_migration": false,
+    "parallel_corporate_action_maintenance_backup_and_integrity_check": "completed_under_separate_maintenance_scope"
+  },
+  "health_smoke_parity": {
+    "current_health_read_only_preflight": "pass",
+    "stage5_source_parity_tests": "74 passed",
+    "full_phase_e_web_smoke": "not_run",
+    "full_phase_e_line_round_trip": "not_run",
+    "post_release_drift_monitoring": "not_started"
+  },
+  "security_privacy": {
+    "privacy_and_image_contract_tests": "passed_in_stage4_and_full_suite",
+    "current_code_freeze_security_review": "not_completed",
+    "raw_image_or_full_ocr_release_gate": "source_regression_only_not_release_evidence"
+  },
+  "verification": {
+    "stage8_targeted_tests": "25 passed in 1.28s",
+    "last_full_suite_before_concurrent_maintenance_edits": "1832 passed in 45.01s",
+    "prospective_and_release_authorization_tests": "13 passed in 0.21s",
+    "corporate_action_packet_parity_and_safety_tests": "58 passed in 0.78s",
+    "current_full_suite_after_concurrent_maintenance_edits": "1845 passed in 47.44s",
+    "required_read_only_api_gets": {
+      "GET /": 200,
+      "GET /api/quotes?mode=watchlist": 200,
+      "GET /api/quotes?mode=tw50": 200,
+      "GET /api/stock/6669/detail": 200
+    },
+    "shared_files_changed_during_full_suite": false,
+    "rollout_change": false,
+    "scheduler_install_or_enable": false,
+    "benchmark_posts": 0,
+    "candidate_nonzero_weight": false,
+    "public_release": false,
+    "legal_approval": false
+  },
+  "blockers": [
+    "protected_hashes_9_of_11",
+    "current_code_freeze_not_established",
+    "prospective_prediction_floor_not_met",
+    "phase_d_five_trading_days_not_met",
+    "phase_d_100_completed_samples_per_profile_not_met",
+    "current_load_matrix_and_contention_evidence_incomplete",
+    "independent_human_quality_evidence_incomplete",
+    "scheduler_installation_not_authorized_and_not_present",
+    "actual_restart_wake_catch_up_unverified",
+    "release_specific_production_backup_restore_not_run",
+    "security_review_incomplete",
+    "external_legal_gate_not_started",
+    "phase_e_health_smoke_line_round_trip_not_run"
+  ],
+  "decision": {
+    "state": "not_release_ready",
+    "stable_behavior_remains_authoritative": true,
+    "next_action_requires_new_authority": true,
+    "next_action": "After concurrent maintenance stops, establish an approved protected baseline and immutable source freeze; then separately authorize prospective Shadow collection, Phase D, scheduler deployment, security review, and external legal review before any Phase E action."
+  }
+}
