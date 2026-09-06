@@ -39,3 +39,8 @@ def detail_page(code: str) -> FileResponse:
 @router.get("/portfolio")
 def portfolio_page() -> FileResponse:
     return _static_file("portfolio.html")
+
+
+@router.get("/account")
+def account_page() -> FileResponse:
+    return _static_file("account.html")

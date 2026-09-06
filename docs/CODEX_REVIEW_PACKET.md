@@ -1,3 +1,117 @@
+# 會員、註冊與密碼：開發驗證（2026-09-06）
+
+## 最新：本機管理員直接登入與 Email 密碼連結
+
+本節為最新狀態。先前 `setup-owner` 在建立帳號前就檢查 SMTP，因此沒有寄信設定時
+無法產生首位管理員。現在本機互動命令可直接建立指定擁有者，Email 仍標示未驗證，
+不會自動接管既有帳號。沒有內建預設帳密；帳密僅由操作人輸入，不進 Git。
+初始登入及每次管理請求只允許直接 loopback，拒絕公開 Host 與代理轉送標頭。
+這是對自動審查拒絕「公開入口使用未驗證弱密碼管理員」後採取的安全替代方案。
+
+正式 smoke 另找出 `equity/application.py` 的全域驗證會先攔截後臺登入，
+使其回覆「請先登入」。現在 `/api/admin/` 使用自己的管理 session／Email proof，
+行情路由仍受客戶端驗證保護。新增實際 create_app 組裝測試（隔離帳號與合成行情库）。
+
+後臺提供「寄送修改密碼連結」。`auth/admin_password.py` 產生 256-bit 隨機 token，
+帳號庫 v8 只保存雜湊；15 分鐘、單次使用、重寄撤銷、每分鐘一次且每小時五次。
+SMTP 失敗撤銷該連結，不假回報寄出。URL 取自操作人設定或 supervisor ready 狀態，
+不信任請求 Host。GET 只呈現表單，不消耗 token；fragment 載入後從網址移除。
+同一分頁再次開啟連結也會重新讀取。完成強密碼及重複確認後驗證 Email、
+解除本機初始限制、撤銷所有舊管理／會員登入，記錄 password_change。
+管理角色、一般新會員手機驗證、行情公式、歷史保留與 LINE 訊息邏輯保持原規則。
+
+驗證：完整隔離回歸 **1,990 passed，1 個既有套件警告，59.10 秒**；
+Python 語法及 diff check 通過。320／390／768 px 瀏覽器完成本機登入、模擬寄信、
+密碼確認、修改、新密碼登入及登出，零頁面 JS 錯誤；真實寄信未執行。
+證據：`var/test-results/local-owner-password-links.xml`、
+`var/qa/password-link-mobile-results.json`、`var/qa/admin-password-mobile.png`。
+
+正式帳號庫已先備份再升級 v8，依操作人要求建立首位擁有者。
+正式 Edge 手機瀏覽器已驗證登入、名單、稽核、SMTP 未設定提示及登出，零 JS 錯誤；
+證據 `var/qa/local-owner-browser-result.json`。`var/qa/local-owner-live-result.json`
+保留命令列診斷：頁面／健康 200、未登入行情 401、公開頁面 200、LINE 空事件成功；
+其中後續登入 401 是 requests 不傳送 loopback HTTP Secure Cookie，實際 Edge 流程成功。
+診斷 HTTPS 初次也曾缺少系統信任鏈；重用專案 `configure_tls` 後成功，未關閉 TLS 驗證。
+SMTP 尚未設定，所以目前無法真實寄送修改密碼信；下一步是設定 SMTP 與穩定 HTTPS 網址。
+本次風險等級高（管理員驗證），以本機限制、註冊防覆寫、獨立 session、單次證明與撤銷測試控制。
+金流、社群平台及永久免費正式 SMS 的外部依賴仍未完成；不代表整個商用會員系統已上線。
+新 commit 的 CI 以 PR #2 對應 SHA 為準，不能沿用下方舊版成功結果。
+
+## 手機帳號頁、獨立後臺及社群登入更新
+
+以下為上一版本紀錄；最新狀態以上方章節為準。後臺登入已移除大段介紹，使用獨立 Cookie、
+管理 session 與每次請求的角色檢查。使用者已明確要求後臺免手機驗證；
+一般新會員仍須手機驗證。新增登入、明確登出與會員修改前後紀錄。
+`setup-owner.cmd`／`setup-owner.sh` 提供本機互動建立第一位擁有者；
+仍需 SMTP 與 Email 驗證，沒有預設帳密、沒有自動提升現有會員。
+
+客戶端新增 LINE／Apple／Google 綁定後登入，state 單次消耗、nonce、JWT/官方
+ID-token 驗證與 Google/LINE PKCE；密碼確認後才綁定或解除，不按相同 Email 自動合併。
+資料庫只保留帶金鑰的識別雜湊，不保留社群 token/profile。OAuth 回程 GET 不寫 DB，
+轉 POST 完成流程；存取日誌遮除 callback query。修改密碼須舊密碼、確認新密碼及 Email OTP。
+
+手機號碼正規化後，跨帳號共享臺灣日期每天最多 5 次發送預留，第 6 次不呼叫供應商；
+維持冷卻與全站預算。使用者只允許免費方案，因此介接僅接受 Twilio Trial 帳戶，
+付費 Full 帳戶在發送前拒絕，預設停用。試用僅供預先核准測試號碼；
+任意臺灣客戶的永久免費 SMS 方案尚未確認，不能宣稱正式註冊已開放。
+
+驗證：完整隔離回歸 **1,968 passed，1 個既有套件警告，52.34 秒**；
+Python 語法與 diff check 通過。320/390/768 px × 4 頁無橫向溢出，
+實際瀏覽器登入／角色授權／稽核／登出通過，零頁面 JS 錯誤。
+證據 `var/test-results/auth-admin-social.xml`、`var/qa/auth-mobile-results.json`；
+手機截圖 `var/qa/admin-login-compact.png`、`var/qa/customer-login-compact.png`。
+
+正式帳號庫已先備份再升級至 v7，共用服務重啟為 Running；
+health/account/members/portfolio/social-options 回覆 200，未登入 admin/quotes/detail 回覆 401。
+LINE endpoint 同步且官方空事件測試成功，沒有發送真實訊息。
+原排程設定為 disabled 但執行中；本次暫時啟用重啟後已還原 disabled 設定，仍在 Running。
+此輪未修改分析公式、歷史保留、行情資料库、會員實際角色或金流。
+Email／社群／SMS 真實服務尚未設定；擁有者由使用者透過工具自行建立。
+風險：高（驗證與授權），已覆蓋跨帳號、重播、簽章、到期、撤銷、目的不符 OTP 與每日限額。
+新提交的 GitHub CI 結果記於 PR #2；下方舊 SHA 的 CI 不代表本輪結果。
+操作與外部前提見 [帳號設定](project/ACCOUNT_SETUP.md)。
+
+部署與 CI 補充（08:00 後）：正式帳號庫已透過備份後遷移升級至 v5，
+共用服務已恢復 Running；`/account`、`/members`、`/portfolio` 公開頁全部 200，LINE endpoint
+啟用且官方空事件成功，四種會員提示的官方 validate/reply 全部 200，未發送真實訊息。
+證據 `var/qa/member-deployment.json`。Email／SMS 設定目前均未完成，註冊入口保持停用；
+擁有者尚待使用者指定 Email。下方開發階段「尚未遷移／未重啟」敘述已由本段取代。
+
+提交 `4a821029428099119abc70a9b4acfbeb6973dfa9` 已推送，草稿 PR #2 的四組 CI 全部成功。
+Push run 34000002596 有一項 Windows/Python 3.11 失敗：既有測試
+`tests/test_canonical_model_candidate_service.py:227` 比較 `30.00000000000003 <= 30` 不成立，
+該工作 1 failed / 1942 passed；其餘三組成功。此測試與對應 service 均未被本次提交修改。
+使用者已明確核准固定測試時鐘：僅替換該測試中 service 的 time 綁定，
+monotonic 固定 1000.0、deadline 固定 1030.0，保留真實 perf_counter_ns 與原本 5–30 秒斷言。
+未修改正式服務邏輯、重啟服務或重寫 main。相關 4 項測試通過；完整隔離回歸
+1,943 passed、1 個既有套件警告（41.02 秒），語法檢查通過。
+證據 `var/test-results/ci-clock-fix.xml`；新提交的遠端 CI 結果另記於 PR #2，須同時確認 push 與 PR 工作。
+
+- [PR #2](https://github.com/gpteric0211-cyber/taiwan-line-equity/pull/2)
+- [失敗工作](https://github.com/gpteric0211-cyber/taiwan-line-equity/actions/runs/34000002596/job/101397039230)
+- [通過的 PR workflow](https://github.com/gpteric0211-cyber/taiwan-line-equity/actions/runs/34000039655)
+- 已核准並套用提案：`var/qa/proposed-ci-clock.patch`；未放寬斷言、跳過測試或變更正式程式。
+
+- 分支 `feat/member-administration` 基於 `7b718fff906d25ff4662b970870cbb4bc3faf648`；原 main 未重寫。
+- 帳號庫新增交易式 v2–v5 升級：會員資格/角色/稽核、憑證版本、手機驗證及 LINE 身分對照。
+  `equity.membership_admin migrate` 先建立並檢查 SQLite 備份。正式帳號库尚未執行此命令。
+- `/members` 管理員名單、搜尋、分頁、限期/永久招待、角色調整與操作紀錄；版本衝突和重送檢查，
+  寫入交易內重新驗證權限。擁有者須指定現有已驗證帳號，本輪未自動提升任一帳號。
+- `/account` 註冊雙密碼、Email/手機驗證、登入、修改密碼與忘記密碼。舊憑證在密碼變更後撤銷。
+  SMTP 缺設定不假回報成功、不記錄 OTP；Email/簡訊均有重寄與嘗試上限。新會員手機未驗證時阻擋會員 API。
+- Twilio Verify 僅模擬測試；尚無真實送達證據。信用卡、LINE Pay、自動月繳、USDT/USDC 結算未串接/啟用。
+  使用者目前為無統編個人，需依官方資格申請服務。詳見 [會員操作與申請限制](project/MEMBERSHIP.md)。
+- 分級開關 `EQUITY_MEMBERSHIP_ENFORCEMENT` 預設關閉；開啟後 Web AI/圖片與 LINE 分析共用到期狀態，
+  免費持股與刪除功能保留。未更動分析公式、行情更新或歷史保留規則。
+- 相關 42 項測試通過；完整隔離回歸 **1,943 passed，1 個既有套件警告**，
+  報告 `var/test-results/member-account-complete.xml`。新增頁面 JS 語法通過。
+- CUA 沙箱失敗後，以內建 Playwright/Edge 在隔離合成帳號預覽完成 390 px 手機檢查：
+  註冊雙密碼欄位、招待會員操作、修改密碼均通過，零頁面 JS 錯誤。截圖 `var/qa/account-register-mobile.png`、
+  `var/qa/member-admin-mobile.png`；這是測試資料，不是正式會員畫面。
+- 正式服務未重啟，公開註冊及收費尚未上線。保留原有 tracked LINE WAL/SHM 刪除狀態，不納入提交。
+
+---
+
 # 共用網頁、LINE 與行情更新修正（2026-09-06）
 
 - 新分支 `fix/shared-web-line-runtime` 自 `4cab294548a226ae644179f88d2654c3b9c444d5` 建立，未重寫舊提交。GitHub main 已重新讀取核對；舊提交的 Portable regression 四個 Windows／Ubuntu、Python 3.11／3.13 工作全部成功，舊「0 個可存取儲存庫」判斷已失效。

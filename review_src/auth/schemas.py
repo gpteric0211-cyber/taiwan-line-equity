@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -16,7 +16,14 @@ def normalize_email(value: str) -> str:
 class RegisterRequest(BaseModel):
     email: str
     password: str = Field(min_length=10, max_length=128)
+    confirm_password: str = Field(min_length=10, max_length=128)
     turnstile_token: str | None = None
+
+    @model_validator(mode="after")
+    def passwords_match(self):
+        if self.password != self.confirm_password:
+            raise ValueError("兩次密碼輸入不一致")
+        return self
 
     @field_validator("email")
     @classmethod
@@ -84,6 +91,13 @@ class PasswordResetConfirmRequest(BaseModel):
     email: str
     code: str = Field(min_length=4, max_length=12)
     new_password: str = Field(min_length=10, max_length=128)
+    confirm_password: str = Field(min_length=10, max_length=128)
+
+    @model_validator(mode="after")
+    def passwords_match(self):
+        if self.new_password != self.confirm_password:
+            raise ValueError("兩次新密碼輸入不一致")
+        return self
 
     @field_validator("email")
     @classmethod
@@ -96,6 +110,19 @@ class PasswordResetConfirmRequest(BaseModel):
 
 class WatchlistAddRequest(BaseModel):
     query: str = Field(min_length=1, max_length=40)
+
+
+class PasswordChangeRequest(BaseModel):
+    code: str = Field(pattern=r"^[0-9]{6}$")
+    current_password: str = Field(min_length=1, max_length=128)
+    new_password: str = Field(min_length=10, max_length=128)
+    confirm_password: str = Field(min_length=10, max_length=128)
+
+    @model_validator(mode="after")
+    def passwords_match(self):
+        if self.new_password != self.confirm_password:
+            raise ValueError("兩次新密碼輸入不一致")
+        return self
 
 
 class WatchlistReorderRequest(BaseModel):

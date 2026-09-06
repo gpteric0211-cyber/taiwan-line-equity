@@ -2,6 +2,11 @@
 
 Last verified against the working tree: 2026-08-28.
 
+Membership development verified 2026-09-06: account-only migrations v2–v5, membership repository/service/API,
+`/members` administration, `/account` registration/password/phone verification, and opt-in shared Web/LINE entitlement checks
+are implemented. Offline tests and synthetic mobile UI checks pass; production migration, owner assignment,
+identity-provider delivery and payment onboarding remain separate, uncompleted deployment steps. See `docs/project/MEMBERSHIP.md`.
+
 Runtime integration verified 2026-09-06: `equity/lifecycle.py` owns idempotent background desktop startup; both Windows web/LINE buttons delegate to it. `core/database_access.py` coordinates shared market connections with isolated publication, and `equity/database_middleware.py` keeps API requests on one file generation and arbitrates canonical artifact writes with updates. No financial layer was extracted or reweighted. The earlier business-layer snapshot below retains its original verification date. See `docs/project/SHARED_RUNTIME.md` and the latest review packet for validation and deployment limits.
 
 Read this before an `app.py` extraction or a change to the LINE/backend surface. This is a living implementation snapshot, not a fixed specification. Verify paths and responsibilities before updating a checkbox.
@@ -143,6 +148,22 @@ The LINE gateway does not need to wait for a future web `build_row_service.py`; 
 Image-derived values remain `estimated`, never enter scoring/referee inputs, never override the shared main conclusion, and image bytes are not persisted. A bounded encrypted non-image chart summary may remain for follow-up questions within the configured retention period.
 
 ## Planned LINE Extensions
+
+Account boundary update (2026-09-06): independent back-office sessions and audit are in
+`auth/admin_session.py`; account-only migrations v6/v7 add social identities, one-use states
+and admin sessions/events. `adapter/social_login.py` validates provider proofs,
+`repository/social_identity.py` stores keyed identifiers, and `auth/social_router.py` handles
+login/link orchestration. Customer phone proof remains mandatory; admin sessions explicitly
+do not require it. No market-analysis or LINE-message formula path changed.
+See `docs/project/ACCOUNT_SETUP.md` for provider prerequisites and the unfulfilled permanent-free SMS requirement.
+
+Local owner recovery update (2026-09-06): `auth/local_owner.py` provisions a first owner
+without SMTP and confines initial admin sessions to direct loopback requests. Migration v8
+adds the local-owner marker and hashed one-use password links. `auth/admin_password.py`
+handles emailed password rotation, expiry, replay protection and credential revocation.
+`equity/application.py` delegates `/api/admin/` authorization to its independent route
+dependencies; customer auth continues protecting market APIs. The production assembly
+contract is exercised with isolated accounts and a synthetic market DB.
 
 These are planned targets, not existing behavior:
 

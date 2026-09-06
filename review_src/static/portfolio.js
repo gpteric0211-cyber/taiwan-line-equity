@@ -36,7 +36,16 @@ function render() {
     const option=element("option",h.code);option.value=h.code;$("chat-code").append(option);
   }
 }
-async function refresh() {state=await api("/api/portfolio");$("login").hidden=true;$("workspace").hidden=false;render();}
+async function refresh() {
+  state=await api("/api/portfolio");$("login").hidden=true;$("workspace").hidden=false;render();
+  $("membership-admin-link").hidden=true;
+  try {
+    const member=await api("/api/membership");
+    const names={free:"免費會員",monthly:"限期進階會員",complimentary:"永久招待會員"};
+    $("membership-summary").textContent=names[member.effective_plan]+(member.expires_at?" · 到期："+new Date(member.expires_at*1000).toLocaleString("zh-TW"):"")+(member.expired?"（已到期）":"");
+    $("membership-admin-link").hidden=!member.can_manage_members;
+  } catch(error) {$("membership-summary").textContent="會員資格目前無法讀取，請稍後重試。";}
+}
 function showDraft(data) {
   draft=data; $("draft-panel").hidden=false;$("draft-rows").replaceChildren();
   for(const row of data.holdings) {

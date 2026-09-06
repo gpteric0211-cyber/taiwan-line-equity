@@ -4210,7 +4210,11 @@ def handle_line_event(
     }
     result = _AnswerResult("系統目前無法完成查詢，請稍後再試。")
     try:
-        if message_type == "image":
+        from services.membership_service import line_denial
+        membership_message = line_denial(event,question)
+        if membership_message:
+            result = _AnswerResult(membership_message,answer_path="membership")
+        elif message_type == "image":
             provider = message.get("contentProvider") if isinstance(message.get("contentProvider"), dict) else {}
             content = get_line_image_content(
                 message_id,

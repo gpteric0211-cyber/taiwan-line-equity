@@ -72,6 +72,10 @@ class PortfolioStore:
         row = conn.execute("SELECT owner FROM portfolio_aliases WHERE alias=?", (subject,)).fetchone()
         return row["owner"] if row else subject
 
+    def resolved_owner(self, subject: str) -> str:
+        with self.connect() as conn:
+            return self._owner(conn,subject)
+
     def _encode(self, value):
         return self.cipher.encrypt(json.dumps(value, ensure_ascii=False, allow_nan=False).encode())
 

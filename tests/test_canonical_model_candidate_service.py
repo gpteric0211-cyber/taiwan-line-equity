@@ -215,7 +215,11 @@ def test_interactive_candidate_uses_work_stop_deadline_and_no_background_timeout
 
     monkeypatch.setattr(candidate_service, "qwen_chat_detailed", fake_qwen)
     monkeypatch.setattr(candidate_service, "run_interactive_model", fake_interactive)
-    deadline = time.monotonic() + 30
+    monkeypatch.setattr(
+        candidate_service, "time",
+        SimpleNamespace(monotonic=lambda: 1000.0, perf_counter_ns=time.perf_counter_ns),
+    )
+    deadline = 1030.0
 
     result = candidate_service.run_canonical_model_candidate_interactive(
         "分析",
