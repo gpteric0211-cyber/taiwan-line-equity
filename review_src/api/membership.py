@@ -35,7 +35,7 @@ def admin_login(payload: LoginRequest, request: Request, response: Response):
     from auth.dependencies import get_client_ip
     from auth.security import AUTH_COOKIE_SECURE
     _mutation(request)
-    token=admin_session.login(payload.email,payload.password,get_client_ip(request))
+    token=admin_session.login(payload.email,payload.password,get_client_ip(request),request)
     response.set_cookie(admin_session.COOKIE,token,max_age=admin_session.TTL,httponly=True,
                         secure=AUTH_COOKIE_SECURE or request.url.scheme=="https",samesite="strict",path="/api/admin")
     response.headers["Cache-Control"]="no-store"
@@ -67,6 +67,39 @@ def admin_events(offset: int = Query(default=0,ge=0),user=Depends(manager)):
 @router.get("/members")
 def member_page():
     return FileResponse(Path(__file__).resolve().parents[1] / "static" / "members.html")
+
+
+@router.post("/api/admin/password/link")
+def admin_password_link(request: Request, response: Response, user=Depends(manager)):
+    from auth.admin_password import request_link
+    _mutation(request)
+    response.headers["Cache-Control"] = "no-store"
+    return {"message": request_link(user["id"])}
+
+
+class AdminPasswordChange(BaseModel):
+    model_config = {"extra": "forbid"}
+    token: str = Field(min_length=43, max_length=43, pattern=r"^[A-Za-z0-9_-]+$")
+    new_password: str = Field(min_length=10, max_length=128)
+    confirm_password: str = Field(min_length=10, max_length=128)
+
+
+@router.post("/api/admin/password/complete")
+def admin_password_complete(payload: AdminPasswordChange, request: Request, response: Response):
+    from auth.admin_password import complete
+    from auth.admin_session import COOKIE
+    _mutation(request)
+    message = complete(payload.token, payload.new_password, payload.confirm_password)
+    response.delete_cookie(COOKIE, path="/api/admin")
+    response.headers["Cache-Control"] = "no-store"
+    return {"message": message}
+
+
+@router.get("/admin/password")
+def admin_password_page():
+    return FileResponse(Path(__file__).resolve().parents[1] / "static" / "admin-password.html",
+        headers={"Cache-Control": "no-store", "Referrer-Policy": "no-referrer",
+                 "Content-Security-Policy": "default-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"})
 
 
 @router.get("/api/membership")

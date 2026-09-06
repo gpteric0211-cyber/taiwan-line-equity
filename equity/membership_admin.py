@@ -11,6 +11,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=["migrate", "owner", "create-owner"])
     parser.add_argument("--email", help="Existing verified account for first owner initialization")
+    parser.add_argument("--allow-temporary-password", action="store_true", help="Explicit local-only exception for a temporary first-owner password")
     args = parser.parse_args()
     load_settings()
     from core.accounts_database import initialize, path
@@ -19,7 +20,7 @@ def main():
     if args.action == "create-owner":
         from equity.owner_setup import setup_owner
         try:
-            setup_owner()
+            setup_owner(allow_temporary_password=args.allow_temporary_password)
         except ValueError as exc:
             parser.exit(1, str(exc) + "\n")
         return

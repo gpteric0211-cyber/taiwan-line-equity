@@ -1,6 +1,6 @@
 """Transactional account-schema upgrades. Never touch the market database."""
 
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 STATEMENTS = (
     """CREATE TABLE member_access (
         user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
@@ -52,3 +52,8 @@ def migrate(conn):
             conn.execute("CREATE TABLE admin_session(token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id), expires_at REAL NOT NULL, revoked_at REAL)")
             conn.execute("CREATE TABLE admin_event(id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id), action TEXT NOT NULL, created_at REAL NOT NULL)")
             conn.execute("INSERT INTO account_migration(version) VALUES(7)")
+        if current < 8:
+            conn.execute("CREATE TABLE local_admin_identity(user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE)")
+            conn.execute("CREATE TABLE admin_password_link(token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id), email TEXT NOT NULL, credential_version INTEGER NOT NULL, created_at REAL NOT NULL, expires_at REAL NOT NULL, used_at REAL)")
+            conn.execute("CREATE INDEX idx_admin_password_link_user ON admin_password_link(user_id,created_at)")
+            conn.execute("INSERT INTO account_migration(version) VALUES(8)")

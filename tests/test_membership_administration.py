@@ -45,7 +45,7 @@ def test_upgrade_existing_v1_and_idempotent_preserves_accounts(tmp_path, monkeyp
     assert accounts.initialize()["users"]==1
     with closing(accounts.db()) as conn:
         assert conn.execute("SELECT hashed_password FROM users").fetchone()[0]=="unchanged"
-        assert [row[0] for row in conn.execute("SELECT version FROM account_migration ORDER BY version")]==[1,2,3,4,5,6,7]
+        assert [row[0] for row in conn.execute("SELECT version FROM account_migration ORDER BY version")]==[1,2,3,4,5,6,7,8]
 
 
 def test_failed_migration_rolls_back_all_ddl(tmp_path):

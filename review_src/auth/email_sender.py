@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import smtplib
+from html import escape
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -65,6 +66,13 @@ def send_password_reset_email(to_email: str, code: str) -> bool:
     </div>
     """
     return _send_email(to_email, subject, html)
+
+
+def send_password_change_link(to_email: str, url: str) -> bool:
+    html = ("<h2>修改後臺密碼</h2><p>請點擊下方連結，設定您的新密碼。</p>"
+            f'<p><a href="{escape(url, quote=True)}">設定新密碼</a></p>'
+            "<p>連結 15 分鐘內有效，只能使用一次。若不是您本人操作，請忽略此信。</p>")
+    return _send_email(to_email, "【台股研究室】修改後臺密碼", html)
 
 
 def email_security_warnings() -> list[str]:

@@ -98,7 +98,7 @@ def create_user(email: str, password: str, ip: str) -> tuple[bool, str]:
     with closing(db()) as conn:
         conn.execute("BEGIN IMMEDIATE")
         existing = conn.execute("SELECT id,is_verified FROM users WHERE email=?", (email,)).fetchone()
-        if existing and existing["is_verified"]:
+        if existing and (existing["is_verified"] or conn.execute("SELECT 1 FROM local_admin_identity WHERE user_id=?", (existing["id"],)).fetchone()):
             return False, "此 Email 已註冊，請直接登入"
         hashed = hash_password(password)
         if existing:

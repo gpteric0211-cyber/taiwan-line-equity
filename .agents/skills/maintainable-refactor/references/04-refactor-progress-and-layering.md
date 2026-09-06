@@ -157,6 +157,14 @@ login/link orchestration. Customer phone proof remains mandatory; admin sessions
 do not require it. No market-analysis or LINE-message formula path changed.
 See `docs/project/ACCOUNT_SETUP.md` for provider prerequisites and the unfulfilled permanent-free SMS requirement.
 
+Local owner recovery update (2026-09-06): `auth/local_owner.py` provisions a first owner
+without SMTP and confines initial admin sessions to direct loopback requests. Migration v8
+adds the local-owner marker and hashed one-use password links. `auth/admin_password.py`
+handles emailed password rotation, expiry, replay protection and credential revocation.
+`equity/application.py` delegates `/api/admin/` authorization to its independent route
+dependencies; customer auth continues protecting market APIs. The production assembly
+contract is exercised with isolated accounts and a synthetic market DB.
+
 These are planned targets, not existing behavior:
 
 - [ ] Push-message and quota endpoints in the LINE adapter

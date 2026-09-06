@@ -59,9 +59,9 @@ def change(actor_id, target_id, *, action, value, version, reason, request_id):
     now = time.time()
     with closing(db()) as conn, conn:
         conn.execute("BEGIN IMMEDIATE")
-        actor = conn.execute("SELECT is_active,is_verified FROM users WHERE id=?", (actor_id,)).fetchone()
+        actor = conn.execute("SELECT is_active,is_verified,EXISTS(SELECT 1 FROM local_admin_identity l WHERE l.user_id=users.id) local_admin FROM users WHERE id=?", (actor_id,)).fetchone()
         role = _access(conn, actor_id)["role"]
-        if not actor or not actor["is_active"] or not actor["is_verified"] or role not in {"owner", "manager"}:
+        if not actor or not actor["is_active"] or not (actor["is_verified"] or actor["local_admin"]) or role not in {"owner", "manager"}:
             raise PermissionError("需要會員管理權限")
         if not conn.execute("SELECT 1 FROM users WHERE id=?", (target_id,)).fetchone():
             raise LookupError("找不到會員")

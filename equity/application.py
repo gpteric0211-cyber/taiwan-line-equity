@@ -33,7 +33,8 @@ def create_app():
         @app.middleware("http")
         async def protect_api(request, call_next):
             path = request.url.path
-            public = path.startswith(("/api/auth/", "/api/bot/market-data/")) or path == "/api/setup"
+            # Admin routes enforce their independent session or one-use email proof.
+            public = path.startswith(("/api/auth/", "/api/admin/", "/api/bot/market-data/")) or path == "/api/setup"
             if path.startswith("/api/") and not public:
                 value = request.headers.get("authorization", "")
                 credentials = (
@@ -60,7 +61,7 @@ def create_app():
             if path.startswith("/api/"):
                 response.headers["Cache-Control"] = "no-store"
             response.headers["X-Content-Type-Options"] = "nosniff"
-            response.headers["Referrer-Policy"] = "same-origin"
+            response.headers.setdefault("Referrer-Policy", "same-origin")
             return response
 
         app.include_router(market_router)

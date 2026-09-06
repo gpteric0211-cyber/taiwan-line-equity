@@ -1,8 +1,45 @@
 # 會員、註冊與密碼：開發驗證（2026-09-06）
 
+## 最新：本機管理員直接登入與 Email 密碼連結
+
+本節為最新狀態。先前 `setup-owner` 在建立帳號前就檢查 SMTP，因此沒有寄信設定時
+無法產生首位管理員。現在本機互動命令可直接建立指定擁有者，Email 仍標示未驗證，
+不會自動接管既有帳號。沒有內建預設帳密；帳密僅由操作人輸入，不進 Git。
+初始登入及每次管理請求只允許直接 loopback，拒絕公開 Host 與代理轉送標頭。
+這是對自動審查拒絕「公開入口使用未驗證弱密碼管理員」後採取的安全替代方案。
+
+正式 smoke 另找出 `equity/application.py` 的全域驗證會先攔截後臺登入，
+使其回覆「請先登入」。現在 `/api/admin/` 使用自己的管理 session／Email proof，
+行情路由仍受客戶端驗證保護。新增實際 create_app 組裝測試（隔離帳號與合成行情库）。
+
+後臺提供「寄送修改密碼連結」。`auth/admin_password.py` 產生 256-bit 隨機 token，
+帳號庫 v8 只保存雜湊；15 分鐘、單次使用、重寄撤銷、每分鐘一次且每小時五次。
+SMTP 失敗撤銷該連結，不假回報寄出。URL 取自操作人設定或 supervisor ready 狀態，
+不信任請求 Host。GET 只呈現表單，不消耗 token；fragment 載入後從網址移除。
+同一分頁再次開啟連結也會重新讀取。完成強密碼及重複確認後驗證 Email、
+解除本機初始限制、撤銷所有舊管理／會員登入，記錄 password_change。
+管理角色、一般新會員手機驗證、行情公式、歷史保留與 LINE 訊息邏輯保持原規則。
+
+驗證：完整隔離回歸 **1,990 passed，1 個既有套件警告，59.10 秒**；
+Python 語法及 diff check 通過。320／390／768 px 瀏覽器完成本機登入、模擬寄信、
+密碼確認、修改、新密碼登入及登出，零頁面 JS 錯誤；真實寄信未執行。
+證據：`var/test-results/local-owner-password-links.xml`、
+`var/qa/password-link-mobile-results.json`、`var/qa/admin-password-mobile.png`。
+
+正式帳號庫已先備份再升級 v8，依操作人要求建立首位擁有者。
+正式 Edge 手機瀏覽器已驗證登入、名單、稽核、SMTP 未設定提示及登出，零 JS 錯誤；
+證據 `var/qa/local-owner-browser-result.json`。`var/qa/local-owner-live-result.json`
+保留命令列診斷：頁面／健康 200、未登入行情 401、公開頁面 200、LINE 空事件成功；
+其中後續登入 401 是 requests 不傳送 loopback HTTP Secure Cookie，實際 Edge 流程成功。
+診斷 HTTPS 初次也曾缺少系統信任鏈；重用專案 `configure_tls` 後成功，未關閉 TLS 驗證。
+SMTP 尚未設定，所以目前無法真實寄送修改密碼信；下一步是設定 SMTP 與穩定 HTTPS 網址。
+本次風險等級高（管理員驗證），以本機限制、註冊防覆寫、獨立 session、單次證明與撤銷測試控制。
+金流、社群平台及永久免費正式 SMS 的外部依賴仍未完成；不代表整個商用會員系統已上線。
+新 commit 的 CI 以 PR #2 對應 SHA 為準，不能沿用下方舊版成功結果。
+
 ## 手機帳號頁、獨立後臺及社群登入更新
 
-本節取代下方較早的帳號／部署狀態。後臺登入已移除大段介紹，使用獨立 Cookie、
+以下為上一版本紀錄；最新狀態以上方章節為準。後臺登入已移除大段介紹，使用獨立 Cookie、
 管理 session 與每次請求的角色檢查。使用者已明確要求後臺免手機驗證；
 一般新會員仍須手機驗證。新增登入、明確登出與會員修改前後紀錄。
 `setup-owner.cmd`／`setup-owner.sh` 提供本機互動建立第一位擁有者；
