@@ -1,5 +1,26 @@
 # 會員、註冊與密碼：開發驗證（2026-09-06）
 
+部署與 CI 補充（08:00 後）：正式帳號庫已透過備份後遷移升級至 v5，
+共用服務已恢復 Running；`/account`、`/members`、`/portfolio` 公開頁全部 200，LINE endpoint
+啟用且官方空事件成功，四種會員提示的官方 validate/reply 全部 200，未發送真實訊息。
+證據 `var/qa/member-deployment.json`。Email／SMS 設定目前均未完成，註冊入口保持停用；
+擁有者尚待使用者指定 Email。下方開發階段「尚未遷移／未重啟」敘述已由本段取代。
+
+提交 `4a821029428099119abc70a9b4acfbeb6973dfa9` 已推送，草稿 PR #2 的四組 CI 全部成功。
+Push run 34000002596 有一項 Windows/Python 3.11 失敗：既有測試
+`tests/test_canonical_model_candidate_service.py:227` 比較 `30.00000000000003 <= 30` 不成立，
+該工作 1 failed / 1942 passed；其餘三組成功。此測試與對應 service 均未被本次提交修改。
+使用者已明確核准固定測試時鐘：僅替換該測試中 service 的 time 綁定，
+monotonic 固定 1000.0、deadline 固定 1030.0，保留真實 perf_counter_ns 與原本 5–30 秒斷言。
+未修改正式服務邏輯、重啟服務或重寫 main。相關 4 項測試通過；完整隔離回歸
+1,943 passed、1 個既有套件警告（41.02 秒），語法檢查通過。
+證據 `var/test-results/ci-clock-fix.xml`；新提交的遠端 CI 結果另記於 PR #2，須同時確認 push 與 PR 工作。
+
+- [PR #2](https://github.com/gpteric0211-cyber/taiwan-line-equity/pull/2)
+- [失敗工作](https://github.com/gpteric0211-cyber/taiwan-line-equity/actions/runs/34000002596/job/101397039230)
+- [通過的 PR workflow](https://github.com/gpteric0211-cyber/taiwan-line-equity/actions/runs/34000039655)
+- 已核准並套用提案：`var/qa/proposed-ci-clock.patch`；未放寬斷言、跳過測試或變更正式程式。
+
 - 分支 `feat/member-administration` 基於 `7b718fff906d25ff4662b970870cbb4bc3faf648`；原 main 未重寫。
 - 帳號庫新增交易式 v2–v5 升級：會員資格/角色/稽核、憑證版本、手機驗證及 LINE 身分對照。
   `equity.membership_admin migrate` 先建立並檢查 SQLite 備份。正式帳號库尚未執行此命令。
