@@ -77,7 +77,8 @@ def test_phone_attempt_budget_before_provider(client,monkeypatch):
 
 def test_change_password_confirms_current_and_revokes_tokens(client):
     old=register(client)["access_token"]
-    payload={"current_password":"incorrect","new_password":NEW_PASSWORD,"confirm_password":NEW_PASSWORD}
+    payload={"current_password":"incorrect","new_password":NEW_PASSWORD,"confirm_password":NEW_PASSWORD,"code":"123456"}
+    assert client.post("/api/auth/change-password/code",json={}).status_code==200
     assert client.post("/api/auth/change-password",json=payload).status_code==400
     assert client.post("/api/auth/change-password",json={**payload,"confirm_password":PASSWORD}).status_code==422
     payload["current_password"]=PASSWORD
@@ -103,3 +104,40 @@ def test_email_attempts_and_expiry(client):
     with closing(accounts.db()) as conn,conn:
         conn.execute("UPDATE email_verifications SET attempts=0,expires_at=?",(time.time()-1,))
     assert client.post("/api/auth/verify-email",json={"email":EMAIL,"code":"123456"}).status_code==400
+
+
+def test_phone_five_per_taiwan_day_before_provider_and_next_day(client,monkeypatch):
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from types import SimpleNamespace
+    register(client)
+    clock=[datetime(2026,9,6,1,tzinfo=ZoneInfo("Asia/Taipei")).timestamp()]
+    monkeypatch.setattr(phones,"time",SimpleNamespace(time=lambda:clock[0]))
+    sent=[]
+    monkeypatch.setattr(provider,"send",lambda phone:sent.append(phone) or "VE"+"a"*32)
+    for _ in range(5):
+        assert client.post("/api/auth/phone/start",json={"phone":"0912345678"}).status_code==200
+        clock[0]+=3601
+    response=client.post("/api/auth/phone/start",json={"phone":"+886912345678"})
+    assert response.status_code==429 and "今日" in response.json()["detail"]
+    assert len(sent)==5
+    clock[0]=datetime(2026,9,7,0,1,tzinfo=ZoneInfo("Asia/Taipei")).timestamp()
+    assert client.post("/api/auth/phone/start",json={"phone":"0912345678"}).status_code==200
+    assert len(sent)==6
+
+
+def test_phone_daily_limit_shared_between_accounts(client,monkeypatch):
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from types import SimpleNamespace
+    register(client)
+    clock=[datetime(2026,9,6,12,tzinfo=ZoneInfo("Asia/Taipei")).timestamp()]
+    monkeypatch.setattr(phones,"time",SimpleNamespace(time=lambda:clock[0]))
+    with closing(accounts.db()) as conn,conn:
+        for n in range(2,7):
+            conn.execute("INSERT INTO users(id,email,hashed_password,is_verified,is_active,created_at,updated_at) VALUES(?,?,?,1,1,1,1)",(n,f"shared{n}@example.invalid","synthetic"))
+    # All reservations occur within the same calendar day, independent of user id.
+    for n in range(1,6):
+        phones.reserve(n,"+886912345678")
+        clock[0]+=61
+    with pytest.raises(ValueError,match="今日"):phones.reserve(6,"+886912345678")

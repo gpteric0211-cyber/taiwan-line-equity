@@ -71,7 +71,7 @@ def get_current_user(
     if not user.get("is_verified"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="請先完成 Email 驗證")
     allowed = request.url.path.startswith("/api/auth/phone") or request.url.path in {
-        "/api/auth/me", "/api/auth/change-password", "/api/auth/logout"}
+        "/api/auth/me", "/api/auth/change-password", "/api/auth/change-password/code", "/api/auth/logout"}
     if user.get("phone_required") and not user.get("phone_verified") and not allowed:
         raise HTTPException(403,"請先完成手機驗證")
     return user

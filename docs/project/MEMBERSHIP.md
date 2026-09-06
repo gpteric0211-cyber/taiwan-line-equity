@@ -1,5 +1,9 @@
 # 會員管理與收款規劃
 
+2026-09-06 更新：後臺改為獨立管理登入（免手機驗證），加入登入／登出／修改紀錄；
+新會員手機維持必驗證，每個號碼臺灣日期每天最多發送 5 次。新增社群帳號綁定，
+修改密碼須 Email 驗證碼。初始化工具與平台前置條件見 [帳號設定](ACCOUNT_SETUP.md)。
+
 ## 已實作：管理基礎
 
 `/members` 提供會員登入、Email 搜尋、分頁名單、資格調整與操作紀錄。
@@ -62,7 +66,7 @@ OTP 10 分鐘內有效，最多嘗試 5 次；服務端確認成功才寫入驗�
 新註冊者必須完成 Email 及手機驗證才可使用會員資料 API；既有本機遷移帳號保留原登入方式，
 未被自動標示成手機已驗證。公開註冊不會授予管理角色。
 
-設定 `TWILIO_ACCOUNT_SID`、`TWILIO_AUTH_TOKEN`、`TWILIO_VERIFY_SERVICE_SID` 及 SMTP；
+設定 `PHONE_VERIFICATION_MODE=trial`、`TWILIO_ACCOUNT_SID`、`TWILIO_AUTH_TOKEN`、`TWILIO_VERIFY_SERVICE_SID` 及 SMTP；
 未設定時註冊入口明確停用，API 拒絕建立新帳號。這些設定只代表具備設定值，還需要
 實際寄信、台灣簡訊送達與正確驗證測試才能稱為正式可用。此輪全部使用合成帳號與模擬服務，
 沒有傳送真實簡訊或 Email，沒有把任何現有會員改成招待或管理員。

@@ -1,6 +1,8 @@
 """Encrypted phone identity and bounded, durable SMS attempts in the account DB."""
 
 from contextlib import closing
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import hashlib
 import hmac
 import os
@@ -20,6 +22,7 @@ def reserve(user_id, phone):
     key=load_key();cipher=Fernet(key)
     digest=hmac.new(key,phone.encode(),hashlib.sha256).hexdigest()
     now=time.time();request_id=uuid.uuid4().hex
+    day_start=datetime.fromtimestamp(now,ZoneInfo("Asia/Taipei")).replace(hour=0,minute=0,second=0,microsecond=0).timestamp()
     with closing(db()) as conn,conn:
         conn.execute("BEGIN IMMEDIATE")
         if conn.execute("SELECT 1 FROM account_phone WHERE user_id=? OR phone_hash=?",(user_id,digest)).fetchone():
@@ -28,6 +31,9 @@ def reserve(user_id, phone):
         count=conn.execute("SELECT COUNT(*) FROM phone_send_attempt WHERE created_at>? AND (user_id=? OR phone_hash=?)",(now-3600,user_id,digest)).fetchone()[0]
         daily=conn.execute("SELECT COUNT(*) FROM phone_send_attempt WHERE created_at>?",(now-86400,)).fetchone()[0]
         budget=max(1,min(10000,int(os.getenv("PHONE_SMS_DAILY_LIMIT","100"))))
+        phone_daily=conn.execute("SELECT COUNT(*) FROM phone_send_attempt WHERE phone_hash=? AND created_at>=?",(digest,day_start)).fetchone()[0]
+        if phone_daily>=5:
+            raise ValueError("此手機今日已申請 5 次驗證簡訊，請於臺灣時間明日再試")
         if (recent and recent[0]>now-60) or count>=5 or daily>=budget:
             raise ValueError("驗證簡訊請求已達限制，請稍後再試")
         conn.execute("DELETE FROM phone_send_attempt WHERE created_at<?",(now-86400,))

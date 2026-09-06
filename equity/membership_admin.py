@@ -9,12 +9,20 @@ from equity.__main__ import load_settings
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["migrate", "owner"])
+    parser.add_argument("action", choices=["migrate", "owner", "create-owner"])
     parser.add_argument("--email", help="Existing verified account for first owner initialization")
     args = parser.parse_args()
     load_settings()
     from core.accounts_database import initialize, path
     from repository.member_repository import bootstrap_owner
+
+    if args.action == "create-owner":
+        from equity.owner_setup import setup_owner
+        try:
+            setup_owner()
+        except ValueError as exc:
+            parser.exit(1, str(exc) + "\n")
+        return
 
     if args.action == "owner":
         if not args.email:

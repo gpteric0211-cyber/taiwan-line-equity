@@ -3,10 +3,12 @@
 from typing import Literal
 from pathlib import Path
 import sqlite3
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from auth.dependencies import get_current_user
+from auth.admin_session import current_admin
+from auth.schemas import LoginRequest
 from api.portfolio import _mutation
 from repository import member_repository as members
 from services.membership_service import effective_access, get_membership, update_member
@@ -21,10 +23,45 @@ def membership(user):
         raise HTTPException(503, "會員服務尚未完成初始化，請聯絡管理員") from exc
 
 
-def manager(user=Depends(get_current_user)):
+def manager(user=Depends(current_admin)):
     if not membership(user)["can_manage_members"]:
         raise HTTPException(403, "需要會員管理權限")
     return user
+
+
+@router.post("/api/admin/login")
+def admin_login(payload: LoginRequest, request: Request, response: Response):
+    from auth import admin_session
+    from auth.dependencies import get_client_ip
+    from auth.security import AUTH_COOKIE_SECURE
+    _mutation(request)
+    token=admin_session.login(payload.email,payload.password,get_client_ip(request))
+    response.set_cookie(admin_session.COOKIE,token,max_age=admin_session.TTL,httponly=True,
+                        secure=AUTH_COOKIE_SECURE or request.url.scheme=="https",samesite="strict",path="/api/admin")
+    response.headers["Cache-Control"]="no-store"
+    return {"ok":True}
+
+
+@router.post("/api/admin/logout")
+def admin_logout(request: Request, response: Response):
+    from auth import admin_session
+    _mutation(request)
+    admin_session.logout(request.cookies.get(admin_session.COOKIE,""))
+    response.delete_cookie(admin_session.COOKIE,path="/api/admin")
+    return {"ok":True}
+
+
+@router.get("/api/admin/me")
+def admin_me(user=Depends(manager)):
+    return membership(user)
+
+
+@router.get("/api/admin/events")
+def admin_events(offset: int = Query(default=0,ge=0),user=Depends(manager)):
+    from auth.admin_session import events
+    if user["role"]!="owner":
+        raise HTTPException(403,"只有擁有者可以檢視完整管理紀錄")
+    return {"items":events(offset)}
 
 
 @router.get("/members")

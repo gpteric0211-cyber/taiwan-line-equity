@@ -240,7 +240,7 @@ def reset_password(email: str, code: str, new_password: str) -> tuple[bool, str]
             conn.commit()
             return False, "驗證碼錯誤"
         conn.execute("UPDATE users SET hashed_password=?, updated_at=? WHERE email=?", (hash_password(new_password), ts, email))
-        conn.execute("UPDATE email_verifications SET used_at=? WHERE id=?", (ts, row["id"]))
+        conn.execute("UPDATE email_verifications SET used_at=? WHERE email=? AND used_at IS NULL AND purpose IN ('reset_password','change_password')", (ts, email))
         from auth.password_change import revoke_credentials
         user = conn.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
         if user:

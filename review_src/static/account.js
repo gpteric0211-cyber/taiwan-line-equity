@@ -18,7 +18,7 @@
   const data=await api("me");$("signed-in-email").textContent="目前帳號："+data.user.email;
   const phone=await api("phone");$("phone-readiness").textContent=phone.verified?"手機已驗證。":phone.configured?"輸入手機號碼收取驗證碼，10 分鐘內有效。":"手機驗證服務尚未開通，請聯絡管理員。";
   $("account-phone-form").hidden=phone.verified;$("account-phone-verify-form").hidden=phone.verified;$("phone-send").disabled=!phone.configured;
-  tab("security");return data.user;
+  tab("security");window.dispatchEvent(new Event("equity-account-ready"));return data.user;
  }
  form("account-login-form","login",async(body,form)=>{form.reset();const user=await loadUser();if(user.phone_required&&!user.phone_verified)message("已登入，請先完成手機驗證。");else message("已登入，可返回研究空間。");});
  form("account-register-form","register",async(body,form)=>{$("account-verify-form").elements.email.value=body.email;form.reset();tab("verify");});
@@ -26,6 +26,7 @@
  $("resend-email").onclick=()=>task($("resend-email"),async()=>{const result=await api("resend-verification",{email:$("account-verify-form").elements.email.value});message(result.message);});
  form("account-forgot-form","forgot-password",async(body)=>{$("account-reset-form").elements.email.value=body.email;});
  form("account-reset-form","reset-password",async(body,form)=>{form.reset();tab("login");});
+ $("change-email-send").onclick=()=>task($("change-email-send"),async()=>{const result=await api("change-password/code",{});message(result.message);});
  form("account-change-form","change-password",async(body,form)=>{form.reset();tab("login");});
  form("account-phone-form","phone/start",async()=>{});
  form("account-phone-verify-form","phone/verify",async(body,form)=>{form.reset();await loadUser();message("手機驗證完成，可以返回研究空間。");});
@@ -34,6 +35,6 @@
   const options=await api("options");$("register-submit").disabled=!options.registration_enabled;
   $("registration-readiness").textContent=options.registration_enabled?"先驗證 Email，再登入完成手機驗證。":"註冊尚未開放：Email 或手機驗證服務尚未完成設定。";
   if(options.turnstile_site_key){const script=document.createElement("script");script.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";script.onload=()=>{captchaId=window.turnstile.render($("captcha"),{sitekey:options.turnstile_site_key,callback:token=>{captchaToken=token;}});};document.head.append(script);}
-  const requested=location.hash.slice(1);if(["login","register","verify","reset","security"].includes(requested)){tab(requested);if(requested==="security")await loadUser();}
+  const requested=location.hash.slice(1);if(requested==="social-error"){tab("login");message("第三方登入未完成。首次使用請先註冊並以 Email 登入，再到帳號安全綁定。",true);}if(["login","register","verify","reset","security"].includes(requested)){tab(requested);if(requested==="security")await loadUser();}
  });
 })();

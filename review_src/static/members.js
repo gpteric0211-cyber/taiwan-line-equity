@@ -1,7 +1,7 @@
 "use strict";
 (() => {
   const $ = id => document.getElementById(id);
-  let offset=0, selected=null, me=null, pendingId=null;
+  let offset=0, selected=null, me=null, pendingId=null, eventOffset=0;
   const planNames={free:"免費會員",monthly:"限期進階會員",complimentary:"永久招待會員"};
   const roleNames={member:"一般會員",manager:"會員管理員",owner:"擁有者"};
   const status=(text,error=false)=>{ $("admin-status").textContent=text; $("admin-status").className=error?"error":""; };
@@ -26,7 +26,7 @@
     $("member-reason").value="";$("member-editor").hidden=false;$("member-editor").scrollIntoView({behavior:"smooth"});
   }
   async function load(){
-    me=await api("/api/membership");
+    me=await api("/api/admin/me");$("admin-events").hidden=me.role!=="owner";
     if(!me.can_manage_members)throw new Error("此帳號沒有會員管理權限。請由擁有者授權。");
     const data=await api("/api/admin/members?q="+encodeURIComponent($("member-query").value)+"&offset="+offset);
     $("admin-login").hidden=true;$("admin-workspace").hidden=false;
@@ -49,7 +49,7 @@
     }
     $("member-prev").disabled=offset===0;$("member-next").disabled=offset+30>=data.total;
   }
-  $("admin-login-form").onsubmit=e=>{e.preventDefault();task(e.submitter,async()=>{await api("/api/auth/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});e.target.reset();await load();status("已登入。");});};
+  $("admin-login-form").onsubmit=e=>{e.preventDefault();task(e.submitter,async()=>{await api("/api/admin/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(e.target)))});e.target.reset();await load();status("已登入。");});};
   $("member-search").onsubmit=e=>{e.preventDefault();offset=0;task(e.submitter,load);};
   $("member-prev").onclick=()=>{offset=Math.max(0,offset-30);task(null,load);};
   $("member-next").onclick=()=>{offset+=30;task(null,load);};
@@ -63,5 +63,18 @@
     await api(`/api/admin/members/${selected.id}`,{method:"PATCH",body:JSON.stringify({action,plan,role:$("member-role").value,expires_at:expires,version:selected.version,reason:$("member-reason").value,request_id:pendingId})});
     $("member-editor").hidden=true;selected=null;await load();status("資格已更新，操作紀錄已保存。");
   });};
-  task(null,load);
+  $("admin-logout").onclick=()=>task($("admin-logout"),async()=>{await api("/api/admin/logout",{method:"POST",body:"{}"});$("admin-login").hidden=false;$("admin-workspace").hidden=true;$("member-list").replaceChildren();$("admin-event-list").replaceChildren();status("已登出。");});
+  async function loadEvents(){
+    const data=await api("/api/admin/events?offset="+eventOffset);$("admin-event-list").replaceChildren();
+    for(const item of data.items){const card=node("article","");const names={login:"登入後臺",logout:"登出後臺",role:"調整管理權限",plan:"調整會員資格",bootstrap_owner:"建立擁有者"};
+      card.append(node("p",date(item.created_at)+" · "+(item.email||"主機初始化")+" · "+(names[item.action]||"修改會員")));
+      if(item.before_json&&item.after_json){const before=JSON.parse(item.before_json),after=JSON.parse(item.after_json);const desc=v=>[roleNames[v.role],planNames[v.plan],v.expires_at?date(v.expires_at):""].filter(Boolean).join(" / ");card.append(node("p","會員 "+item.target_id+"："+desc(before)+" → "+desc(after)),node("p","原因："+item.reason));}
+      $("admin-event-list").append(card);
+    }
+    $("event-prev").disabled=eventOffset===0;$("event-next").disabled=data.items.length<50;$("admin-events-panel").hidden=false;
+  }
+  $("admin-events").onclick=()=>{eventOffset=0;task(null,loadEvents);};
+  $("event-prev").onclick=()=>{eventOffset=Math.max(0,eventOffset-50);task(null,loadEvents);};
+  $("event-next").onclick=()=>{eventOffset+=50;task(null,loadEvents);};
+  load().catch(error=>{if($("admin-login").hidden)status(error.message,true);});
 })();

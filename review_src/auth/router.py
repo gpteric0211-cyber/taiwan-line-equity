@@ -38,19 +38,21 @@ from .service import (
 )
 
 router = APIRouter(prefix="/api", tags=["auth"])
+from auth.social_router import router as social_router
+router.include_router(social_router, prefix="/auth")
 
 
 def _raise_bad_request(message: str) -> None:
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=message)
 
 
-def _set_auth_cookies(response: Response, access_token: str, session_token: str) -> None:
+def _set_auth_cookies(response: Response, access_token: str, session_token: str, *, secure: bool | None = None) -> None:
     response.set_cookie(
         AUTH_COOKIE_NAME,
         access_token,
         max_age=ACCESS_TOKEN_MINUTES * 60,
         httponly=True,
-        secure=AUTH_COOKIE_SECURE,
+        secure=AUTH_COOKIE_SECURE if secure is None else secure,
         samesite=AUTH_COOKIE_SAMESITE,
         path="/",
     )
@@ -59,7 +61,7 @@ def _set_auth_cookies(response: Response, access_token: str, session_token: str)
         session_token,
         max_age=SESSION_DAYS * 24 * 3600,
         httponly=True,
-        secure=AUTH_COOKIE_SECURE,
+        secure=AUTH_COOKIE_SECURE if secure is None else secure,
         samesite=AUTH_COOKIE_SAMESITE,
         path="/",
     )
@@ -184,13 +186,29 @@ def change_password_endpoint(payload: PasswordChangeRequest, request: Request, r
     ip = get_client_ip(request)
     if too_many_failed_logins(ip, user["email"]):
         raise HTTPException(429, "嘗試次數過多，請 15 分鐘後再試")
-    ok, message = change_password(user["id"],payload.current_password,payload.new_password)
+    ok, message = change_password(user["id"],payload.current_password,payload.new_password,payload.code)
     if not ok:
         record_login_attempt(ip,user["email"],False,"password_change")
         _raise_bad_request(message)
     response.delete_cookie(AUTH_COOKIE_NAME, path="/")
     response.delete_cookie(f"{AUTH_COOKIE_NAME}_session", path="/")
     return {"ok":True,"message":message}
+
+
+@router.post("/auth/change-password/code")
+def password_change_code(request: Request, user: dict = Depends(get_current_user)):
+    from api.portfolio import _mutation
+    from auth import service
+    from auth.email_sender import smtp_configured
+    _mutation(request)
+    if not smtp_configured():
+        raise HTTPException(503, "Email 驗證服務尚未開通")
+    code = service.generate_verification_code()
+    if not service._store_verification_code(user["email"], "change_password", code):
+        raise HTTPException(429, "驗證碼寄送過於頻繁，請稍後再試")
+    if not service.send_password_reset_email(user["email"], code):
+        raise HTTPException(503, "驗證信寄送失敗，請稍後再試")
+    return {"ok": True, "message": "驗證碼已寄至目前帳號的 Email，15 分鐘內有效"}
 
 
 @router.get("/me/watchlist")

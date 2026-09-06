@@ -45,7 +45,7 @@ def test_upgrade_existing_v1_and_idempotent_preserves_accounts(tmp_path, monkeyp
     assert accounts.initialize()["users"]==1
     with closing(accounts.db()) as conn:
         assert conn.execute("SELECT hashed_password FROM users").fetchone()[0]=="unchanged"
-        assert [row[0] for row in conn.execute("SELECT version FROM account_migration ORDER BY version")]==[1,2,3,4,5]
+        assert [row[0] for row in conn.execute("SELECT version FROM account_migration ORDER BY version")]==[1,2,3,4,5,6,7]
 
 
 def test_failed_migration_rolls_back_all_ddl(tmp_path):
@@ -118,9 +118,9 @@ def test_admin_api_auth_csrf_input_and_readonly_listing(member_db):
     app=FastAPI();app.include_router(membership.router)
     client=TestClient(app)
     assert client.get("/api/admin/members").status_code==401
-    app.dependency_overrides[membership.get_current_user]=lambda:{"id":2}
+    app.dependency_overrides[membership.current_admin]=lambda:{"id":2}
     assert client.get("/api/admin/members").status_code==403
-    app.dependency_overrides[membership.get_current_user]=lambda:{"id":1}
+    app.dependency_overrides[membership.current_admin]=lambda:{"id":1}
     before=accounts.path().read_bytes()
     response=client.get("/api/admin/members")
     assert response.status_code==200 and response.json()["total"]==4

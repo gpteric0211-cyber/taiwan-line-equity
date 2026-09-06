@@ -1,5 +1,39 @@
 # 會員、註冊與密碼：開發驗證（2026-09-06）
 
+## 手機帳號頁、獨立後臺及社群登入更新
+
+本節取代下方較早的帳號／部署狀態。後臺登入已移除大段介紹，使用獨立 Cookie、
+管理 session 與每次請求的角色檢查。使用者已明確要求後臺免手機驗證；
+一般新會員仍須手機驗證。新增登入、明確登出與會員修改前後紀錄。
+`setup-owner.cmd`／`setup-owner.sh` 提供本機互動建立第一位擁有者；
+仍需 SMTP 與 Email 驗證，沒有預設帳密、沒有自動提升現有會員。
+
+客戶端新增 LINE／Apple／Google 綁定後登入，state 單次消耗、nonce、JWT/官方
+ID-token 驗證與 Google/LINE PKCE；密碼確認後才綁定或解除，不按相同 Email 自動合併。
+資料庫只保留帶金鑰的識別雜湊，不保留社群 token/profile。OAuth 回程 GET 不寫 DB，
+轉 POST 完成流程；存取日誌遮除 callback query。修改密碼須舊密碼、確認新密碼及 Email OTP。
+
+手機號碼正規化後，跨帳號共享臺灣日期每天最多 5 次發送預留，第 6 次不呼叫供應商；
+維持冷卻與全站預算。使用者只允許免費方案，因此介接僅接受 Twilio Trial 帳戶，
+付費 Full 帳戶在發送前拒絕，預設停用。試用僅供預先核准測試號碼；
+任意臺灣客戶的永久免費 SMS 方案尚未確認，不能宣稱正式註冊已開放。
+
+驗證：完整隔離回歸 **1,968 passed，1 個既有套件警告，52.34 秒**；
+Python 語法與 diff check 通過。320/390/768 px × 4 頁無橫向溢出，
+實際瀏覽器登入／角色授權／稽核／登出通過，零頁面 JS 錯誤。
+證據 `var/test-results/auth-admin-social.xml`、`var/qa/auth-mobile-results.json`；
+手機截圖 `var/qa/admin-login-compact.png`、`var/qa/customer-login-compact.png`。
+
+正式帳號庫已先備份再升級至 v7，共用服務重啟為 Running；
+health/account/members/portfolio/social-options 回覆 200，未登入 admin/quotes/detail 回覆 401。
+LINE endpoint 同步且官方空事件測試成功，沒有發送真實訊息。
+原排程設定為 disabled 但執行中；本次暫時啟用重啟後已還原 disabled 設定，仍在 Running。
+此輪未修改分析公式、歷史保留、行情資料库、會員實際角色或金流。
+Email／社群／SMS 真實服務尚未設定；擁有者由使用者透過工具自行建立。
+風險：高（驗證與授權），已覆蓋跨帳號、重播、簽章、到期、撤銷、目的不符 OTP 與每日限額。
+新提交的 GitHub CI 結果記於 PR #2；下方舊 SHA 的 CI 不代表本輪結果。
+操作與外部前提見 [帳號設定](project/ACCOUNT_SETUP.md)。
+
 部署與 CI 補充（08:00 後）：正式帳號庫已透過備份後遷移升級至 v5，
 共用服務已恢復 Running；`/account`、`/members`、`/portfolio` 公開頁全部 200，LINE endpoint
 啟用且官方空事件成功，四種會員提示的官方 validate/reply 全部 200，未發送真實訊息。

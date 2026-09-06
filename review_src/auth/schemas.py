@@ -113,6 +113,7 @@ class WatchlistAddRequest(BaseModel):
 
 
 class PasswordChangeRequest(BaseModel):
+    code: str = Field(pattern=r"^[0-9]{6}$")
     current_password: str = Field(min_length=1, max_length=128)
     new_password: str = Field(min_length=10, max_length=128)
     confirm_password: str = Field(min_length=10, max_length=128)

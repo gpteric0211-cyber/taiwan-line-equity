@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101a23"><title>我的持股｜台股研究室</title><link rel="stylesheet" href="/static/portfolio.css"><script src="/static/portfolio.js" defer></script></head>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101a23"><title>我的持股｜台股研究室</title><link rel="stylesheet" href="/static/portfolio.css"><script src="/static/portfolio.js" defer></script><link rel="stylesheet" href="/static/account-layout.css"><script src="/static/social-login.js" defer></script></head>
 <body>
 <header class="top"><a class="brand" href="/portfolio"><span class="brand-icon">台</span>台股研究室</a><span class="private-label">個人研究空間</span></header>
 <main>
@@ -7,7 +7,7 @@
 <nav class="tabs" aria-label="研究功能"><button data-tab="holdings" class="active">我的持股</button><button data-tab="research">分析對話</button><button data-tab="news">新聞與事件</button><button data-tab="settings">帳號與 LINE</button></nav>
 <div id="status" role="status" aria-live="polite"></div>
 <p><a href="/account#register">註冊帳號</a> · <a href="/account#reset">忘記密碼</a> · <a href="/account#security">修改密碼／手機驗證</a></p>
-<section id="login" class="panel narrow" hidden><p class="eyebrow">歡迎回來</p><h2>登入你的研究空間</h2><p class="subtle">使用原有網頁帳號。首次使用者可先由專案管理員建立帳號。</p><form id="login-form"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>密碼<input id="password" type="password" autocomplete="current-password" minlength="10" required></label><button class="primary" type="submit">登入</button></form><a href="/">返回行情與帳號設定</a></section>
+<section id="login" class="panel narrow" hidden><h2>會員登入</h2><div class="social-login" aria-label="其他登入方式"></div><p class="divider">或使用 Email</p><form id="login-form"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>密碼<input id="password" type="password" autocomplete="current-password" minlength="10" required></label><button class="primary" type="submit">登入</button></form><a href="/">返回行情與帳號設定</a></section>
 <div id="workspace" hidden>
 <section class="panel"><p id="membership-summary">會員資格讀取中</p><a id="membership-admin-link" href="/members" hidden>開啟會員管理後臺</a></section>
 <section id="consent" class="notice" hidden><h2>開始前，先確認資料保存方式</h2><p>已確認的股票、股數與成本會在本機加密保存，直到你要求刪除。圖片僅供辨識，不保存原圖；辨識草稿一小時後到期。圖片會交由已設定的模型處理，請先遮住姓名與帳號。你可隨時匯出、修改或刪除紀錄。</p><button class="primary" id="accept-consent">同意並開始使用</button></section>

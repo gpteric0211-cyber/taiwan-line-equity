@@ -149,6 +149,14 @@ Image-derived values remain `estimated`, never enter scoring/referee inputs, nev
 
 ## Planned LINE Extensions
 
+Account boundary update (2026-09-06): independent back-office sessions and audit are in
+`auth/admin_session.py`; account-only migrations v6/v7 add social identities, one-use states
+and admin sessions/events. `adapter/social_login.py` validates provider proofs,
+`repository/social_identity.py` stores keyed identifiers, and `auth/social_router.py` handles
+login/link orchestration. Customer phone proof remains mandatory; admin sessions explicitly
+do not require it. No market-analysis or LINE-message formula path changed.
+See `docs/project/ACCOUNT_SETUP.md` for provider prerequisites and the unfulfilled permanent-free SMS requirement.
+
 These are planned targets, not existing behavior:
 
 - [ ] Push-message and quota endpoints in the LINE adapter

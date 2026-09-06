@@ -1,6 +1,6 @@
 """Transactional account-schema upgrades. Never touch the market database."""
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 7
 STATEMENTS = (
     """CREATE TABLE member_access (
         user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
@@ -44,3 +44,11 @@ def migrate(conn):
         if current < 5:
             conn.execute("CREATE TABLE member_principal(user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, portfolio_subject TEXT NOT NULL UNIQUE)")
             conn.execute("INSERT INTO account_migration(version) VALUES(5)")
+        if current < 6:
+            conn.execute("CREATE TABLE social_identity(provider TEXT NOT NULL, subject_hash TEXT NOT NULL, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_at REAL NOT NULL, PRIMARY KEY(provider,subject_hash), UNIQUE(provider,user_id))")
+            conn.execute("CREATE TABLE social_state(state_hash TEXT PRIMARY KEY, expires_at REAL NOT NULL)")
+            conn.execute("INSERT INTO account_migration(version) VALUES(6)")
+        if current < 7:
+            conn.execute("CREATE TABLE admin_session(token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id), expires_at REAL NOT NULL, revoked_at REAL)")
+            conn.execute("CREATE TABLE admin_event(id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id), action TEXT NOT NULL, created_at REAL NOT NULL)")
+            conn.execute("INSERT INTO account_migration(version) VALUES(7)")
